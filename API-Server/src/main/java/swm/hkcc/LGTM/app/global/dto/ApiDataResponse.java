@@ -1,9 +1,9 @@
-package swm.hkcc.LGTM.app.common.dto;
+package swm.hkcc.LGTM.app.global.dto;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import swm.hkcc.LGTM.app.common.constant.ErrorCode;
+import swm.hkcc.LGTM.app.global.constant.ErrorCode;
 
 @Getter
 @ToString

@@ -1,9 +1,9 @@
-package swm.hkcc.LGTM.app.common.constant;
+package swm.hkcc.LGTM.app.global.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import swm.hkcc.LGTM.app.common.exception.GeneralException;
+import swm.hkcc.LGTM.app.global.exception.GeneralException;
 
 import java.util.Arrays;
 import java.util.Optional;

@@ -1,8 +1,8 @@
-package swm.hkcc.LGTM.app.common.dto;
+package swm.hkcc.LGTM.app.global.dto;
 
 
 import lombok.*;
-import swm.hkcc.LGTM.app.common.constant.ErrorCode;
+import swm.hkcc.LGTM.app.global.constant.ErrorCode;
 
 @Getter
 @ToString

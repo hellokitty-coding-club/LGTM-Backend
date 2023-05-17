@@ -1,7 +1,7 @@
-package swm.hkcc.LGTM.app.common.exception;
+package swm.hkcc.LGTM.app.global.exception;
 
 import lombok.Getter;
-import swm.hkcc.LGTM.app.common.constant.ErrorCode;
+import swm.hkcc.LGTM.app.global.constant.ErrorCode;
 
 @Getter
 public class GeneralException extends RuntimeException{
