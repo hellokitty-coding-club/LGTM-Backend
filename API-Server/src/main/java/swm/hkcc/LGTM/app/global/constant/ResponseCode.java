@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 
 @Getter
 @RequiredArgsConstructor
-public enum ErrorCode {
+public enum ResponseCode {
 
     OK(0, HttpStatus.OK, "Ok"),
 
@@ -28,21 +28,21 @@ public enum ErrorCode {
     private final String message;
 
 
-    public static ErrorCode valueOf(HttpStatus httpStatus) {
+    public static ResponseCode valueOf(HttpStatus httpStatus) {
         if (httpStatus == null) {
             throw new GeneralException("HttpStatus is null.");
         }
 
         return Arrays.stream(values())
-                .filter(errorCode -> errorCode.getHttpStatus() == httpStatus)
+                .filter(responseCode -> responseCode.getHttpStatus() == httpStatus)
                 .findFirst()
                 .orElseGet(() -> {
                     if (httpStatus.is4xxClientError()) {
-                        return ErrorCode.BAD_REQUEST;
+                        return ResponseCode.BAD_REQUEST;
                     } else if (httpStatus.is5xxServerError()) {
-                        return ErrorCode.INTERNAL_ERROR;
+                        return ResponseCode.INTERNAL_ERROR;
                     } else {
-                        return ErrorCode.OK;
+                        return ResponseCode.OK;
                     }
                 });
     }

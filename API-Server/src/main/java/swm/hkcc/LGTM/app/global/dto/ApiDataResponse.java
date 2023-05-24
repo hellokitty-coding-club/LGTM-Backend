@@ -3,7 +3,7 @@ package swm.hkcc.LGTM.app.global.dto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import swm.hkcc.LGTM.app.global.constant.ErrorCode;
+import swm.hkcc.LGTM.app.global.constant.ResponseCode;
 
 @Getter
 @ToString
@@ -13,7 +13,7 @@ public class ApiDataResponse<T> extends ApiResponse {
     private final T data;
 
     private ApiDataResponse(T data) {
-        super(true, ErrorCode.OK.getCode(), ErrorCode.OK.getMessage());
+        super(true, ResponseCode.OK.getCode(), ResponseCode.OK.getMessage());
         this.data = data;
     }
 

@@ -2,7 +2,7 @@ package swm.hkcc.LGTM.app.global.dto;
 
 
 import lombok.*;
-import swm.hkcc.LGTM.app.global.constant.ErrorCode;
+import swm.hkcc.LGTM.app.global.constant.ResponseCode;
 
 @Getter
 @ToString
@@ -11,22 +11,22 @@ import swm.hkcc.LGTM.app.global.constant.ErrorCode;
 public class ApiResponse {
 
     private final Boolean success;
-    private final Integer errorCode;
+    private final Integer responseCode;
     private final String message;
 
-    public static ApiResponse of(Boolean success, Integer errorCode, String message) {
-        return new ApiResponse(success, errorCode, message);
+    public static ApiResponse of(Boolean success, Integer responseCode, String message) {
+        return new ApiResponse(success, responseCode, message);
     }
 
-    public static ApiResponse of(Boolean success, ErrorCode errorCode) {
-        return new ApiResponse(success, errorCode.getCode(), errorCode.getMessage());
+    public static ApiResponse of(Boolean success, ResponseCode responseCode) {
+        return new ApiResponse(success, responseCode.getCode(), responseCode.getMessage());
     }
 
-    public static ApiResponse of(Boolean success, ErrorCode errorCode, Exception e) {
-        return new ApiResponse(success, errorCode.getCode(), errorCode.getMessage(e));
+    public static ApiResponse of(Boolean success, ResponseCode responseCode, Exception e) {
+        return new ApiResponse(success, responseCode.getCode(), responseCode.getMessage(e));
     }
 
-    public static ApiResponse of(Boolean success, ErrorCode errorCode, String message) {
-        return new ApiResponse(success, errorCode.getCode(), errorCode.getMessage(message));
+    public static ApiResponse of(Boolean success, ResponseCode responseCode, String message) {
+        return new ApiResponse(success, responseCode.getCode(), responseCode.getMessage(message));
     }
 }
