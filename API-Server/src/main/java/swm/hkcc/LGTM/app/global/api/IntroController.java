@@ -10,7 +10,7 @@ import swm.hkcc.LGTM.app.global.dto.ApiDataResponse;
 @RequestMapping("/api/v1/intro")
 public class IntroController {
 
-    @GetMapping("/")
+    @GetMapping
     public ApiDataResponse<IntroResponse> getIntro() {
         // 임시로 100,100 넣어둠
         return ApiDataResponse.of(new IntroResponse(100, 100));
