@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/login/getGithubAuthUrl", "/login/oauth2/code/**").permitAll()
+                .requestMatchers("/login/**").permitAll()
                 .requestMatchers("/api/**").hasRole("USER")
                 .anyRequest().denyAll()
                 .and()
