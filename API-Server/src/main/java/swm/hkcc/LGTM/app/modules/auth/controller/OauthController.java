@@ -68,9 +68,9 @@ public class OauthController {
         headers.setBearerAuth(githubOAuthResponse.getAccessToken());
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        // To do: GithubUserInfoProvider 클래스를 만들어서, 여기서는 그냥 String으로 받아오고, 그 클래스에서 필요한 정보만 추출해서 리턴하도록 하기
-        // To do: 추출한 정보를 가지고 로그인과 회원가입 처리하기
-        // To do : 해당 메소드의 반환값은 우리 서버의 access token, refresh token, user 정보를 담은 dto일 것
+        // Todo: GithubUserInfoProvider 클래스를 만들어서, 여기서는 그냥 String으로 받아오고, 그 클래스에서 필요한 정보만 추출해서 리턴하도록 하기
+        // Todo: 추출한 정보를 가지고 로그인과 회원가입 처리하기
+        // Todo : 해당 메소드의 반환값은 우리 서버의 access token, refresh token, user 정보를 담은 dto일 것
         return restTemplate.exchange(getGithubUserInfoEndpoint, HttpMethod.GET, entity, GithubUserInfo.class);
     }
 
