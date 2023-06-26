@@ -12,8 +12,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import swm.hkcc.LGTM.app.utils.jwt.JwtFilter;
-import swm.hkcc.LGTM.app.utils.jwt.TokenProvider;
+import swm.hkcc.LGTM.app.modules.auth.utils.jwt.JwtFilter;
+import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
 
 import java.util.List;
 

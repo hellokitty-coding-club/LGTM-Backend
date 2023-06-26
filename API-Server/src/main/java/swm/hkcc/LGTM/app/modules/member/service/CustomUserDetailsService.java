@@ -1,4 +1,4 @@
-package swm.hkcc.LGTM.app.service.auth;
+package swm.hkcc.LGTM.app.modules.member.service;
 
 
 import lombok.RequiredArgsConstructor;
@@ -6,9 +6,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import swm.hkcc.LGTM.app.entity.member.custom.CustomUserDetails;
-import swm.hkcc.LGTM.app.entity.member.Member;
-import swm.hkcc.LGTM.app.repository.member.MemberRepository;
+import swm.hkcc.LGTM.app.modules.member.entity.custom.CustomUserDetails;
+import swm.hkcc.LGTM.app.modules.member.entity.Member;
+import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 
 @Service
 @RequiredArgsConstructor

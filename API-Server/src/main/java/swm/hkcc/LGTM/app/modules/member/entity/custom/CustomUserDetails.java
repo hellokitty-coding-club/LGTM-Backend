@@ -1,9 +1,9 @@
-package swm.hkcc.LGTM.app.entity.member.custom;
+package swm.hkcc.LGTM.app.modules.member.entity.custom;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import swm.hkcc.LGTM.app.entity.member.Member;
+import swm.hkcc.LGTM.app.modules.member.entity.Member;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

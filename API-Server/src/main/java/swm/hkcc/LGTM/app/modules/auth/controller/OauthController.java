@@ -1,4 +1,4 @@
-package swm.hkcc.LGTM.app.controller.auth;
+package swm.hkcc.LGTM.app.modules.auth.controller;
 
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,12 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import swm.hkcc.LGTM.app.dto.auth.GithubOAuthRequest;
-import swm.hkcc.LGTM.app.dto.auth.GithubOAuthResponse;
-import swm.hkcc.LGTM.app.dto.auth.GithubUserInfo;
+import swm.hkcc.LGTM.app.modules.auth.dto.GithubOAuthRequest;
+import swm.hkcc.LGTM.app.modules.auth.dto.GithubOAuthResponse;
+import swm.hkcc.LGTM.app.modules.auth.dto.GithubUserInfo;
 
 import java.net.URI;
-import java.util.LinkedHashMap;
 
 @Slf4j
 @RestController

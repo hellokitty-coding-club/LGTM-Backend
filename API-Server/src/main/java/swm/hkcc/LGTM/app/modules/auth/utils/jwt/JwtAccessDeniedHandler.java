@@ -1,4 +1,4 @@
-package swm.hkcc.LGTM.app.utils.jwt;
+package swm.hkcc.LGTM.app.modules.auth.utils.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

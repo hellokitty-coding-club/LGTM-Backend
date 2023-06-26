@@ -1,4 +1,4 @@
-package swm.hkcc.LGTM.app.utils.jwt;
+package swm.hkcc.LGTM.app.modules.auth.utils.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -13,8 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import swm.hkcc.LGTM.app.service.auth.CustomUserDetailsService;
-import swm.hkcc.LGTM.app.entity.member.Authority;
+import swm.hkcc.LGTM.app.modules.member.service.CustomUserDetailsService;
+import swm.hkcc.LGTM.app.modules.member.entity.Authority;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;

@@ -1,7 +1,7 @@
-package swm.hkcc.LGTM.app.repository.member;
+package swm.hkcc.LGTM.app.modules.member.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import swm.hkcc.LGTM.app.entity.member.Member;
+import swm.hkcc.LGTM.app.modules.member.entity.Member;
 
 import java.util.Optional;
 

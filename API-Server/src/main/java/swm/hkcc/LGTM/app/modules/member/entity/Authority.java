@@ -1,4 +1,4 @@
-package swm.hkcc.LGTM.app.entity.member;
+package swm.hkcc.LGTM.app.modules.member.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

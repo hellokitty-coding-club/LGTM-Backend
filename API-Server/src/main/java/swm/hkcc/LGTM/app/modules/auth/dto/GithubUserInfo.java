@@ -1,4 +1,4 @@
-package swm.hkcc.LGTM.app.dto.auth;
+package swm.hkcc.LGTM.app.modules.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

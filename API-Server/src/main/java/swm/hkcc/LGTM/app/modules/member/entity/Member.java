@@ -1,8 +1,9 @@
-package swm.hkcc.LGTM.app.entity.member;
+package swm.hkcc.LGTM.app.modules.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import swm.hkcc.LGTM.app.global.entity.BaseEntity;
+import swm.hkcc.LGTM.app.modules.member.entity.Authority;
 
 import java.util.ArrayList;
 import java.util.List;
