@@ -6,7 +6,6 @@ import swm.hkcc.LGTM.app.modules.member.entity.Member;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    Optional<Member> findOneByEmail(String email);
-
-    Optional<Member> findOneByName(String name);
+    Optional<Member> findOneByNickName(String nickName);
+    Optional<Member> findOneByGithubId(String githubId);
 }
