@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/login/**").permitAll()
+                .requestMatchers("/login/**", "/h2-console/**").permitAll()
                 .requestMatchers("/api/**").hasRole("USER")
                 .anyRequest().denyAll()
                 .and()
