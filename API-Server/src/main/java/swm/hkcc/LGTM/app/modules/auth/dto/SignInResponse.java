@@ -10,6 +10,9 @@ import lombok.ToString;
 @ToString
 @Builder
 public class SignInResponse {
-    private String accessToken;
-    private String refreshToken;
+
+    private Long userId;
+    private String githubId;
+    private boolean isRegistered;
+    private TokenDto tokenDto;
 }
