@@ -42,7 +42,8 @@ public class OauthController {
     public ResponseEntity<?> getGoogleAuthUrl(HttpServletRequest request) throws Exception {
         HttpHeaders headers = setGithubAuthRequestHeader();
 
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+        // ① 로그인 페이지로 리디렉션
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     @GetMapping(value = "/login/oauth2/code/github")
