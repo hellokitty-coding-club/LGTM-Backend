@@ -3,7 +3,6 @@ package swm.hkcc.LGTM.app.modules.member.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import swm.hkcc.LGTM.app.global.entity.BaseEntity;
-import swm.hkcc.LGTM.app.modules.member.entity.Authority;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,22 +15,32 @@ import java.util.List;
 @Entity
 public class Member extends BaseEntity {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long memberId;
 
     @Column(nullable = false, unique = true)
-    private String name;
+    private String githubId;
 
-    @Column(name = "address", nullable = false)
-    private String address;
+    @Column(nullable = false, unique = true)
+    private String nickName;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
+    @Column(nullable = false, unique = true)
+    private String githubRefreshToken;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(nullable = false, unique = true)
+    private String refreshToken;
+
+    @Column(unique = true)
+    private String deviceToken;
+
+    @Column(nullable = false)
+    private String profileImageUrl;
+
+    @Column(nullable = false)
+    private String introduction;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Builder.Default
