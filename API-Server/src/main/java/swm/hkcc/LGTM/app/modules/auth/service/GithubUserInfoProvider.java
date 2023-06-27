@@ -21,9 +21,6 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class GithubUserInfoProvider {
 
-    @NonNull
-    UserAuthService userAuthService;
-
     @Value("${spring.security.oauth2.client.registration.github.clientId}")
     private String githubClientId;
 
@@ -40,7 +37,7 @@ public class GithubUserInfoProvider {
 
     private final String getGithubUserInfoEndpoint = "https://api.github.com/user";
 
-    // ① 로그인 페이지로 리디렉션
+    // 리디렉션 헤더 정보 설정
     public HttpHeaders getGithubAuthRequestHeader() {
         String reqUrl = setRequestUrl();
         HttpHeaders headers = new HttpHeaders();
@@ -48,9 +45,8 @@ public class GithubUserInfoProvider {
         return headers;
     }
 
-    // ② 로그인 후 리디렉션된 페이지에서 auth code를 받아옴
-    public UserAuthResponse getUserAuthInfo(String authCode) {
-        // ③ ~ ④ auth code를 이용해 access token(githubOAuthResponse.getAccessToken())을 받아옴
+    // 로그인 후 리디렉션된 페이지에서 auth code를 받아옴
+    public GithubOAuthResponse getGithubOAuthInfo(String authCode) {
         GithubOAuthRequest githubOAuthRequest = GithubOAuthRequest.builder()
                 .clientId(githubClientId)
                 .clientSecret(githubClientSecret)
@@ -58,19 +54,16 @@ public class GithubUserInfoProvider {
                 .build();
 
         RestTemplate restTemplate = new RestTemplate();
-        GithubOAuthResponse githubOAuthResponse = restTemplate.postForObject(
+        return restTemplate.postForObject(
                 getGithubAccessTokenRequestUrl(authCode),
                 githubOAuthRequest,
                 GithubOAuthResponse.class); // todo : githubOAuthResponse 정보 저장 필요
-
-        // ⑤ ~ ⑥ access token을 이용해 github user 정보를 받아옴
-        // Auth 서버로 부터 받은 githubOAuthResponse는 나중에 활용, 우선 access token만 사용
-        GithubUserInfo githubUserInfo = getGithubUserInfo(githubOAuthResponse.getAccessToken());
-
-        return userAuthService.getUserLoginInfo(githubOAuthResponse, githubUserInfo);
     }
 
+
+    // Github accessToken 이용해 Github 유저 정보 조회
     public GithubUserInfo getGithubUserInfo(String accessToken) {
+        // Auth 서버로 부터 받은 githubOAuthResponse는 나중에 활용, 우선 access token만 사용
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);

@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import swm.hkcc.LGTM.app.global.dto.ApiDataResponse;
+import swm.hkcc.LGTM.app.modules.auth.dto.GithubOAuthResponse;
+import swm.hkcc.LGTM.app.modules.auth.dto.GithubUserInfo;
 import swm.hkcc.LGTM.app.modules.auth.service.GithubUserInfoProvider;
+import swm.hkcc.LGTM.app.modules.auth.service.UserAuthService;
 
 @Slf4j
 @RestController
@@ -22,6 +25,9 @@ public class OauthController {
 
     @NonNull
     GithubUserInfoProvider githubUserInfoProvider;
+
+    @NonNull
+    UserAuthService userAuthService;
 
     /**
      * Github 로그인 페이지로 리디렉션
@@ -44,9 +50,16 @@ public class OauthController {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
+        // ② 로그인 후 리디렉션된 페이지에서 auth code를 받아옴
 
+        // ③ ~ ④ auth code를 이용해 access token(githubOAuthResponse.getAccessToken())을 받아옴
+        GithubOAuthResponse githubOAuthResponse = githubUserInfoProvider.getGithubOAuthInfo(authCode);
+        // ⑤ ~ ⑥ access token을 이용해 github user 정보 조회
+        GithubUserInfo githubUserInfo = githubUserInfoProvider.getGithubUserInfo(githubOAuthResponse.getAccessToken());
+
+        // 로그인 or 회원가입 정보 반환
         return ApiDataResponse.of(
-                githubUserInfoProvider.getUserAuthInfo(authCode)
+                userAuthService.getUserLoginInfo(githubOAuthResponse, githubUserInfo)
         );
     }
 
