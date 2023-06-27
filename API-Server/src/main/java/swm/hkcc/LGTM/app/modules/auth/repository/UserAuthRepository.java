@@ -5,7 +5,6 @@ import swm.hkcc.LGTM.app.modules.auth.entity.User;
 
 import java.util.Optional;
 
-@Repository
 public interface UserAuthRepository {
 
     public Optional<User> findUserByGithubId(String githubId);

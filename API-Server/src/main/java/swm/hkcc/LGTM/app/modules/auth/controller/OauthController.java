@@ -23,11 +23,9 @@ import swm.hkcc.LGTM.app.modules.auth.service.UserAuthService;
 @RequiredArgsConstructor
 public class OauthController {
 
-    @NonNull
-    GithubUserInfoProvider githubUserInfoProvider;
+    private final GithubUserInfoProvider githubUserInfoProvider;
 
-    @NonNull
-    UserAuthService userAuthService;
+    private final UserAuthService userAuthService;
 
     /**
      * Github 로그인 페이지로 리디렉션

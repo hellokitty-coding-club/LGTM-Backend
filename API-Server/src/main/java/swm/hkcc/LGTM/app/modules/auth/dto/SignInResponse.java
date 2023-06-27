@@ -9,12 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class UserAuthResponse {
+public class SignInResponse {
     private String accessToken;
-    private Integer expiresIn;
     private String refreshToken;
-    private Integer refreshTokenExpiresIn;
-    private String tokenType;
-    private String scope;
-
 }

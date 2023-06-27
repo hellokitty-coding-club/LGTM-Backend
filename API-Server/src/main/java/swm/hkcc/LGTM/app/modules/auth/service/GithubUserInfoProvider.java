@@ -1,18 +1,16 @@
 package swm.hkcc.LGTM.app.modules.auth.service;
 
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import swm.hkcc.LGTM.app.modules.auth.dto.GithubOAuthRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.GithubOAuthResponse;
 import swm.hkcc.LGTM.app.modules.auth.dto.GithubUserInfo;
-import swm.hkcc.LGTM.app.modules.auth.dto.UserAuthResponse;
-import swm.hkcc.LGTM.app.modules.auth.repository.UserAuthRepository;
 
 import java.net.URI;
 
