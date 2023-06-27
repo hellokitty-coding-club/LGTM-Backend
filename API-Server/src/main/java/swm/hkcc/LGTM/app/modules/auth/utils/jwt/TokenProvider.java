@@ -13,13 +13,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import swm.hkcc.LGTM.app.modules.auth.constants.TokenType;
 import swm.hkcc.LGTM.app.modules.member.service.CustomUserDetailsService;
-import swm.hkcc.LGTM.app.modules.member.entity.Authority;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Component
@@ -30,8 +29,9 @@ public class TokenProvider {
 
     private Key secretKey;
 
-    // 만료시간 : 1Hour
-    private final long exp = 1000L * 3600 * 3600;
+    // todo : 만료 시간 변경
+    private final long ACCESS_EXPIRED_IN = 1000L * 3600;
+    private final long REFRESH_EXPIRED_IN = 1000L * 3600 * 3;
 
     private final CustomUserDetailsService userDetailsService;
 
@@ -41,16 +41,31 @@ public class TokenProvider {
     }
 
     // 토큰 생성
-    public String createToken(String account, List<Authority> roles) {
-        Claims claims = Jwts.claims().setSubject(account);
-        claims.put("roles", roles);
+    public String createToken(Long userId, String githubId, TokenType tokenType) {
+        Claims claims = Jwts.claims();
+        claims.put("userId", userId);
+        claims.put("githubId", githubId);
         Date now = new Date();
+
+        return createTokenByType(claims, now, tokenType);
+    }
+
+    private String createTokenByType(Claims claims, Date now, TokenType tokenType) {
+        if (tokenType == TokenType.ACCESS_TOKEN ) {
+            return Jwts.builder()
+                    .setClaims(claims)
+                    .setIssuedAt(now)
+                    .setExpiration(new Date(now.getTime() + REFRESH_EXPIRED_IN))
+                    .signWith(secretKey, SignatureAlgorithm.HS256)
+                    .compact();
+        }
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + exp))
+                .setExpiration(new Date(now.getTime() + ACCESS_EXPIRED_IN))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
+
     }
 
     // 권한정보 획득
