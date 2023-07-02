@@ -1,4 +1,4 @@
-package swm.hkcc.LGTM.app.modules.auth.service;
+package swm.hkcc.LGTM.app.modules.auth.utils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,9 +8,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import swm.hkcc.LGTM.app.modules.auth.dto.GithubOAuthRequest;
-import swm.hkcc.LGTM.app.modules.auth.dto.GithubOAuthResponse;
-import swm.hkcc.LGTM.app.modules.auth.dto.GithubUserInfo;
+import swm.hkcc.LGTM.app.modules.auth.dto.oauth.GithubOAuthRequest;
+import swm.hkcc.LGTM.app.modules.auth.dto.oauth.GithubOAuthResponse;
+import swm.hkcc.LGTM.app.modules.auth.dto.oauth.GithubUserInfo;
+import swm.hkcc.LGTM.app.modules.auth.exception.InvalidGithubAccessToken;
 
 import java.net.URI;
 
@@ -61,18 +62,20 @@ public class GithubUserInfoProvider {
 
     // Github accessToken 이용해 Github 유저 정보 조회
     public GithubUserInfo getGithubUserInfo(String accessToken) {
-        // Auth 서버로 부터 받은 githubOAuthResponse는 나중에 활용, 우선 access token만 사용
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        return  restTemplate.exchange(
-                getGithubUserInfoEndpoint,
-                HttpMethod.GET,
-                entity,
-                GithubUserInfo.class
-        ).getBody();
+        try {
+            return restTemplate.exchange(
+                    getGithubUserInfoEndpoint,
+                    HttpMethod.GET,
+                    entity,
+                    GithubUserInfo.class).getBody();
+        } catch (Exception e) {
+            throw new InvalidGithubAccessToken();
+        }
     }
 
     private String getGithubAccessTokenRequestUrl(String authCode) {
