@@ -18,6 +18,7 @@ public enum ResponseCode {
     BAD_REQUEST(10000, HttpStatus.BAD_REQUEST, "Bad request"),
     NOT_FOUND(10001, HttpStatus.NOT_FOUND, "Requested resource is not found"),
     VALIDATION_ERROR(10002, HttpStatus.BAD_REQUEST, "Validation error"),
+    INVALID_GITHUB_ACCESS_TOKEN(10003, HttpStatus.BAD_REQUEST, "Invalid Github Access Token"),
 
     INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
     DATA_ACCESS_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error")
