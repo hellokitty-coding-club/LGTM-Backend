@@ -1,8 +1,9 @@
-package swm.hkcc.LGTM.app.modules.member.entity;
+package swm.hkcc.LGTM.app.modules.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
 import swm.hkcc.LGTM.app.global.entity.BaseEntity;
+import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Member extends BaseEntity {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +28,6 @@ public class Member extends BaseEntity {
     private String nickName;
 
     @Column(nullable = false, unique = true)
-    private String githubRefreshToken;
-
-    @Column(nullable = false, unique = true)
     private String refreshToken;
 
     @Column(unique = true)
@@ -42,12 +39,33 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String introduction;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private Junior junior;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private Senior senior;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Builder.Default
     private List<Authority> roles = new ArrayList<>();
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
     public void setRoles(List<Authority> role) {
         this.roles = role;
         role.forEach(o -> o.setMember(this));
+    }
+
+    public static Member create(SignUpRequest request) {
+        return Member.builder()
+                .githubId(request.getGithubId())
+                .nickName(request.getNickName())
+                .refreshToken("")
+                .deviceToken(request.getDeviceToken())
+                .profileImageUrl(request.getProfileImageUrl())
+                .introduction(request.getIntroduction())
+                .build();
     }
 }
