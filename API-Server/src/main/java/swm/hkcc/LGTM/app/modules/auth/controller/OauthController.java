@@ -24,7 +24,7 @@ public class OauthController {
     private final GithubUserInfoProvider githubUserInfoProvider;
     private final AuthService authService;
 
-    @GetMapping(value = "/githubSignIn")
+    @PostMapping(value = "/githubSignIn")
     public ApiDataResponse<SignInResponse> githubSignIn(
             @Validated @RequestBody GithubSignInRequest request
     ) {
