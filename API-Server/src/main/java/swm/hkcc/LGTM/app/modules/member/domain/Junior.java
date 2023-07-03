@@ -20,12 +20,12 @@ public class Junior {
     @JoinColumn(name = "memberId")
     private Member member;
 
-    private String position;
+    private String educationalHistory;
 
     public static Junior create(JuniorSignUpRequest request, Member member) {
         return Junior.builder()
                 .member(member)
-                .position(request.getPosition())
+                .educationalHistory(request.getEducationalHistory())
                 .build();
     }
 }

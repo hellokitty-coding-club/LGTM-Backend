@@ -9,15 +9,15 @@ import java.util.List;
 @Data
 public class JuniorSignUpRequest extends SignUpRequest {
     @NotNull
-    private String position;
+    private String educationalHistory;
 
     protected JuniorSignUpRequest() {
         super();
     }
 
     @Builder
-    public JuniorSignUpRequest(String githubId, String nickName, String deviceToken, String profileImageUrl, String introduction, List<String> tagList, String position) {
+    public JuniorSignUpRequest(String githubId, String nickName, String deviceToken, String profileImageUrl, String introduction, List<String> tagList, String educationalHistory) {
         super(githubId, nickName, deviceToken, profileImageUrl, introduction, tagList);
-        this.position = position;
+        this.educationalHistory = educationalHistory;
     }
 }

@@ -22,12 +22,14 @@ public class Senior {
 
     private String companyInfo;
     private int careerPeriod;
+    private String position;
 
     public static Senior create(SeniorSignUpRequest request, Member member) {
         return Senior.builder()
                 .member(member)
                 .companyInfo(request.getCompanyInfo())
                 .careerPeriod(request.getCareerPeriod())
+                .position(request.getPosition())
                 .build();
     }
 }

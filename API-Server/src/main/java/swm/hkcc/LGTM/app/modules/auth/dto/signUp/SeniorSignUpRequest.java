@@ -14,14 +14,17 @@ public class SeniorSignUpRequest extends SignUpRequest {
     @NotNull
     private Integer careerPeriod;
 
+    private String position;
+
     protected SeniorSignUpRequest() {
         super();
     }
 
     @Builder
-    public SeniorSignUpRequest(String githubId, String nickName, String deviceToken, String profileImageUrl, String introduction, List<String> tagList, String companyInfo, Integer careerPeriod) {
+    public SeniorSignUpRequest(String githubId, String nickName, String deviceToken, String profileImageUrl, String introduction, List<String> tagList, String companyInfo, Integer careerPeriod, String position) {
         super(githubId, nickName, deviceToken, profileImageUrl, introduction, tagList);
         this.companyInfo = companyInfo;
         this.careerPeriod = careerPeriod;
+        this.position = position;
     }
 }
