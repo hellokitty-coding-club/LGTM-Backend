@@ -21,9 +21,10 @@ public class SignInResponse {
     @NotNull
     private boolean isRegistered;
 
-    @NotNull
+    @Builder.Default
     private String accessToken = "";
 
-    @NotNull
+    @Builder.Default
     private String refreshToken = "";
+
 }

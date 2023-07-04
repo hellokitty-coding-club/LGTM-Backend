@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
                 .requestMatchers("/v1/auth/**").permitAll()
+                .requestMatchers("/login/**").permitAll() // for temporary test
                 .anyRequest().denyAll()
                 .and()
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
