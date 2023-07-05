@@ -11,6 +11,7 @@ import swm.hkcc.LGTM.app.modules.auth.dto.signUp.JuniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SeniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpResponse;
+import swm.hkcc.LGTM.app.modules.auth.exception.DuplicateNickName;
 import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
 import swm.hkcc.LGTM.app.modules.member.domain.Authority;
 import swm.hkcc.LGTM.app.modules.member.domain.Junior;
@@ -19,8 +20,13 @@ import swm.hkcc.LGTM.app.modules.member.domain.Senior;
 import swm.hkcc.LGTM.app.modules.member.repository.JuniorRepository;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.member.repository.SeniorRepository;
+import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
+import swm.hkcc.LGTM.app.modules.tag.domain.TechTagPerMember;
+import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMemberRepository;
+import swm.hkcc.LGTM.app.modules.tag.repository.TechTagRepository;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -32,6 +38,8 @@ public class AuthServiceImpl implements AuthService {
     private final MemberRepository memberRepository;
     private final JuniorRepository juniorRepository;
     private final SeniorRepository seniorRepository;
+    private final TechTagRepository techTagRepository;
+    private final TechTagPerMemberRepository techTagPerMemberRepository;
     private final TokenProvider tokenProvider;
 
     @Override
@@ -63,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public SignUpResponse juniorSignUp(JuniorSignUpRequest request) {
         Member member = createAndSaveMember(request);
-        Junior junior = Junior.create(request, member);
+        Junior junior = Junior.from(request, member);
         juniorRepository.save(junior);
 
         return buildSignUpResponse(member);
@@ -73,20 +81,41 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public SignUpResponse seniorSignUp(SeniorSignUpRequest request) {
         Member member = createAndSaveMember(request);
-        Senior senior = Senior.create(request, member);
+        Senior senior = Senior.from(request, member);
         seniorRepository.save(senior);
 
         return buildSignUpResponse(member);
     }
 
     private Member createAndSaveMember(SignUpRequest request) {
-        Member member = Member.create(request);
+        validateSignUpRequest(request);
+        Member member = Member.from(request);
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
-        //tag list 추가
         Member savedMember = memberRepository.save(member);
+        setTagListOfMember(member, request.getTagList());
         updateRefreshToken(savedMember);
 
         return savedMember;
+    }
+
+    private void validateSignUpRequest(SignUpRequest request) {
+        validateDuplicateNickName(request.getNickName());
+        validateTagList(request.getTagList());
+    }
+
+    private void validateDuplicateNickName(String nickName) {
+        if (memberRepository.existsByNickName(nickName)) {
+            throw new DuplicateNickName();
+        }
+    }
+
+    private void validateTagList(List<String> tagList) {
+        boolean hasInvalidTag = tagList.stream()
+                .anyMatch(tag -> !techTagRepository.existsByName(tag));
+
+        if (hasInvalidTag) {
+            throw new IllegalArgumentException("One or more tags are invalid");
+        }
     }
 
     private String createAccessToken(Member member) {
@@ -104,6 +133,20 @@ public class AuthServiceImpl implements AuthService {
                 TokenType.REFRESH_TOKEN
         );
     }
+
+    private void setTagListOfMember(Member member, List<String> tagList) {
+        tagList.stream()
+                .map(tagName -> techTagRepository.findByName(tagName)
+                        .orElseGet(() -> techTagRepository.save(TechTag.builder().name(tagName).build())))
+                .forEach(techTag -> {
+                    TechTagPerMember techTagPerMember = TechTagPerMember.builder()
+                            .member(member)
+                            .techTag(techTag)
+                            .build();
+                    techTagPerMemberRepository.save(techTagPerMember);
+                });
+    }
+
 
     private void updateRefreshToken(Member member) {
         String refreshToken = createRefreshToken(member);
