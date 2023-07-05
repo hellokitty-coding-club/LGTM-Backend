@@ -19,9 +19,12 @@ public enum ResponseCode {
     NOT_FOUND(10001, HttpStatus.NOT_FOUND, "Requested resource is not found"),
     VALIDATION_ERROR(10002, HttpStatus.BAD_REQUEST, "Validation error"),
     INVALID_GITHUB_ACCESS_TOKEN(10003, HttpStatus.BAD_REQUEST, "Invalid Github Access Token"),
+    DUPLICATE_NICK_NAME(10004, HttpStatus.BAD_REQUEST, "Duplicate nickname"),
+    INVALID_TECH_TAG(10005, HttpStatus.BAD_REQUEST, "Invalid tech tag"),
+    INVALID_CAREER_PERIOD(10006,  HttpStatus.BAD_REQUEST, "Invalid career period, Career period should be at least 12 months"),
 
     INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
-    DATA_ACCESS_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error")
+    DATA_ACCESS_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error"),
     ;
 
     private final Integer code;
