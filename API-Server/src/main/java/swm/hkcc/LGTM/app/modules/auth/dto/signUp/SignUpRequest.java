@@ -22,6 +22,9 @@ public abstract class SignUpRequest {
     protected String githubId;
 
     @NotNull
+    protected String name;
+
+    @NotNull
     protected String nickName;
 
     @NotNull
