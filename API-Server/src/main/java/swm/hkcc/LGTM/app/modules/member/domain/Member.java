@@ -58,7 +58,7 @@ public class Member extends BaseEntity {
         role.forEach(o -> o.setMember(this));
     }
 
-    public static Member create(SignUpRequest request) {
+    public static Member from(SignUpRequest request) {
         return Member.builder()
                 .githubId(request.getGithubId())
                 .nickName(request.getNickName())

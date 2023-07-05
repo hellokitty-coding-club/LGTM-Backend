@@ -22,7 +22,7 @@ public class Junior {
 
     private String educationalHistory;
 
-    public static Junior create(JuniorSignUpRequest request, Member member) {
+    public static Junior from(JuniorSignUpRequest request, Member member) {
         return Junior.builder()
                 .member(member)
                 .educationalHistory(request.getEducationalHistory())
