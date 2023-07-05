@@ -61,7 +61,7 @@ public class GithubUserInfoProvider {
 
 
     // Github accessToken 이용해 Github 유저 정보 조회
-    public GithubUserInfo getGithubUserInfo(String accessToken) {
+    public GithubUserInfo validateAccessTokenAndGetGithubUserInfo(String accessToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
