@@ -3,10 +3,11 @@ package swm.hkcc.LGTM.app.modules.auth.utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import swm.hkcc.LGTM.app.modules.auth.dto.oauth.GithubOAuthRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.oauth.GithubOAuthResponse;
@@ -16,7 +17,7 @@ import swm.hkcc.LGTM.app.modules.auth.exception.InvalidGithubAccessToken;
 import java.net.URI;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 public class GithubUserInfoProvider {
 
