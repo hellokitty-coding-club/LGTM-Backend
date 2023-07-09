@@ -35,14 +35,14 @@ public class AuthController {
     }
 
     @PostMapping("/junior/signup")
-    public ApiDataResponse<SignUpResponse> signup(
+    public ApiDataResponse<SignUpResponse> juniorSignup(
             @Validated @RequestBody JuniorSignUpRequest request
     ) {
         return ApiDataResponse.of(authService.juniorSignUp(request));
     }
 
     @PostMapping("/senior/signup")
-    public ApiDataResponse<SignUpResponse> signup(
+    public ApiDataResponse<SignUpResponse> seniorSignup(
             @Validated @RequestBody SeniorSignUpRequest request
     ) {
         return ApiDataResponse.of(authService.seniorSignUp(request));
