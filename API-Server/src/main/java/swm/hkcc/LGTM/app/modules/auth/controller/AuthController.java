@@ -21,7 +21,6 @@ import swm.hkcc.LGTM.app.modules.auth.service.AuthService;
 @RequestMapping("/v1/auth")
 public class AuthController {
 
-    private final GithubUserInfoProvider githubUserInfoProvider;
     private final AuthService authService;
 
     @PostMapping("/junior/signup")
