@@ -31,11 +31,11 @@ dependencies {
 
 }
 
-// Spring Rest Docs
-
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+// Spring Rest Docs
 
 ext {
     snippetsDir = file('build/generated-snippets')
