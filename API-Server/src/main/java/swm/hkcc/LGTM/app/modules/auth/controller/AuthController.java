@@ -24,16 +24,6 @@ public class AuthController {
     private final GithubUserInfoProvider githubUserInfoProvider;
     private final AuthService authService;
 
-    @PostMapping(value = "/githubSignIn")
-    public ApiDataResponse<SignInResponse> githubSignIn(
-            @Validated @RequestBody GithubSignInRequest request
-    ) {
-        GithubUserInfo githubUserInfo = githubUserInfoProvider
-                .validateAccessTokenAndGetGithubUserInfo(request.getGithubAccessToken());
-
-        return ApiDataResponse.of(authService.githubSignIn(githubUserInfo));
-    }
-
     @PostMapping("/junior/signup")
     public ApiDataResponse<SignUpResponse> juniorSignup(
             @Validated @RequestBody JuniorSignUpRequest request
