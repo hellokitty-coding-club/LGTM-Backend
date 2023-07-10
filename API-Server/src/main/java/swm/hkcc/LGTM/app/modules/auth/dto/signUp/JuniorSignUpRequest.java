@@ -11,13 +11,17 @@ public class JuniorSignUpRequest extends SignUpRequest {
     @NotNull
     private String educationalHistory;
 
+    @NotNull
+    private String realName;
+
     protected JuniorSignUpRequest() {
         super();
     }
 
     @Builder
-    public JuniorSignUpRequest(String githubId, String name, String nickName, String deviceToken, String profileImageUrl, String introduction, List<String> tagList, String educationalHistory) {
-        super(githubId, name, nickName, deviceToken, profileImageUrl, introduction, tagList);
+    public JuniorSignUpRequest(String githubId, String nickName, String deviceToken, String profileImageUrl, String introduction, List<String> tagList, String educationalHistory, String realName) {
+        super(githubId, nickName, deviceToken, profileImageUrl, introduction, tagList);
         this.educationalHistory = educationalHistory;
+        this.realName = realName;
     }
 }

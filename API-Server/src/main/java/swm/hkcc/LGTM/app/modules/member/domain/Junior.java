@@ -22,10 +22,13 @@ public class Junior {
 
     private String educationalHistory;
 
+    private String realName;
+
     public static Junior from(JuniorSignUpRequest request, Member member) {
         return Junior.builder()
                 .member(member)
                 .educationalHistory(request.getEducationalHistory())
+                .realName(request.getRealName())
                 .build();
     }
 }

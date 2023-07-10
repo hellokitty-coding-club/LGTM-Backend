@@ -21,11 +21,11 @@ public enum ResponseCode {
     INVALID_GITHUB_ACCESS_TOKEN(10003, HttpStatus.BAD_REQUEST, "Invalid Github Access Token"),
     DUPLICATE_NICK_NAME(10004, HttpStatus.BAD_REQUEST, "Duplicate nickname"),
     INVALID_TECH_TAG(10005, HttpStatus.BAD_REQUEST, "Invalid tech tag"),
-    INVALID_CAREER_PERIOD(10006,  HttpStatus.BAD_REQUEST, "Invalid career period, Career period should be at least 12 months"),
+    INVALID_CAREER_PERIOD(10006, HttpStatus.BAD_REQUEST, "Invalid career period, Career period should be at least 12 months"),
+    INVALID_BANK_NAME(10007, HttpStatus.BAD_REQUEST, "Invalid Bank name"),
 
     INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
-    DATA_ACCESS_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error"),
-    ;
+    DATA_ACCESS_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error");
 
     private final Integer code;
     private final HttpStatus httpStatus;

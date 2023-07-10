@@ -19,6 +19,7 @@ import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SeniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpResponse;
 import swm.hkcc.LGTM.app.modules.auth.service.AuthService;
 import swm.hkcc.LGTM.app.modules.auth.utils.GithubUserInfoProvider;
+import swm.hkcc.LGTM.app.modules.member.constant.Bank;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,13 +58,13 @@ class AuthControllerTest {
         // given
         JuniorSignUpRequest juniorSignUpRequest = JuniorSignUpRequest.builder()
                 .githubId("testGithubId")
-                .name("Test Name")
                 .nickName("Test NickName")
                 .deviceToken("Test DeviceToken")
                 .profileImageUrl("Test ProfileImageUrl")
                 .introduction("Test Introduction")
                 .tagList(Arrays.asList("tag1", "tag2"))
                 .educationalHistory("Test EducationalHistory")
+                .realName("Test RealName")
                 .build();
 
         SignUpResponse expectedResponse = SignUpResponse.builder()
@@ -97,7 +98,6 @@ class AuthControllerTest {
         // given
         SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
                 .githubId("testGithubId")
-                .name("Test Name")
                 .nickName("Test NickName")
                 .deviceToken("Test DeviceToken")
                 .profileImageUrl("Test ProfileImageUrl")
@@ -106,6 +106,8 @@ class AuthControllerTest {
                 .companyInfo("Test CompanyInfo")
                 .careerPeriod(5)
                 .position("Test Position")
+                .accountNumber("Test AccountNumber")
+                .bank(Bank.fromDisplayName("국민은행"))
                 .build();
 
         SignUpResponse expectedResponse = SignUpResponse.builder()
