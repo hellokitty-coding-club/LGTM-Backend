@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import swm.hkcc.LGTM.app.modules.member.exception.InvalidBankName;
 
+import java.util.Arrays;
+
 @Getter
 @RequiredArgsConstructor
 public enum Bank {
@@ -21,11 +23,10 @@ public enum Bank {
     private final String name;
 
     public static Bank fromName(String displayName) {
-        for (Bank bank : Bank.values()) {
-            if (bank.getName().equals(displayName)) {
-                return bank;
-            }
-        }
-        throw new InvalidBankName();
+        return Arrays.stream(Bank.values())
+                .filter(bank -> bank.getName().equals(displayName))
+                .findFirst()
+                .orElseThrow(InvalidBankName::new);
     }
 }
+
