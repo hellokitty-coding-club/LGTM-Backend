@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SeniorSignUpRequest;
-import swm.hkcc.LGTM.app.modules.member.constant.Bank;
 import swm.hkcc.LGTM.app.modules.member.exception.InvalidCareerPeriod;
 
 @Entity
@@ -48,7 +47,7 @@ public class Senior {
                 .careerPeriod(request.getCareerPeriod())
                 .position(request.getPosition())
                 .accountNumber(request.getAccountNumber())
-                .bank(request.getBank())
+                .bank(Bank.fromName(request.getBankName()))
                 .build();
     }
 

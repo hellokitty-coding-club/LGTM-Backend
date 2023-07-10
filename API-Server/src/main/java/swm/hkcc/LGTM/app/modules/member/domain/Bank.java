@@ -1,7 +1,8 @@
-package swm.hkcc.LGTM.app.modules.member.constant;
+package swm.hkcc.LGTM.app.modules.member.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import swm.hkcc.LGTM.app.modules.member.exception.InvalidBankName;
 
 @Getter
 @RequiredArgsConstructor
@@ -17,14 +18,14 @@ public enum Bank {
     DAEGU("대구은행"),
     JEJU("제주은행");
 
-    private final String displayName;
+    private final String name;
 
-    public static Bank fromDisplayName(String displayName) {
+    public static Bank fromName(String displayName) {
         for (Bank bank : Bank.values()) {
-            if (bank.getDisplayName().equals(displayName)) {
+            if (bank.getName().equals(displayName)) {
                 return bank;
             }
         }
-        throw new IllegalArgumentException("No enum constant " + Bank.class.getCanonicalName() + "." + displayName);
+        throw new InvalidBankName();
     }
 }

@@ -3,7 +3,7 @@ package swm.hkcc.LGTM.app.modules.member.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import swm.hkcc.LGTM.app.global.entity.BaseEntity;
-import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpRequest;
+import swm.hkcc.LGTM.app.modules.auth.dto.signUp.CommonUserData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public class Member extends BaseEntity {
         role.forEach(o -> o.setMember(this));
     }
 
-    public static Member from(SignUpRequest request) {
+    public static Member from(CommonUserData request) {
         return Member.builder()
                 .githubId(request.getGithubId())
                 .nickName(request.getNickName())

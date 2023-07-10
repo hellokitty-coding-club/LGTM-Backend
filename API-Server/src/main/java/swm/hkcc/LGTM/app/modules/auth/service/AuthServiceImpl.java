@@ -9,7 +9,7 @@ import swm.hkcc.LGTM.app.modules.auth.dto.oauth.GithubUserInfo;
 import swm.hkcc.LGTM.app.modules.auth.dto.signIn.SignInResponse;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.JuniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SeniorSignUpRequest;
-import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpRequest;
+import swm.hkcc.LGTM.app.modules.auth.dto.signUp.CommonUserData;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpResponse;
 import swm.hkcc.LGTM.app.modules.auth.exception.DuplicateNickName;
 import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
@@ -70,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public SignUpResponse juniorSignUp(JuniorSignUpRequest request) {
-        Member member = createAndSaveMember(request);
+        Member member = createAndSaveMember(request.getCommonUserData());
         Junior junior = Junior.from(request, member);
         juniorRepository.save(junior);
 
@@ -80,14 +80,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public SignUpResponse seniorSignUp(SeniorSignUpRequest request) {
-        Member member = createAndSaveMember(request);
+        Member member = createAndSaveMember(request.getCommonUserData());
         Senior senior = Senior.from(request, member);
         seniorRepository.save(senior);
 
         return buildSignUpResponse(member);
     }
 
-    private Member createAndSaveMember(SignUpRequest request) {
+    private Member createAndSaveMember(CommonUserData request) {
         validateSignUpRequest(request);
         Member member = Member.from(request);
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
@@ -98,7 +98,7 @@ public class AuthServiceImpl implements AuthService {
         return savedMember;
     }
 
-    private void validateSignUpRequest(SignUpRequest request) {
+    private void validateSignUpRequest(CommonUserData request) {
         validateDuplicateNickName(request.getNickName());
         validateTagList(request.getTagList());
     }

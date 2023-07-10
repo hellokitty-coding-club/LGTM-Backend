@@ -1,14 +1,20 @@
 package swm.hkcc.LGTM.app.modules.auth.dto.signUp;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import swm.hkcc.LGTM.app.modules.member.constant.Bank;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-public class SeniorSignUpRequest extends SignUpRequest {
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+public class SeniorSignUpRequest {
+
+    @NotNull
+    private CommonUserData commonUserData;
+
     @NotNull
     private String companyInfo;
 
@@ -22,19 +28,6 @@ public class SeniorSignUpRequest extends SignUpRequest {
     private String accountNumber;
 
     @NotNull
-    private Bank bank;
+    private String bankName;
 
-    protected SeniorSignUpRequest() {
-        super();
-    }
-
-    @Builder
-    public SeniorSignUpRequest(String githubId, String nickName, String deviceToken, String profileImageUrl, String introduction, List<String> tagList, String companyInfo, Integer careerPeriod, String position, String accountNumber, Bank bank) {
-        super(githubId, nickName, deviceToken, profileImageUrl, introduction, tagList);
-        this.companyInfo = companyInfo;
-        this.careerPeriod = careerPeriod;
-        this.position = position;
-        this.accountNumber = accountNumber;
-        this.bank = bank;
-    }
 }

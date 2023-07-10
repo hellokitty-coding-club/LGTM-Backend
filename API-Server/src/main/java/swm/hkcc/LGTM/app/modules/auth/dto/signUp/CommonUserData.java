@@ -5,18 +5,15 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Data
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = JuniorSignUpRequest.class, name = "junior"),
-        @JsonSubTypes.Type(value = SeniorSignUpRequest.class, name = "senior")
-})
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class SignUpRequest {
+@SuperBuilder
+public class CommonUserData {
 
     @NotNull
     protected String githubId;

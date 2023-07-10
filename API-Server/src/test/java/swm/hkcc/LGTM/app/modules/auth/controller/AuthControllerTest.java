@@ -14,15 +14,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import swm.hkcc.LGTM.app.modules.auth.dto.signUp.CommonUserData;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.JuniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SeniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpResponse;
 import swm.hkcc.LGTM.app.modules.auth.service.AuthService;
 import swm.hkcc.LGTM.app.modules.auth.utils.GithubUserInfoProvider;
-import swm.hkcc.LGTM.app.modules.member.constant.Bank;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -56,13 +55,17 @@ class AuthControllerTest {
     @DisplayName("주니어 회원가입 테스트")
     void juniorSignup() throws Exception {
         // given
-        JuniorSignUpRequest juniorSignUpRequest = JuniorSignUpRequest.builder()
+        CommonUserData commonUserData = CommonUserData.builder()
                 .githubId("testGithubId")
                 .nickName("Test NickName")
                 .deviceToken("Test DeviceToken")
                 .profileImageUrl("Test ProfileImageUrl")
                 .introduction("Test Introduction")
                 .tagList(Arrays.asList("tag1", "tag2"))
+                .build();
+
+        JuniorSignUpRequest juniorSignUpRequest = JuniorSignUpRequest.builder()
+                .commonUserData(commonUserData)
                 .educationalHistory("Test EducationalHistory")
                 .realName("Test RealName")
                 .build();
@@ -96,18 +99,22 @@ class AuthControllerTest {
     @DisplayName("시니어 회원가입 테스트")
     void seniorSignup() throws Exception {
         // given
-        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
+        CommonUserData commonUserData = CommonUserData.builder()
                 .githubId("testGithubId")
                 .nickName("Test NickName")
                 .deviceToken("Test DeviceToken")
                 .profileImageUrl("Test ProfileImageUrl")
                 .introduction("Test Introduction")
                 .tagList(Arrays.asList("tag1", "tag2"))
+                .build();
+
+        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
+                .commonUserData(commonUserData)
                 .companyInfo("Test CompanyInfo")
                 .careerPeriod(5)
                 .position("Test Position")
                 .accountNumber("Test AccountNumber")
-                .bank(Bank.fromDisplayName("국민은행"))
+                .bankName("국민은행")
                 .build();
 
         SignUpResponse expectedResponse = SignUpResponse.builder()
