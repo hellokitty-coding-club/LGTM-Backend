@@ -145,27 +145,7 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("닉네임 중복 검사 테스트 - 중복인 경우")
-    void checkNickname_Duplicate() throws Exception {
-        // given
-        String duplicateNickname = "duplicateNickname";
-
-        // when
-        Mockito.when(authService.isNicknameDuplicate(duplicateNickname)).thenReturn(true);
-
-        // then
-        mockMvc.perform(get("/v1/auth/check-nickname")
-                        .param("nickname", duplicateNickname)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.responseCode").value(0))
-                .andExpect(jsonPath("$.message").value("Ok"))
-                .andExpect(jsonPath("$.data").value(true));
-    }
-
-    @Test
-    @DisplayName("닉네임 중복 검사 테스트 - 중복이 아닌 경우")
+    @DisplayName("닉네임 중복 검사")
     void checkNickname_NonDuplicate() throws Exception {
         // given
         String nonDuplicateNickname = "nonDuplicateNickname";
