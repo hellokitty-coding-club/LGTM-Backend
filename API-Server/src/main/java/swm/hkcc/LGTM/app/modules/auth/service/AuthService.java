@@ -13,4 +13,6 @@ public interface AuthService {
     SignUpResponse juniorSignUp(JuniorSignUpRequest request);
 
     SignUpResponse seniorSignUp(SeniorSignUpRequest request);
+
+    boolean isNicknameDuplicate(String nickname);
 }

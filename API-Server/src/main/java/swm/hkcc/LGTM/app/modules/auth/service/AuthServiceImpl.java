@@ -90,6 +90,11 @@ public class AuthServiceImpl implements AuthService {
         return buildSignUpResponse(member);
     }
 
+    @Override
+    public boolean isNicknameDuplicate(String nickname) {
+        return memberRepository.existsByNickName(nickname);
+    }
+
     private Member createAndSaveMember(CommonUserData request) {
         validateSignUpRequest(request);
         Member member = Member.from(request);

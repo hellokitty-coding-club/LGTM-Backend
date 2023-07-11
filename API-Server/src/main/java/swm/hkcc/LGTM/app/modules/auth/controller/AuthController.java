@@ -34,4 +34,13 @@ public class AuthController {
         return ApiDataResponse.of(authService.seniorSignUp(request));
     }
 
+    @GetMapping("/check-nickname")
+    public ApiDataResponse<Boolean> checkNickname(
+            @RequestParam String nickname
+    ) {
+        boolean isDuplicate = authService.isNicknameDuplicate(nickname);
+        return ApiDataResponse.of(isDuplicate);
+    }
+
+
 }

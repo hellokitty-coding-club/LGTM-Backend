@@ -25,6 +25,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -142,5 +143,47 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.data.accessToken").value("testAccessToken"))
                 .andExpect(jsonPath("$.data.refreshToken").value("testRefreshToken"));
     }
+
+    @Test
+    @DisplayName("닉네임 중복 검사 테스트 - 중복인 경우")
+    void checkNickname_Duplicate() throws Exception {
+        // given
+        String duplicateNickname = "duplicateNickname";
+
+        // when
+        Mockito.when(authService.isNicknameDuplicate(duplicateNickname)).thenReturn(true);
+
+        // then
+        mockMvc.perform(get("/v1/auth/check-nickname")
+                        .param("nickname", duplicateNickname)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.responseCode").value(0))
+                .andExpect(jsonPath("$.message").value("Ok"))
+                .andExpect(jsonPath("$.data").value(true));
+    }
+
+    @Test
+    @DisplayName("닉네임 중복 검사 테스트 - 중복이 아닌 경우")
+    void checkNickname_NonDuplicate() throws Exception {
+        // given
+        String nonDuplicateNickname = "nonDuplicateNickname";
+
+        // when
+        Mockito.when(authService.isNicknameDuplicate(nonDuplicateNickname)).thenReturn(false);
+
+        // then
+        mockMvc.perform(get("/v1/auth/check-nickname")
+                        .param("nickname", nonDuplicateNickname)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.responseCode").value(0))
+                .andExpect(jsonPath("$.message").value("Ok"))
+                .andExpect(jsonPath("$.data").value(false));
+    }
+
+
 
 }
