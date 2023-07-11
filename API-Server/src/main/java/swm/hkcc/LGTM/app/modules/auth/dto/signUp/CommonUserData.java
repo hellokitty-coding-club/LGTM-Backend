@@ -19,6 +19,9 @@ public class CommonUserData {
     protected String githubId;
 
     @NotNull
+    protected Integer githubUuid;
+
+    @NotNull
     protected String nickName;
 
     @NotNull

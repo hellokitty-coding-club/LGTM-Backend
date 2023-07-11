@@ -57,6 +57,7 @@ class AuthControllerTest {
         // given
         CommonUserData commonUserData = CommonUserData.builder()
                 .githubId("testGithubId")
+                .githubUuid(12345)
                 .nickName("Test NickName")
                 .deviceToken("Test DeviceToken")
                 .profileImageUrl("Test ProfileImageUrl")
@@ -101,6 +102,7 @@ class AuthControllerTest {
         // given
         CommonUserData commonUserData = CommonUserData.builder()
                 .githubId("testGithubId")
+                .githubUuid(12345)
                 .nickName("Test NickName")
                 .deviceToken("Test DeviceToken")
                 .profileImageUrl("Test ProfileImageUrl")

@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findOneByNickName(String nickName);
 
-    Optional<Member> findOneByGithubId(String githubId);
+    Optional<Member> findOneByGithubUuid(Integer githubUuid);
 
     boolean existsByNickName(String nickName);
 }

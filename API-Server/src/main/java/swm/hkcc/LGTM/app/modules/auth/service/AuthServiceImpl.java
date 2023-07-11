@@ -7,11 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import swm.hkcc.LGTM.app.modules.auth.constants.TokenType;
 import swm.hkcc.LGTM.app.modules.auth.dto.oauth.GithubUserInfo;
 import swm.hkcc.LGTM.app.modules.auth.dto.signIn.SignInResponse;
+import swm.hkcc.LGTM.app.modules.auth.dto.signUp.CommonUserData;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.JuniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SeniorSignUpRequest;
-import swm.hkcc.LGTM.app.modules.auth.dto.signUp.CommonUserData;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpResponse;
 import swm.hkcc.LGTM.app.modules.auth.exception.DuplicateNickName;
+import swm.hkcc.LGTM.app.modules.auth.exception.InvalidTechTag;
 import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
 import swm.hkcc.LGTM.app.modules.member.domain.Authority;
 import swm.hkcc.LGTM.app.modules.member.domain.Junior;
@@ -47,12 +48,13 @@ public class AuthServiceImpl implements AuthService {
     public SignInResponse githubSignIn(GithubUserInfo githubUserInfo) {
         log.info("githubUserInfo={}", githubUserInfo);
 
-        Optional<Member> member = memberRepository.findOneByGithubId(githubUserInfo.getLogin());
+        Optional<Member> member = memberRepository.findOneByGithubUuid(githubUserInfo.getId());
 
         if (member.isPresent()) {
             return SignInResponse.builder()
                     .memberId(member.get().getMemberId())
                     .githubId(githubUserInfo.getLogin())
+                    .githubUuid(githubUserInfo.getId())
                     .isRegistered(true)
                     .accessToken(createAccessToken(member.get()))
                     .refreshToken(createRefreshToken(member.get()))
@@ -62,6 +64,7 @@ public class AuthServiceImpl implements AuthService {
         return SignInResponse.builder()
                 .memberId(0L)
                 .githubId(githubUserInfo.getLogin())
+                .githubUuid(githubUserInfo.getId())
                 .isRegistered(false)
                 .build();
 
@@ -114,7 +117,7 @@ public class AuthServiceImpl implements AuthService {
                 .anyMatch(tag -> !techTagRepository.existsByName(tag));
 
         if (hasInvalidTag) {
-            throw new IllegalArgumentException("One or more tags are invalid");
+            throw new InvalidTechTag();
         }
     }
 
