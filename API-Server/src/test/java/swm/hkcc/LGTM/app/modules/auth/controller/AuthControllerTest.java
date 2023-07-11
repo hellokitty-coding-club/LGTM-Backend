@@ -91,7 +91,6 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.message").value("Ok"))
                 .andExpect(jsonPath("$.data.memberId").value(1L))
                 .andExpect(jsonPath("$.data.githubId").value("testGithubId"))
-                .andExpect(jsonPath("$.data.githubOauthId").value(12345))
                 .andExpect(jsonPath("$.data.accessToken").value("testAccessToken"))
                 .andExpect(jsonPath("$.data.refreshToken").value("testRefreshToken"));
     }
@@ -140,7 +139,6 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.message").value("Ok"))
                 .andExpect(jsonPath("$.data.memberId").value(1L))
                 .andExpect(jsonPath("$.data.githubId").value("testGithubId"))
-                .andExpect(jsonPath("$.data.githubOauthId").value(12345))
                 .andExpect(jsonPath("$.data.accessToken").value("testAccessToken"))
                 .andExpect(jsonPath("$.data.refreshToken").value("testRefreshToken"));
     }
