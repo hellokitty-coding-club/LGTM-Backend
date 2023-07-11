@@ -19,7 +19,7 @@ public class CommonUserData {
     protected String githubId;
 
     @NotNull
-    protected Integer githubUuid;
+    protected Integer githubOauthId;
 
     @NotNull
     protected String nickName;

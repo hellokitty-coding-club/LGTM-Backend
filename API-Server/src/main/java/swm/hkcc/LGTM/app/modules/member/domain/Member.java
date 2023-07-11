@@ -25,7 +25,7 @@ public class Member extends BaseEntity {
     private String githubId;
 
     @Column(nullable = false, unique = true)
-    private Integer githubUuid;
+    private Integer githubOauthId;
 
     @Column(nullable = false, unique = true)
     private String nickName;
@@ -64,7 +64,7 @@ public class Member extends BaseEntity {
     public static Member from(CommonUserData request) {
         return Member.builder()
                 .githubId(request.getGithubId())
-                .githubUuid(request.getGithubUuid())
+                .githubOauthId(request.getGithubOauthId())
                 .nickName(request.getNickName())
                 .refreshToken("")
                 .deviceToken(request.getDeviceToken())

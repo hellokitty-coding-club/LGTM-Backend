@@ -30,7 +30,6 @@ public class AuthController {
     public ApiDataResponse<SignUpResponse> seniorSignup(
             @Validated @RequestBody SeniorSignUpRequest request
     ) {
-        log.info(request.toString());
         return ApiDataResponse.of(authService.seniorSignUp(request));
     }
 

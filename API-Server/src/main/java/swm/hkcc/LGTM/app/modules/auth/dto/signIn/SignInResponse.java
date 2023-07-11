@@ -19,7 +19,7 @@ public class SignInResponse {
     private String githubId;
 
     @NotNull
-    private Integer githubUuid;
+    private Integer githubOauthId;
 
     @NotNull
     private boolean isRegistered;

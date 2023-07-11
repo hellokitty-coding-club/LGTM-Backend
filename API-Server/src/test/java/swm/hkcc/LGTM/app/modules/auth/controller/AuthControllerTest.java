@@ -23,7 +23,6 @@ import swm.hkcc.LGTM.app.modules.auth.utils.GithubUserInfoProvider;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -58,7 +57,7 @@ class AuthControllerTest {
         // given
         CommonUserData commonUserData = CommonUserData.builder()
                 .githubId("testGithubId")
-                .githubUuid(12345)
+                .githubOauthId(12345)
                 .nickName("Test NickName")
                 .deviceToken("Test DeviceToken")
                 .profileImageUrl("Test ProfileImageUrl")
@@ -103,7 +102,7 @@ class AuthControllerTest {
         // given
         CommonUserData commonUserData = CommonUserData.builder()
                 .githubId("testGithubId")
-                .githubUuid(12345)
+                .githubOauthId(12345)
                 .nickName("Test NickName")
                 .deviceToken("Test DeviceToken")
                 .profileImageUrl("Test ProfileImageUrl")
@@ -163,7 +162,6 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.message").value("Ok"))
                 .andExpect(jsonPath("$.data").value(false));
     }
-
 
 
 }

@@ -48,13 +48,13 @@ public class AuthServiceImpl implements AuthService {
     public SignInResponse githubSignIn(GithubUserInfo githubUserInfo) {
         log.info("githubUserInfo={}", githubUserInfo);
 
-        Optional<Member> member = memberRepository.findOneByGithubUuid(githubUserInfo.getId());
+        Optional<Member> member = memberRepository.findOneByGithubOauthId(githubUserInfo.getId());
 
         if (member.isPresent()) {
             return SignInResponse.builder()
                     .memberId(member.get().getMemberId())
                     .githubId(githubUserInfo.getLogin())
-                    .githubUuid(githubUserInfo.getId())
+                    .githubOauthId(githubUserInfo.getId())
                     .isRegistered(true)
                     .accessToken(createAccessToken(member.get()))
                     .refreshToken(createRefreshToken(member.get()))
@@ -64,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
         return SignInResponse.builder()
                 .memberId(0L)
                 .githubId(githubUserInfo.getLogin())
-                .githubUuid(githubUserInfo.getId())
+                .githubOauthId(githubUserInfo.getId())
                 .isRegistered(false)
                 .build();
 
