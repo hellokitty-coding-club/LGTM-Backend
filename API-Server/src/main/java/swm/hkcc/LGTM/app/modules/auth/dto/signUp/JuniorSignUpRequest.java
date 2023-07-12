@@ -10,10 +10,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JuniorSignUpRequest {
-
-    @NotNull
-    private CommonUserData commonUserData;
+public class JuniorSignUpRequest extends CommonUserData{
 
     @NotNull
     private String educationalHistory;

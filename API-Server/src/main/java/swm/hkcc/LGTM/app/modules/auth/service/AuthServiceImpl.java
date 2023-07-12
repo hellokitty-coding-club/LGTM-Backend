@@ -73,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public SignUpResponse signupJunior(JuniorSignUpRequest request) {
-        Member member = createAndSaveMember(request.getCommonUserData());
+        Member member = createAndSaveMember(request);
         Junior junior = Junior.from(request, member);
         juniorRepository.save(junior);
 
@@ -83,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public SignUpResponse signupSenior(SeniorSignUpRequest request) {
-        Member member = createAndSaveMember(request.getCommonUserData());
+        Member member = createAndSaveMember(request);
         Senior senior = Senior.from(request, member);
         seniorRepository.save(senior);
 

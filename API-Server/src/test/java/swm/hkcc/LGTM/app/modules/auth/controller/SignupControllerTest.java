@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import swm.hkcc.LGTM.app.modules.auth.dto.signUp.CommonUserData;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.JuniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SeniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpResponse;
@@ -55,7 +54,8 @@ class SignupControllerTest {
     @DisplayName("주니어 회원가입 테스트")
     void juniorSignup() throws Exception {
         // given
-        CommonUserData commonUserData = CommonUserData.builder()
+
+        JuniorSignUpRequest juniorSignUpRequest = JuniorSignUpRequest.builder()
                 .githubId("testGithubId")
                 .githubOauthId(12345)
                 .nickName("Test NickName")
@@ -63,10 +63,6 @@ class SignupControllerTest {
                 .profileImageUrl("Test ProfileImageUrl")
                 .introduction("Test Introduction")
                 .tagList(Arrays.asList("tag1", "tag2"))
-                .build();
-
-        JuniorSignUpRequest juniorSignUpRequest = JuniorSignUpRequest.builder()
-                .commonUserData(commonUserData)
                 .educationalHistory("Test EducationalHistory")
                 .realName("Test RealName")
                 .build();
@@ -100,7 +96,8 @@ class SignupControllerTest {
     @DisplayName("시니어 회원가입 테스트")
     void seniorSignup() throws Exception {
         // given
-        CommonUserData commonUserData = CommonUserData.builder()
+
+        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
                 .githubId("testGithubId")
                 .githubOauthId(12345)
                 .nickName("Test NickName")
@@ -108,10 +105,6 @@ class SignupControllerTest {
                 .profileImageUrl("Test ProfileImageUrl")
                 .introduction("Test Introduction")
                 .tagList(Arrays.asList("tag1", "tag2"))
-                .build();
-
-        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
-                .commonUserData(commonUserData)
                 .companyInfo("Test CompanyInfo")
                 .careerPeriod(5)
                 .position("Test Position")
