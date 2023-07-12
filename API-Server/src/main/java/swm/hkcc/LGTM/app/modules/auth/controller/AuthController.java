@@ -14,20 +14,20 @@ import swm.hkcc.LGTM.app.modules.auth.service.AuthService;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/auth")
+@RequestMapping("/v1/signup")
 public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/junior/signup")
-    public ApiDataResponse<SignUpResponse> juniorSignup(
+    @PostMapping("/junior")
+    public ApiDataResponse<SignUpResponse> signupJunior(
             @Validated @RequestBody JuniorSignUpRequest request
     ) {
         return ApiDataResponse.of(authService.juniorSignUp(request));
     }
 
-    @PostMapping("/senior/signup")
-    public ApiDataResponse<SignUpResponse> seniorSignup(
+    @PostMapping("/senior")
+    public ApiDataResponse<SignUpResponse> signupSenior(
             @Validated @RequestBody SeniorSignUpRequest request
     ) {
         return ApiDataResponse.of(authService.seniorSignUp(request));

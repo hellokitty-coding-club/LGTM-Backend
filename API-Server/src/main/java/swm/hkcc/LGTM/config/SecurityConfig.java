@@ -45,7 +45,7 @@ public class SecurityConfig {
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
-                .requestMatchers("/v1/auth/**", "/v1/intro").permitAll()
+                .requestMatchers("/v1/signup/**", "/v1/intro").permitAll()
                 .requestMatchers("/login/**").permitAll() // for temporary test
                 .anyRequest().denyAll()
                 .and()
