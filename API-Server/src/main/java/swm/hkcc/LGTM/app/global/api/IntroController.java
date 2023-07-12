@@ -7,7 +7,7 @@ import swm.hkcc.LGTM.app.global.api.dto.IntroResponse;
 import swm.hkcc.LGTM.app.global.dto.ApiDataResponse;
 
 @RestController
-@RequestMapping("/api/v1/intro")
+@RequestMapping("/v1/intro")
 public class IntroController {
 
     @GetMapping
