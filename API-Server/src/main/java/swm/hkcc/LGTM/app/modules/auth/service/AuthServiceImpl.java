@@ -72,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public SignUpResponse juniorSignUp(JuniorSignUpRequest request) {
+    public SignUpResponse signupJunior(JuniorSignUpRequest request) {
         Member member = createAndSaveMember(request.getCommonUserData());
         Junior junior = Junior.from(request, member);
         juniorRepository.save(junior);
@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public SignUpResponse seniorSignUp(SeniorSignUpRequest request) {
+    public SignUpResponse signupSenior(SeniorSignUpRequest request) {
         Member member = createAndSaveMember(request.getCommonUserData());
         Senior senior = Senior.from(request, member);
         seniorRepository.save(senior);
@@ -91,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean isNicknameDuplicate(String nickname) {
+    public boolean checkDuplicateNickname(String nickname) {
         return memberRepository.existsByNickName(nickname);
     }
 

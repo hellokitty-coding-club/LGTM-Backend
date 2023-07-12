@@ -10,9 +10,9 @@ import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpResponse;
 public interface AuthService {
     SignInResponse githubSignIn(GithubUserInfo githubUserInfo);
 
-    SignUpResponse juniorSignUp(JuniorSignUpRequest request);
+    SignUpResponse signupJunior(JuniorSignUpRequest request);
 
-    SignUpResponse seniorSignUp(SeniorSignUpRequest request);
+    SignUpResponse signupSenior(SeniorSignUpRequest request);
 
-    boolean isNicknameDuplicate(String nickname);
+    boolean checkDuplicateNickname(String nickname);
 }

@@ -23,21 +23,21 @@ public class AuthController {
     public ApiDataResponse<SignUpResponse> signupJunior(
             @Validated @RequestBody JuniorSignUpRequest request
     ) {
-        return ApiDataResponse.of(authService.juniorSignUp(request));
+        return ApiDataResponse.of(authService.signupJunior(request));
     }
 
     @PostMapping("/senior")
     public ApiDataResponse<SignUpResponse> signupSenior(
             @Validated @RequestBody SeniorSignUpRequest request
     ) {
-        return ApiDataResponse.of(authService.seniorSignUp(request));
+        return ApiDataResponse.of(authService.signupSenior(request));
     }
 
     @GetMapping("/check-nickname")
-    public ApiDataResponse<Boolean> checkNickname(
+    public ApiDataResponse<Boolean> checkDuplicateNickname(
             @RequestParam String nickname
     ) {
-        boolean isDuplicate = authService.isNicknameDuplicate(nickname);
+        boolean isDuplicate = authService.checkDuplicateNickname(nickname);
         return ApiDataResponse.of(isDuplicate);
     }
 

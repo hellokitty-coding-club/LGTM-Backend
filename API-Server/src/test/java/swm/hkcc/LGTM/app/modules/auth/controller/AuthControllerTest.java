@@ -79,7 +79,7 @@ class AuthControllerTest {
                 .build();
 
         // when
-        Mockito.when(authService.juniorSignUp(juniorSignUpRequest)).thenReturn(expectedResponse);
+        Mockito.when(authService.signupJunior(juniorSignUpRequest)).thenReturn(expectedResponse);
 
         // then
         mockMvc.perform(post("/v1/auth/junior/signup")
@@ -127,7 +127,7 @@ class AuthControllerTest {
                 .build();
 
         // when
-        Mockito.when(authService.seniorSignUp(seniorSignUpRequest)).thenReturn(expectedResponse);
+        Mockito.when(authService.signupSenior(seniorSignUpRequest)).thenReturn(expectedResponse);
 
         // then
         mockMvc.perform(post("/v1/auth/senior/signup")
@@ -150,7 +150,7 @@ class AuthControllerTest {
         String nonDuplicateNickname = "nonDuplicateNickname";
 
         // when
-        Mockito.when(authService.isNicknameDuplicate(nonDuplicateNickname)).thenReturn(false);
+        Mockito.when(authService.checkDuplicateNickname(nonDuplicateNickname)).thenReturn(false);
 
         // then
         mockMvc.perform(get("/v1/auth/check-nickname")
