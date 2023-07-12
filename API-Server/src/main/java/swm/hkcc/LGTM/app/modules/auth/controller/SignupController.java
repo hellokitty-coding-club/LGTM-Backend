@@ -15,7 +15,7 @@ import swm.hkcc.LGTM.app.modules.auth.service.AuthService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/signup")
-public class AuthController {
+public class SignupController {
 
     private final AuthService authService;
 

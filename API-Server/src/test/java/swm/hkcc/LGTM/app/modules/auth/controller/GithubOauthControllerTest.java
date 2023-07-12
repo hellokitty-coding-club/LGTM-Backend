@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-class OauthControllerTest {
+class GithubOauthControllerTest {
 
     private MockMvc mockMvc;
 

@@ -20,7 +20,7 @@ import java.net.URI;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class OauthController {
+public class GithubOauthController {
 
     private final GithubUserInfoProvider githubUserInfoProvider;
     private final AuthService authService;

@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-class AuthControllerTest {
+class SignupControllerTest {
 
     private MockMvc mockMvc;
 
@@ -82,7 +82,7 @@ class AuthControllerTest {
         Mockito.when(authService.signupJunior(juniorSignUpRequest)).thenReturn(expectedResponse);
 
         // then
-        mockMvc.perform(post("/v1/auth/junior/signup")
+        mockMvc.perform(post("/v1/signup/junior")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(juniorSignUpRequest)))
                 .andExpect(status().isOk())
@@ -130,7 +130,7 @@ class AuthControllerTest {
         Mockito.when(authService.signupSenior(seniorSignUpRequest)).thenReturn(expectedResponse);
 
         // then
-        mockMvc.perform(post("/v1/auth/senior/signup")
+        mockMvc.perform(post("/v1/signup/senior")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(seniorSignUpRequest)))
                 .andExpect(status().isOk())
@@ -153,7 +153,7 @@ class AuthControllerTest {
         Mockito.when(authService.checkDuplicateNickname(nonDuplicateNickname)).thenReturn(false);
 
         // then
-        mockMvc.perform(get("/v1/auth/check-nickname")
+        mockMvc.perform(get("/v1/signup/check-nickname")
                         .param("nickname", nonDuplicateNickname)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
