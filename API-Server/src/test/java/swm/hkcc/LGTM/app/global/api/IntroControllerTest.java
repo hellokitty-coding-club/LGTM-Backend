@@ -41,7 +41,7 @@ class IntroControllerTest {
         // given
         // when
         // then
-        ResultActions perform = mockMvc.perform(get("/api/v1/intro"))
+        ResultActions perform = mockMvc.perform(get("/v1/intro"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.responseCode").value(0))
