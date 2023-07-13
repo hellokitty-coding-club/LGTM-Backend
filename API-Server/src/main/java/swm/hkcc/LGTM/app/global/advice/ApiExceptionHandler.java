@@ -1,6 +1,7 @@
 package swm.hkcc.LGTM.app.global.advice;
 
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import swm.hkcc.LGTM.app.global.constant.ResponseCode;
 import swm.hkcc.LGTM.app.global.dto.ApiResponse;
 import swm.hkcc.LGTM.app.global.exception.GeneralException;
 
+@Slf4j
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -31,10 +33,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ResponseCode responseCode, WebRequest request) {
+        log.info("exception occurred from {} class : {}", e.getClass().getName() ,e.getMessage());
         return handleExceptionInternal(e, responseCode, HttpHeaders.EMPTY, responseCode.getHttpStatus(), request);
     }
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ResponseCode responseCode, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.info("exception occurred from {} class : {}", e.getClass().getName() ,e.getMessage());
         return super.handleExceptionInternal(
                 e,
                 ApiResponse.of(false, responseCode.getCode(), responseCode.getMessage(e)),
