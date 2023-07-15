@@ -31,7 +31,7 @@ jobs:
     - name: Build and test Spring Boot project
       run: |
         cd ./API-Server
-        chomod +x ./gradlew
+        chmod +x ./gradlew
         ./gradlew build --no-daemon
       
     - name: Configure AWS credentials
