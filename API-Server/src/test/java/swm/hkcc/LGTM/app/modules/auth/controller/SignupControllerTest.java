@@ -4,16 +4,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.JuniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SeniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpResponse;
@@ -22,9 +29,15 @@ import swm.hkcc.LGTM.app.modules.auth.utils.GithubUserInfoProvider;
 
 import java.util.Arrays;
 
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,6 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
+@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 class SignupControllerTest {
 
     private MockMvc mockMvc;
@@ -43,9 +57,11 @@ class SignupControllerTest {
     private GithubUserInfoProvider githubUserInfoProvider;
 
     @BeforeEach
-    public void setUp(@Autowired WebApplicationContext webApplicationContext) {
+    public void setUp(@Autowired WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
+                .apply(documentationConfiguration(restDocumentationContextProvider))
+                .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .alwaysDo(print())
                 .build();
     }
@@ -78,7 +94,7 @@ class SignupControllerTest {
         Mockito.when(authService.signupJunior(juniorSignUpRequest)).thenReturn(expectedResponse);
 
         // then
-        mockMvc.perform(post("/v1/signup/junior")
+        ResultActions perform = mockMvc.perform(post("/v1/signup/junior")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(juniorSignUpRequest)))
                 .andExpect(status().isOk())
@@ -89,6 +105,35 @@ class SignupControllerTest {
                 .andExpect(jsonPath("$.data.githubId").value("testGithubId"))
                 .andExpect(jsonPath("$.data.accessToken").value("testAccessToken"))
                 .andExpect(jsonPath("$.data.refreshToken").value("testRefreshToken"));
+
+        // document
+        perform
+                .andDo(document("post-signup-junior",      // 문서의 고유 id
+                                preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                                preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+
+                                requestFields(
+                                        fieldWithPath("githubId").type(JsonFieldType.STRING).description("Github 아이디"),
+                                        fieldWithPath("githubOauthId").type(JsonFieldType.NUMBER).description("Github Oauth ID"),
+                                        fieldWithPath("nickName").type(JsonFieldType.STRING).description("닉네임"),
+                                        fieldWithPath("deviceToken").type(JsonFieldType.STRING).description("디바이스 토큰"),
+                                        fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+                                        fieldWithPath("introduction").type(JsonFieldType.STRING).description("자기소개"),
+                                        fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("태그 리스트"),
+                                        fieldWithPath("educationalHistory").type(JsonFieldType.STRING).description("학력"),
+                                        fieldWithPath("realName").type(JsonFieldType.STRING).description("실명")
+                                ),
+                                responseFields(
+                                        //{"success":true,"responseCode":0,"message":"Ok","data":{"memberId":1,"githubId":"testGithubId","accessToken":"testAccessToken","refreshToken":"testRefreshToken"}}
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                        fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("회원 아이디"),
+                                        fieldWithPath("data.githubId").type(JsonFieldType.STRING).description("Github 아이디"),
+                                        fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
+                                        fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
+                                )));
     }
 
 
@@ -123,7 +168,7 @@ class SignupControllerTest {
         Mockito.when(authService.signupSenior(seniorSignUpRequest)).thenReturn(expectedResponse);
 
         // then
-        mockMvc.perform(post("/v1/signup/senior")
+        ResultActions perform = mockMvc.perform(post("/v1/signup/senior")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(seniorSignUpRequest)))
                 .andExpect(status().isOk())
@@ -134,6 +179,37 @@ class SignupControllerTest {
                 .andExpect(jsonPath("$.data.githubId").value("testGithubId"))
                 .andExpect(jsonPath("$.data.accessToken").value("testAccessToken"))
                 .andExpect(jsonPath("$.data.refreshToken").value("testRefreshToken"));
+
+        // document
+        perform
+                .andDo(document("post-signup-senior",      // 문서의 고유 id
+                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+
+                        requestFields(
+                                fieldWithPath("githubId").type(JsonFieldType.STRING).description("Github 아이디"),
+                                fieldWithPath("githubOauthId").type(JsonFieldType.NUMBER).description("Github Oauth ID"),
+                                fieldWithPath("nickName").type(JsonFieldType.STRING).description("닉네임"),
+                                fieldWithPath("deviceToken").type(JsonFieldType.STRING).description("디바이스 토큰"),
+                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+                                fieldWithPath("introduction").type(JsonFieldType.STRING).description("자기소개"),
+                                fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("태그 리스트"),
+                                fieldWithPath("companyInfo").type(JsonFieldType.STRING).description("회사 정보"),
+                                fieldWithPath("careerPeriod").type(JsonFieldType.NUMBER).description("경력 기간"),
+                                fieldWithPath("position").type(JsonFieldType.STRING).description("직급"),
+                                fieldWithPath("accountNumber").type(JsonFieldType.STRING).description("계좌 번호"),
+                                fieldWithPath("bankName").type(JsonFieldType.STRING).description("은행 이름")
+                        ),
+                        responseFields(
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("회원 아이디"),
+                                fieldWithPath("data.githubId").type(JsonFieldType.STRING).description("Github 아이디"),
+                                fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
+                                fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
+                        )));
     }
 
     @Test
@@ -146,7 +222,7 @@ class SignupControllerTest {
         Mockito.when(authService.checkDuplicateNickname(nonDuplicateNickname)).thenReturn(false);
 
         // then
-        mockMvc.perform(get("/v1/signup/check-nickname")
+        ResultActions perform = mockMvc.perform(get("/v1/signup/check-nickname")
                         .param("nickname", nonDuplicateNickname)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -154,6 +230,23 @@ class SignupControllerTest {
                 .andExpect(jsonPath("$.responseCode").value(0))
                 .andExpect(jsonPath("$.message").value("Ok"))
                 .andExpect(jsonPath("$.data").value(false));
+
+        // document
+        perform
+                .andDo(document("get-check-nickname",      // 문서의 고유 id
+                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+
+                        queryParameters(
+                                parameterWithName("nickname").description("닉네임")
+                        ),
+                        responseFields(
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.BOOLEAN).description("닉네임 중복 여부")
+                        )));
+
     }
 
 

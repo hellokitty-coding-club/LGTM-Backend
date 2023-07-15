@@ -54,11 +54,7 @@ class IntroControllerTest {
         perform
                 .andDo(print())                                          // 요청/응답을 콘솔에 출력
                 .andDo(document("get-intro",                    // 문서의 고유 id
-                                preprocessRequest(modifyUris()           // 문서의 request 출력 설정
-                                                .scheme("https")
-                                                .host("www.lgtm.com")
-                                                .removePort(),
-                                        prettyPrint()),                  // request JSON 정렬하여 출력
+                                preprocessRequest(prettyPrint()),                  // request JSON 정렬하여 출력
                                 preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
                                 responseFields(                          // 문서의 응답 필드
