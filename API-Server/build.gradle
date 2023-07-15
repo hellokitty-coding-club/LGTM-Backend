@@ -101,8 +101,8 @@ bootJar{
 
 openapi3 {
     server = "https://dev.swm-lgtm.com"
-    title = "LGTM API 문서"
-    description = "Spring REST Docs with SwaggerUI."
+    title = "LGTM API Docs - Dev"
+    description = "LGTM의 Dev Server API 문서입니다."
     version = "0.0.1"
     outputFileNamePrefix = 'open-api-3.0.1'
     format = 'json'
