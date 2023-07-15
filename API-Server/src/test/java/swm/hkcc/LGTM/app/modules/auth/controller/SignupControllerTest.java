@@ -1,5 +1,6 @@
 package swm.hkcc.LGTM.app.modules.auth.controller;
 
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,13 +31,13 @@ import swm.hkcc.LGTM.app.modules.auth.utils.GithubUserInfoProvider;
 import java.util.Arrays;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -109,10 +110,13 @@ class SignupControllerTest {
         // document
         perform
                 .andDo(document("post-signup-junior",      // 문서의 고유 id
-                                preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
-                                preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
-                                requestFields(
+                        resource(ResourceSnippetParameters.builder()
+                                .summary("주니어 회원가입")
+                                .description("주니어 회원가입 정보 입력 후, 회원가입 정보를 반환한다.")
+                                .requestFields(
                                         fieldWithPath("githubId").type(JsonFieldType.STRING).description("Github 아이디"),
                                         fieldWithPath("githubOauthId").type(JsonFieldType.NUMBER).description("Github Oauth ID"),
                                         fieldWithPath("nickName").type(JsonFieldType.STRING).description("닉네임"),
@@ -122,9 +126,8 @@ class SignupControllerTest {
                                         fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("태그 리스트"),
                                         fieldWithPath("educationalHistory").type(JsonFieldType.STRING).description("학력"),
                                         fieldWithPath("realName").type(JsonFieldType.STRING).description("실명")
-                                ),
-                                responseFields(
-                                        //{"success":true,"responseCode":0,"message":"Ok","data":{"memberId":1,"githubId":"testGithubId","accessToken":"testAccessToken","refreshToken":"testRefreshToken"}}
+                                )
+                                .responseFields(
                                         fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
                                         fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
@@ -133,7 +136,9 @@ class SignupControllerTest {
                                         fieldWithPath("data.githubId").type(JsonFieldType.STRING).description("Github 아이디"),
                                         fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
                                         fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
-                                )));
+                                )
+                                .build())
+                ));
     }
 
 
@@ -186,30 +191,35 @@ class SignupControllerTest {
                         preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
-                        requestFields(
-                                fieldWithPath("githubId").type(JsonFieldType.STRING).description("Github 아이디"),
-                                fieldWithPath("githubOauthId").type(JsonFieldType.NUMBER).description("Github Oauth ID"),
-                                fieldWithPath("nickName").type(JsonFieldType.STRING).description("닉네임"),
-                                fieldWithPath("deviceToken").type(JsonFieldType.STRING).description("디바이스 토큰"),
-                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
-                                fieldWithPath("introduction").type(JsonFieldType.STRING).description("자기소개"),
-                                fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("태그 리스트"),
-                                fieldWithPath("companyInfo").type(JsonFieldType.STRING).description("회사 정보"),
-                                fieldWithPath("careerPeriod").type(JsonFieldType.NUMBER).description("경력 기간"),
-                                fieldWithPath("position").type(JsonFieldType.STRING).description("직급"),
-                                fieldWithPath("accountNumber").type(JsonFieldType.STRING).description("계좌 번호"),
-                                fieldWithPath("bankName").type(JsonFieldType.STRING).description("은행 이름")
-                        ),
-                        responseFields(
-                                fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
-                                fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
-                                fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("회원 아이디"),
-                                fieldWithPath("data.githubId").type(JsonFieldType.STRING).description("Github 아이디"),
-                                fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
-                                fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
-                        )));
+                        resource(ResourceSnippetParameters.builder()
+                                .summary("시니어 회원가입")
+                                .description("시니어 회원가입 정보 입력 후, 회원가입 정보를 반환한다.")
+                                .requestFields(
+                                        fieldWithPath("githubId").type(JsonFieldType.STRING).description("Github 아이디"),
+                                        fieldWithPath("githubOauthId").type(JsonFieldType.NUMBER).description("Github Oauth ID"),
+                                        fieldWithPath("nickName").type(JsonFieldType.STRING).description("닉네임"),
+                                        fieldWithPath("deviceToken").type(JsonFieldType.STRING).description("디바이스 토큰"),
+                                        fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+                                        fieldWithPath("introduction").type(JsonFieldType.STRING).description("자기소개"),
+                                        fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("태그 리스트"),
+                                        fieldWithPath("companyInfo").type(JsonFieldType.STRING).description("회사 정보"),
+                                        fieldWithPath("careerPeriod").type(JsonFieldType.NUMBER).description("경력 기간"),
+                                        fieldWithPath("position").type(JsonFieldType.STRING).description("직급"),
+                                        fieldWithPath("accountNumber").type(JsonFieldType.STRING).description("계좌 번호"),
+                                        fieldWithPath("bankName").type(JsonFieldType.STRING).description("은행 이름")
+                                )
+                                .responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                        fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("회원 아이디"),
+                                        fieldWithPath("data.githubId").type(JsonFieldType.STRING).description("Github 아이디"),
+                                        fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
+                                        fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
+                                )
+                                .build())
+                ));
     }
 
     @Test
@@ -237,17 +247,62 @@ class SignupControllerTest {
                         preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
-                        queryParameters(
-                                parameterWithName("nickname").description("닉네임")
-                        ),
-                        responseFields(
-                                fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
-                                fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data").type(JsonFieldType.BOOLEAN).description("닉네임 중복 여부")
-                        )));
-
+                        resource(ResourceSnippetParameters.builder()
+                                .summary("닉네임 중복 검사")
+                                .description("닉네임 중복 검사 후, 중복 여부를 반환한다.")
+                                .queryParameters(
+                                        parameterWithName("nickname").description("닉네임")
+                                )
+                                .responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.BOOLEAN).description("닉네임 중복 여부")
+                                )
+                                .build())
+                ));
     }
 
+
+    @Test
+    @DisplayName("닉네임 중복 검사")
+    void checkNickname_NonDuplicate() throws Exception {
+        // given
+        String nonDuplicateNickname = "nonDuplicateNickname";
+
+        // when
+        Mockito.when(authService.checkDuplicateNickname(nonDuplicateNickname)).thenReturn(false);
+
+        // then
+        ResultActions perform = mockMvc.perform(get("/v1/signup/check-nickname")
+                        .param("nickname", nonDuplicateNickname)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.responseCode").value(0))
+                .andExpect(jsonPath("$.message").value("Ok"))
+                .andExpect(jsonPath("$.data").value(false));
+
+        // document
+        perform
+                .andDo(document("get-check-nickname",      // 문서의 고유 id
+                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+
+                        resource(ResourceSnippetParameters.builder()
+                                .summary("닉네임 중복 검사")
+                                .description("닉네임 중복 검사 후, 중복 여부를 반환한다.")
+                                .queryParameters(
+                                        parameterWithName("nickname").description("닉네임")
+                                )
+                                .responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.BOOLEAN).description("닉네임 중복 여부")
+                                )
+                                .build())
+                ));
+    }
 
 }
