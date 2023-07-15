@@ -118,15 +118,28 @@ class SignupControllerTest {
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
                         resource(ResourceSnippetParameters.builder()
-                                .summary("주니어 회원가입")
-                                .description("주니어 회원가입 정보 입력 후, 회원가입 정보를 반환한다.")
+                                .summary("[회원인증] 주니어 회원가입")
+                                .description(
+                                        "주니어 회원가입 정보 입력 후, 회원가입 정보를 반환한다.\n\n" +
+                                        "View : 회원가입 화면\n\n\n\n" +
+                                        "[Request values]\n\n" +
+                                        "githubId : Github 아이디\n\n" +
+                                        "githubOauthId : Github 의 사용자 식별 번호. 해당 id 이용하여 LGTM의 서비스 이용자를 식별한다.\n\n" +
+                                        "nickName : 닉네임, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다, 동일한 닉네임이 있을 경우 400 에러 반환\n\n" +
+                                        "deviceToken : 디바이스 토큰\n\n" +
+                                        "profileImageUrl : 프로필 이미지 URL\n\n" +
+                                        "introduction : 나의 한줄 소개, 최대 500자, 클라이언트에서 trim()처리하여 보낸다 \n\n" +
+                                        "tagList : 태그 리스트, 텍스트의 리스트로 전달한다. 1개 이상이어야 한다. 선택가능한 태그 외의 문자열이 전달될 경우 400에러 반환\n\n" +
+                                        "educationalHistory : 학력\n\n" +
+                                        "realName : 실명\n\n"
+                                )
                                 .requestFields(
                                         fieldWithPath("githubId").type(JsonFieldType.STRING).description("Github 아이디"),
                                         fieldWithPath("githubOauthId").type(JsonFieldType.NUMBER).description("Github Oauth ID"),
                                         fieldWithPath("nickName").type(JsonFieldType.STRING).description("닉네임"),
                                         fieldWithPath("deviceToken").type(JsonFieldType.STRING).description("디바이스 토큰"),
                                         fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
-                                        fieldWithPath("introduction").type(JsonFieldType.STRING).description("자기소개"),
+                                        fieldWithPath("introduction").type(JsonFieldType.STRING).description("나의 한줄 소개"),
                                         fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("태그 리스트"),
                                         fieldWithPath("educationalHistory").type(JsonFieldType.STRING).description("학력"),
                                         fieldWithPath("realName").type(JsonFieldType.STRING).description("실명")
@@ -282,8 +295,24 @@ class SignupControllerTest {
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
                         resource(ResourceSnippetParameters.builder()
-                                .summary("시니어 회원가입")
-                                .description("시니어 회원가입 정보 입력 후, 회원가입 정보를 반환한다.")
+                                .summary("[회원인증] 시니어 회원가입")
+                                .description(
+                                        "시니어 회원가입 정보 입력 후, 회원가입 정보를 반환한다.\n\n" +
+                                                "View : 회원가입 화면\n\n\n\n" +
+                                                "[Request values]\n\n" +
+                                                "githubId : Github 아이디\n\n" +
+                                                "githubOauthId : Github 의 사용자 식별 번호. 해당 id 이용하여 LGTM의 서비스 이용자를 식별한다.\n\n" +
+                                                "nickName : 닉네임, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다, 동일한 닉네임이 있을 경우 400 에러 반환\n\n" +
+                                                "deviceToken : 디바이스 토큰\n\n" +
+                                                "profileImageUrl : 프로필 이미지 URL\n\n" +
+                                                "introduction : 나의 한줄 소개, 최대 500자, 클라이언트에서 trim()처리하여 보낸다 \n\n" +
+                                                "tagList : 태그 리스트, 텍스트의 리스트로 전달한다. 1개 이상이어야 한다. 선택가능한 태그 외의 문자열이 전달될 경우 400에러 반환\n\n" +
+                                                "companyInfo : 회사 정보, 법인명에 해당하는 이름\n\n" +
+                                                "careerPeriod : 경력 기간, 개월 단위로 입력, 1 이상의 정수, 12개월 이상이어야 한다.\n\n" +
+                                                "position : 직급, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다\n\n" +
+                                                "accountNumber : 계좌번호, 숫자와 '-'로만 이루어져야 한다.\n\n" +
+                                                "bankName : 은행명, 등록되지 않은 이름일 경우 400 에러 반환"
+                                )
                                 .requestFields(
                                         fieldWithPath("githubId").type(JsonFieldType.STRING).description("Github 아이디"),
                                         fieldWithPath("githubOauthId").type(JsonFieldType.NUMBER).description("Github Oauth ID"),
@@ -523,8 +552,11 @@ class SignupControllerTest {
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
                         resource(ResourceSnippetParameters.builder()
-                                .summary("닉네임 중복 검사")
-                                .description("닉네임 중복 검사 후, 중복 여부를 반환한다.")
+                                .summary("[회원인증] 닉네임 중복 검사")
+                                .description("닉네임 중복 검사 후, 중복 여부를 반환한다.\n\n" +
+                                        "View : 회원가입 화면 > 닉네임 입력 화면\n\n\n\n" +
+                                        "true - 중복이므로 실패\n\n" +
+                                        "false - 중복이 아니므로 성공")
                                 .queryParameters(
                                         parameterWithName("nickname").description("닉네임")
                                 )
