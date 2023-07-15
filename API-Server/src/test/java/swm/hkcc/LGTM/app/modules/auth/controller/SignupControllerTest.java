@@ -25,8 +25,12 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.JuniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SeniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpResponse;
+import swm.hkcc.LGTM.app.modules.auth.exception.DuplicateNickName;
+import swm.hkcc.LGTM.app.modules.auth.exception.InvalidTechTag;
 import swm.hkcc.LGTM.app.modules.auth.service.AuthService;
 import swm.hkcc.LGTM.app.modules.auth.utils.GithubUserInfoProvider;
+import swm.hkcc.LGTM.app.modules.member.exception.InvalidBankName;
+import swm.hkcc.LGTM.app.modules.member.exception.InvalidCareerPeriod;
 
 import java.util.Arrays;
 
@@ -141,12 +145,98 @@ class SignupControllerTest {
                 ));
     }
 
+    @Test
+    @DisplayName("주니어 회원가입 실패 테스트 - 닉네임 중복")
+    void juniorSignupDuplicatedNickname() throws Exception {
+        // given
+        JuniorSignUpRequest juniorSignUpRequest = JuniorSignUpRequest.builder()
+                .githubId("testGithubId")
+                .githubOauthId(12345)
+                .nickName("Test NickName")
+                .deviceToken("Test DeviceToken")
+                .profileImageUrl("Test ProfileImageUrl")
+                .introduction("Test Introduction")
+                .tagList(Arrays.asList("tag1", "tag2"))
+                .educationalHistory("Test EducationalHistory")
+                .realName("Test RealName")
+                .build();
+
+        // when
+        Mockito.when(authService.signupJunior(juniorSignUpRequest)).thenThrow(new DuplicateNickName());
+
+        // then
+        ResultActions perform = mockMvc.perform(post("/v1/signup/junior")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(juniorSignUpRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.responseCode").value(10004))
+                .andExpect(jsonPath("$.message").value("Duplicate nickname - Duplicate nickname"));
+
+        // document
+        perform
+                .andDo(document("post-signup-junior-duplicated-nickname",      // 문서의 고유 id
+                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+
+                        resource(ResourceSnippetParameters.builder()
+                                .responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지")
+                                )
+                                .build())
+                ));
+    }
+
+    @Test
+    @DisplayName("주니어 회원가입 실패 테스트 - 부적절한 태그")
+    void juniorSignupInvalidTag() throws Exception {
+        // given
+        JuniorSignUpRequest juniorSignUpRequest = JuniorSignUpRequest.builder()
+                .githubId("testGithubId")
+                .githubOauthId(12345)
+                .nickName("Test NickName")
+                .deviceToken("Test DeviceToken")
+                .profileImageUrl("Test ProfileImageUrl")
+                .introduction("Test Introduction")
+                .tagList(Arrays.asList("tag1", "tag2"))
+                .educationalHistory("Test EducationalHistory")
+                .realName("Test RealName")
+                .build();
+
+        // when
+        Mockito.when(authService.signupJunior(juniorSignUpRequest)).thenThrow(new InvalidTechTag());
+
+        // then
+        ResultActions perform = mockMvc.perform(post("/v1/signup/junior")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(juniorSignUpRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.responseCode").value(10005))
+                .andExpect(jsonPath("$.message").value("Invalid tech tag - Invalid tech tag"));
+
+        // document
+        perform
+                .andDo(document("post-signup-junior-Invalid-tag",      // 문서의 고유 id
+                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+
+                        resource(ResourceSnippetParameters.builder()
+                                .responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지")
+                                )
+                                .build())
+                ));
+    }
 
     @Test
     @DisplayName("시니어 회원가입 테스트")
     void seniorSignup() throws Exception {
         // given
-
         SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
                 .githubId("testGithubId")
                 .githubOauthId(12345)
@@ -220,6 +310,191 @@ class SignupControllerTest {
                                 )
                                 .build())
                 ));
+    }
+
+    @Test
+    @DisplayName("시니어 회원가입 실패 테스트 - 닉네임 중복")
+    void seniorSignupDuplicatedNickname() throws Exception {
+        // given
+        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
+                .githubId("testGithubId")
+                .githubOauthId(12345)
+                .nickName("Test NickName")
+                .deviceToken("Test DeviceToken")
+                .profileImageUrl("Test ProfileImageUrl")
+                .introduction("Test Introduction")
+                .tagList(Arrays.asList("tag1", "tag2"))
+                .companyInfo("Test CompanyInfo")
+                .careerPeriod(5)
+                .position("Test Position")
+                .accountNumber("Test AccountNumber")
+                .bankName("국민은행")
+                .build();
+
+        // when
+        Mockito.when(authService.signupSenior(seniorSignUpRequest)).thenThrow(new DuplicateNickName());
+
+        // then
+        ResultActions perform = mockMvc.perform(post("/v1/signup/senior")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(seniorSignUpRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.responseCode").value(10004))
+                .andExpect(jsonPath("$.message").value("Duplicate nickname - Duplicate nickname"));
+
+        // document
+        perform
+                .andDo(document("post-signup-senior-duplicated-nickname",      // 문서의 고유 id
+                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+
+                        resource(ResourceSnippetParameters.builder()
+                                .responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지")
+                                )
+                                .build())));
+    }
+
+
+    @Test
+    @DisplayName("시니어 회원가입 실패 테스트 - 부적절한 태그")
+    void seniorSignupInvalidTag() throws Exception {
+        // given
+        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
+                .githubId("testGithubId")
+                .githubOauthId(12345)
+                .nickName("Test NickName")
+                .deviceToken("Test DeviceToken")
+                .profileImageUrl("Test ProfileImageUrl")
+                .introduction("Test Introduction")
+                .tagList(Arrays.asList("tag1", "tag2"))
+                .companyInfo("Test CompanyInfo")
+                .careerPeriod(5)
+                .position("Test Position")
+                .accountNumber("Test AccountNumber")
+                .bankName("국민은행")
+                .build();
+
+        // when
+        Mockito.when(authService.signupSenior(seniorSignUpRequest)).thenThrow(new InvalidTechTag());
+
+        // then
+        ResultActions perform = mockMvc.perform(post("/v1/signup/senior")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(seniorSignUpRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.responseCode").value(10005))
+                .andExpect(jsonPath("$.message").value("Invalid tech tag - Invalid tech tag"));
+
+        // document
+        perform
+                .andDo(document("post-signup-senior-invalid-tag",      // 문서의 고유 id
+                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+
+                        resource(ResourceSnippetParameters.builder()
+                                .responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지")
+                                )
+                                .build())));
+    }
+
+    @Test
+    @DisplayName("시니어 회원가입 실패 테스트 - 부적절한 경력사항")
+    void seniorSignupInvalidCareer() throws Exception {
+        // given
+        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
+                .githubId("testGithubId")
+                .githubOauthId(12345)
+                .nickName("Test NickName")
+                .deviceToken("Test DeviceToken")
+                .profileImageUrl("Test ProfileImageUrl")
+                .introduction("Test Introduction")
+                .tagList(Arrays.asList("tag1", "tag2"))
+                .companyInfo("Test CompanyInfo")
+                .careerPeriod(5)
+                .position("Test Position")
+                .accountNumber("Test AccountNumber")
+                .bankName("국민은행")
+                .build();
+
+        // when
+        Mockito.when(authService.signupSenior(seniorSignUpRequest)).thenThrow(new InvalidCareerPeriod());
+
+        // then
+        ResultActions perform = mockMvc.perform(post("/v1/signup/senior")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(seniorSignUpRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.responseCode").value(10006))
+                .andExpect(jsonPath("$.message").value("Invalid career period, Career period should be at least 12 months - Invalid career period, Career period should be at least 12 months"));
+
+        // document
+        perform
+                .andDo(document("post-signup-senior-invalid-career",      // 문서의 고유 id
+                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+
+                        resource(ResourceSnippetParameters.builder()
+                                .responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지")
+                                )
+                                .build())));
+    }
+
+    @Test
+    @DisplayName("시니어 회원가입 실패 테스트 - 부적절한 은행명")
+    void seniorSignupInvalidBankName() throws Exception {
+        // given
+        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
+                .githubId("testGithubId")
+                .githubOauthId(12345)
+                .nickName("Test NickName")
+                .deviceToken("Test DeviceToken")
+                .profileImageUrl("Test ProfileImageUrl")
+                .introduction("Test Introduction")
+                .tagList(Arrays.asList("tag1", "tag2"))
+                .companyInfo("Test CompanyInfo")
+                .careerPeriod(5)
+                .position("Test Position")
+                .accountNumber("Test AccountNumber")
+                .bankName("국민은행")
+                .build();
+
+        // when
+        Mockito.when(authService.signupSenior(seniorSignUpRequest)).thenThrow(new InvalidBankName());
+
+        // then
+        ResultActions perform = mockMvc.perform(post("/v1/signup/senior")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(seniorSignUpRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.responseCode").value(10007))
+                .andExpect(jsonPath("$.message").value("Invalid Bank name - Invalid Bank name"));
+
+        // document
+        perform
+                .andDo(document("post-signup-senior-invalid-bank",      // 문서의 고유 id
+                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+
+                        resource(ResourceSnippetParameters.builder()
+                                .responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지")
+                                )
+                                .build())));
     }
 
     @Test
