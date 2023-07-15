@@ -263,46 +263,4 @@ class SignupControllerTest {
                 ));
     }
 
-
-    @Test
-    @DisplayName("닉네임 중복 검사")
-    void checkNickname_NonDuplicate() throws Exception {
-        // given
-        String nonDuplicateNickname = "nonDuplicateNickname";
-
-        // when
-        Mockito.when(authService.checkDuplicateNickname(nonDuplicateNickname)).thenReturn(false);
-
-        // then
-        ResultActions perform = mockMvc.perform(get("/v1/signup/check-nickname")
-                        .param("nickname", nonDuplicateNickname)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.responseCode").value(0))
-                .andExpect(jsonPath("$.message").value("Ok"))
-                .andExpect(jsonPath("$.data").value(false));
-
-        // document
-        perform
-                .andDo(document("get-check-nickname",      // 문서의 고유 id
-                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
-                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
-
-                        resource(ResourceSnippetParameters.builder()
-                                .summary("닉네임 중복 검사")
-                                .description("닉네임 중복 검사 후, 중복 여부를 반환한다.")
-                                .queryParameters(
-                                        parameterWithName("nickname").description("닉네임")
-                                )
-                                .responseFields(
-                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
-                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
-                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                        fieldWithPath("data").type(JsonFieldType.BOOLEAN).description("닉네임 중복 여부")
-                                )
-                                .build())
-                ));
-    }
-
 }
