@@ -33,6 +33,7 @@ jobs:
 
     - name: Build and test Spring Boot project
       run: |
+        chmod +x ./gradlew
         ./gradlew build --no-daemon
       
     - name: Configure AWS credentials
