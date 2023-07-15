@@ -12,6 +12,7 @@ plugins {
 group = 'swm.hkcc'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
+jar.enabled = false // ..-plain.jar 파일 생성 안함
 
 repositories {
     mavenCentral()
