@@ -19,11 +19,11 @@ jobs:
     - name : echo github.ref_name
       run : echo ${{ github.ref_name }}
       
-    - name : change directory
-      run : cd ./API-Server
-      
     - name: Checkout repository
       uses: actions/checkout@v2
+      
+    - name : change directory
+      run : cd ./API-Server
 
     - name: Set up Java
       uses: actions/setup-java@v2
