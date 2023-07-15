@@ -1,4 +1,4 @@
-= Food REST API Guide
+= LGTM REST API Guide
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
