@@ -17,3 +17,9 @@ jwt:
   secret: ${JWT_SECRET}
   token-validity-in-seconds: 8640000
 
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    url: /docs/open-api-3.0.1.json
+    path: /docs/swagger
