@@ -49,6 +49,9 @@ dependencies {
     //restdocs-api-spec 의존성 추가
     testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.17.1'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+    // sentry
+    implementation 'io.sentry:sentry-spring-boot-starter-jakarta:6.25.0'
 }
 
 tasks.named('test') {

@@ -1,5 +1,6 @@
 package swm.hkcc.LGTM.app.global.advice;
 
+import io.sentry.Sentry;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -19,16 +20,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Object> validation(ConstraintViolationException e, WebRequest request) {
+        Sentry.captureException(e);
         return handleExceptionInternal(e, ResponseCode.VALIDATION_ERROR, request);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> general(GeneralException e, WebRequest request) {
+        Sentry.captureException(e);
         return handleExceptionInternal(e, e.getResponseCode(), request);
     }
 
     @ExceptionHandler
     public ResponseEntity<Object> exception(Exception e, WebRequest request) {
+        Sentry.captureException(e);
         return handleExceptionInternal(e, ResponseCode.INTERNAL_ERROR, request);
     }
 
