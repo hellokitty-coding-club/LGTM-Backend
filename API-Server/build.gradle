@@ -87,7 +87,6 @@ tasks.withType(GenerateSwaggerUI) {
     dependsOn 'openapi3'
 
     //기존 파일 삭제했다가, build 에 출력한 json 정적파일 복사 (안해도 됨 → local 확인용)
-    delete file('src/main/resources/static/docs/')
     copy {
         from "build/resources/main/static/docs"
         into "src/main/resources/static/docs/"
