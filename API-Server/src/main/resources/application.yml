@@ -23,3 +23,9 @@ springdoc:
   swagger-ui:
     url: /docs/open-api-3.0.1.json
     path: /docs/swagger
+
+sentry:
+  dsn: https://6d318a2ba0cb4d13934c4b3b63c6b986@o4505542219333632.ingest.sentry.io/4505542225756160
+  # Set traces-sample-rate to 1.0 to capture 100% of transactions for performance monitoring.
+  # We recommend adjusting this value in production.
+  traces-sample-rate: 1.0
