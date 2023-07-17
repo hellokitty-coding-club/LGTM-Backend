@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .and().authorizeHttpRequests()
                 .requestMatchers("/v1/signup/**", "/v1/intro").permitAll()
                 .requestMatchers("/login/**").permitAll() // for temporary test
+                .requestMatchers("/docs/**", "/v3/api-docs/swagger-config").permitAll()
                 .anyRequest().denyAll()
                 .and()
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)

@@ -1,0 +1,60 @@
+name: Build Image and Push to ECR
+
+
+env:
+  ECR_ROOT: ${{ secrets.AWS_ECR_ROOT }}
+  ECR_REPOSITORY: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository }}:${{ github.ref_name }}_0.0.${{ github.run_number }} 
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name : echo github.ref_name
+      run : echo ${{ github.ref_name }}
+      
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+
+    - name: Build and test Spring Boot project
+      run: |
+        cd ./API-Server
+        chmod +x ./gradlew
+        ./gradlew build --no-daemon
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-2
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      run: |
+        # docker build
+        docker build -t $IMAGE_NAME .
+          
+        # upload img(:branch&version) to ECR
+        docker tag $IMAGE_NAME $ECR_ROOT/$IMAGE_NAME
+        docker push $ECR_ROOT/$IMAGE_NAME
+          
+        # upload img(:latest) to ECR
+        docker tag $IMAGE_NAME $ECR_ROOT/$ECR_REPOSITORY:latest
+        docker push $ECR_ROOT/$ECR_REPOSITORY:latest

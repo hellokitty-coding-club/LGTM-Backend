@@ -1,5 +1,6 @@
 package swm.hkcc.LGTM.app.global.api;
 
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,12 +14,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,16 +52,16 @@ class IntroControllerTest {
 
         // document
         perform
-                .andDo(print())                                          // 요청/응답을 콘솔에 출력
+                .andDo(print())                                         // 요청/응답을 콘솔에 출력
                 .andDo(document("get-intro",                    // 문서의 고유 id
-                                preprocessRequest(modifyUris()           // 문서의 request 출력 설정
-                                                .scheme("https")
-                                                .host("www.lgtm.com")
-                                                .removePort(),
-                                        prettyPrint()),                  // request JSON 정렬하여 출력
-                                preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+                        preprocessRequest(prettyPrint()),               // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),              // response JSON 정렬하여 출력
 
-                                responseFields(                          // 문서의 응답 필드
+                        resource(ResourceSnippetParameters.builder()
+
+                                .summary("인트로 API")
+                                .description("앱 버전 정보를 조회한다.")
+                                .responseFields(                          // 문서의 응답 필드
                                         fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공여부"),
                                         fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답코드"),
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("메시지"),
@@ -68,7 +69,7 @@ class IntroControllerTest {
                                         fieldWithPath("data.minVersion").type(JsonFieldType.NUMBER).description("최소버전"),
                                         fieldWithPath("data.latestVersion").type(JsonFieldType.NUMBER).description("최신버전")
                                 )
-                        )
-                );
+                                .build())
+                ));
     }
 }
