@@ -25,7 +25,7 @@ springdoc:
     path: /docs/swagger
 
 sentry:
-  dsn: https://6d318a2ba0cb4d13934c4b3b63c6b986@o4505542219333632.ingest.sentry.io/4505542225756160
+  dsn: https://676d18b6fc9640c2884dcccc04591419@o4505549721305088.ingest.sentry.io/4505550015954944
   # Set traces-sample-rate to 1.0 to capture 100% of transactions for performance monitoring.
   # We recommend adjusting this value in production.
   traces-sample-rate: 1.0
