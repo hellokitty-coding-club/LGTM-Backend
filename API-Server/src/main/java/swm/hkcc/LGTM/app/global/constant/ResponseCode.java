@@ -55,7 +55,7 @@ public enum ResponseCode {
     }
 
     public String getMessage(Throwable e) {
-        return this.getMessage(this.getMessage() + " - " + e.getMessage());
+        return this.getMessage(e.getMessage());
     }
 
     public String getMessage(String message) {

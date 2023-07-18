@@ -184,7 +184,7 @@ class SignupControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.responseCode").value(10004))
-                .andExpect(jsonPath("$.message").value("Duplicate nickname - Duplicate nickname"));
+                .andExpect(jsonPath("$.message").value("Duplicate nickname"));
 
         // document
         perform
@@ -228,7 +228,7 @@ class SignupControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.responseCode").value(10005))
-                .andExpect(jsonPath("$.message").value("Invalid tech tag - Invalid tech tag"));
+                .andExpect(jsonPath("$.message").value("Invalid tech tag"));
 
         // document
         perform
@@ -370,7 +370,7 @@ class SignupControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.responseCode").value(10004))
-                .andExpect(jsonPath("$.message").value("Duplicate nickname - Duplicate nickname"));
+                .andExpect(jsonPath("$.message").value("Duplicate nickname"));
 
         // document
         perform
@@ -417,7 +417,7 @@ class SignupControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.responseCode").value(10005))
-                .andExpect(jsonPath("$.message").value("Invalid tech tag - Invalid tech tag"));
+                .andExpect(jsonPath("$.message").value("Invalid tech tag"));
 
         // document
         perform
@@ -463,7 +463,7 @@ class SignupControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.responseCode").value(10006))
-                .andExpect(jsonPath("$.message").value("Invalid career period, Career period should be at least 12 months - Invalid career period, Career period should be at least 12 months"));
+                .andExpect(jsonPath("$.message").value("Invalid career period, Career period should be at least 12 months"));
 
         // document
         perform
@@ -509,7 +509,7 @@ class SignupControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.responseCode").value(10007))
-                .andExpect(jsonPath("$.message").value("Invalid Bank name - Invalid Bank name"));
+                .andExpect(jsonPath("$.message").value("Invalid Bank name"));
 
         // document
         perform
