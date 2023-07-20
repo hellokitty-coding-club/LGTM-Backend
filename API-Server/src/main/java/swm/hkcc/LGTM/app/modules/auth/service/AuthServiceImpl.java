@@ -133,7 +133,7 @@ public class AuthServiceImpl implements AuthService {
 
     private String createAccessToken(Member member) {
         return tokenProvider.createToken(
-                member.getNickName(),
+                member.getGithubId(),
                 TokenType.ACCESS_TOKEN
         );
     }
