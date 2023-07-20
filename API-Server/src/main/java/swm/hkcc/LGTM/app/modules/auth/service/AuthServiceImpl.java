@@ -51,8 +51,8 @@ public class AuthServiceImpl implements AuthService {
         Optional<Member> member = memberRepository.findByGithubOauthId(githubUserInfo.getId());
 
         if (member.isPresent()) {
-            String refreshToken = createRefreshToken(member.get());
             Member updatedMember = member.get();
+            String refreshToken = createRefreshToken(updatedMember);
             updatedMember.setRefreshToken(refreshToken);
             memberRepository.save(updatedMember);
 
