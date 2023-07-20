@@ -3,8 +3,8 @@ name: Build Image and Push to ECR
 on:
   push:
     branches:
-      - '*'
-      
+      - 'main'
+      - 'develop'
 
 env:
       ECR_ROOT: ${{ secrets.AWS_ECR_ROOT }}
