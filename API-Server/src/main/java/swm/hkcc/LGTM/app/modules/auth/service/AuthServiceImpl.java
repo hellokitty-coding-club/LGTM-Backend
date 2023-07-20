@@ -44,20 +44,25 @@ public class AuthServiceImpl implements AuthService {
     private final TokenProvider tokenProvider;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public SignInResponse githubSignIn(GithubUserInfo githubUserInfo) {
-        log.info("githubUserInfo={}", githubUserInfo);
+        log.debug("githubUserInfo={}", githubUserInfo);
 
-        Optional<Member> member = memberRepository.findOneByGithubOauthId(githubUserInfo.getId());
+        Optional<Member> member = memberRepository.findByGithubOauthId(githubUserInfo.getId());
 
         if (member.isPresent()) {
+            Member updatedMember = member.get();
+            String refreshToken = createRefreshToken(updatedMember);
+            updatedMember.setRefreshToken(refreshToken);
+            memberRepository.save(updatedMember);
+
             return SignInResponse.builder()
-                    .memberId(member.get().getMemberId())
+                    .memberId(updatedMember.getMemberId())
                     .githubId(githubUserInfo.getLogin())
                     .githubOauthId(githubUserInfo.getId())
                     .isRegistered(true)
-                    .accessToken(createAccessToken(member.get()))
-                    .refreshToken(createRefreshToken(member.get()))
+                    .accessToken(createAccessToken(updatedMember))
+                    .refreshToken(refreshToken)
                     .build();
         }
 
@@ -128,7 +133,6 @@ public class AuthServiceImpl implements AuthService {
 
     private String createAccessToken(Member member) {
         return tokenProvider.createToken(
-                member.getMemberId(),
                 member.getGithubId(),
                 TokenType.ACCESS_TOKEN
         );
@@ -136,7 +140,6 @@ public class AuthServiceImpl implements AuthService {
 
     private String createRefreshToken(Member member) {
         return tokenProvider.createToken(
-                member.getMemberId(),
                 member.getGithubId(),
                 TokenType.REFRESH_TOKEN
         );
