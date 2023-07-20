@@ -140,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
 
     private String createRefreshToken(Member member) {
         return tokenProvider.createToken(
-                member.getNickName(),
+                member.getGithubId(),
                 TokenType.REFRESH_TOKEN
         );
     }
