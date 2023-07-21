@@ -24,7 +24,8 @@ public class HomeController {
     public ApiDataResponse<ServerDrivenScreenResponse> getHomeScreen(
             Authentication auth
     ) {
-        log.info(auth.getName());
-        return ApiDataResponse.of(homeService.getHomeScreen(currentVersionOfController));
+        String githubId = auth.getName();
+
+        return ApiDataResponse.of(homeService.getHomeScreen(githubId, currentVersionOfController));
     }
 }
