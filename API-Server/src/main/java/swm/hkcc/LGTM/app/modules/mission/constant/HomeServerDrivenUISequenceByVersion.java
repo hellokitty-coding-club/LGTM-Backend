@@ -1,4 +1,6 @@
 package swm.hkcc.LGTM.app.modules.mission.constant;
 
-public enum HomeServerDrivenUISequenceByVersion {
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenUISequenceByVersion;
+
+public enum HomeServerDrivenUISequenceByVersion implements ServerDrivenUISequenceByVersion {
 }

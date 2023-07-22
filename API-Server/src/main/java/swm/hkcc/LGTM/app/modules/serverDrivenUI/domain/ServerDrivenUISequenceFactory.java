@@ -1,8 +1,8 @@
 package swm.hkcc.LGTM.app.modules.serverDrivenUI.domain;
 
-import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenScreenResponse;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenUISequenceByVersion;
 
 public interface ServerDrivenUISequenceFactory {
 
-    ServerDrivenScreenResponse createServerDrivenUISequenceByVersion(int version);
+    ServerDrivenUISequenceByVersion createServerDrivenUISequenceByVersion(int version);
 }
