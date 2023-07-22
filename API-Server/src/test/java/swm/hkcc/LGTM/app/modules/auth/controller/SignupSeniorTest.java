@@ -3,6 +3,7 @@ package swm.hkcc.LGTM.app.modules.auth.controller;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import swm.hkcc.LGTM.app.global.constant.ResponseCode;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SeniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpResponse;
 import swm.hkcc.LGTM.app.modules.auth.exception.DuplicateNickName;
@@ -59,6 +61,9 @@ public class SignupSeniorTest {
     @MockBean
     private GithubUserInfoProvider githubUserInfoProvider;
 
+    // given request boy
+    SeniorSignUpRequest seniorSignUpRequest;
+
     @BeforeEach
     public void setUp(@Autowired WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -67,27 +72,27 @@ public class SignupSeniorTest {
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .alwaysDo(print())
                 .build();
+
+        seniorSignUpRequest = SeniorSignUpRequest.builder()
+                .githubId("testGithubId")
+                .githubOauthId(12345)
+                .nickName("test-nickname")
+                .deviceToken("Test_DeviceToken")
+                .profileImageUrl("http://test.ProfileImageUrl.com/img.png")
+                .introduction("Test Introduction")
+                .tagList(Arrays.asList("JAVA", "Python", "JavaScript"))
+                .companyInfo("(주)TestCompany")
+                .careerPeriod(36)
+                .position("서버 개발자")
+                .accountNumber("111-11-1111111")
+                .bankName("국민은행")
+                .build();
     }
 
     @Test
     @DisplayName("시니어 회원가입 테스트")
     void seniorSignup() throws Exception {
         // given
-        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
-                .githubId("testGithubId")
-                .githubOauthId(12345)
-                .nickName("Test NickName")
-                .deviceToken("Test DeviceToken")
-                .profileImageUrl("Test ProfileImageUrl")
-                .introduction("Test Introduction")
-                .tagList(Arrays.asList("tag1", "tag2"))
-                .companyInfo("Test CompanyInfo")
-                .careerPeriod(5)
-                .position("Test Position")
-                .accountNumber("Test AccountNumber")
-                .bankName("국민은행")
-                .build();
-
         SignUpResponse expectedResponse = SignUpResponse.builder()
                 .memberId(1L)
                 .githubId("testGithubId")
@@ -168,32 +173,19 @@ public class SignupSeniorTest {
     @DisplayName("시니어 회원가입 실패 테스트 - 닉네임 중복")
     void seniorSignupDuplicatedNickname() throws Exception {
         // given
-        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
-                .githubId("testGithubId")
-                .githubOauthId(12345)
-                .nickName("Test NickName")
-                .deviceToken("Test DeviceToken")
-                .profileImageUrl("Test ProfileImageUrl")
-                .introduction("Test Introduction")
-                .tagList(Arrays.asList("tag1", "tag2"))
-                .companyInfo("Test CompanyInfo")
-                .careerPeriod(5)
-                .position("Test Position")
-                .accountNumber("Test AccountNumber")
-                .bankName("국민은행")
-                .build();
 
         // when
         Mockito.when(authService.signupSenior(seniorSignUpRequest)).thenThrow(new DuplicateNickName());
 
         // then
+        ResponseCode expectedResponseCode = ResponseCode.DUPLICATE_NICK_NAME;
         ResultActions perform = mockMvc.perform(post("/v1/signup/senior")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(seniorSignUpRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.responseCode").value(10004))
-                .andExpect(jsonPath("$.message").value("Duplicate nickname"));
+                .andExpect(jsonPath("$.responseCode").value(expectedResponseCode.getCode()))
+                .andExpect(jsonPath("$.message").value(expectedResponseCode.getMessage()));
 
         // document
         perform
@@ -215,32 +207,19 @@ public class SignupSeniorTest {
     @DisplayName("시니어 회원가입 실패 테스트 - 부적절한 태그")
     void seniorSignupInvalidTag() throws Exception {
         // given
-        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
-                .githubId("testGithubId")
-                .githubOauthId(12345)
-                .nickName("Test NickName")
-                .deviceToken("Test DeviceToken")
-                .profileImageUrl("Test ProfileImageUrl")
-                .introduction("Test Introduction")
-                .tagList(Arrays.asList("tag1", "tag2"))
-                .companyInfo("Test CompanyInfo")
-                .careerPeriod(5)
-                .position("Test Position")
-                .accountNumber("Test AccountNumber")
-                .bankName("국민은행")
-                .build();
 
         // when
         Mockito.when(authService.signupSenior(seniorSignUpRequest)).thenThrow(new InvalidTechTag());
 
         // then
+        ResponseCode expectedResponseCode = ResponseCode.INVALID_TECH_TAG;
         ResultActions perform = mockMvc.perform(post("/v1/signup/senior")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(seniorSignUpRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.responseCode").value(10005))
-                .andExpect(jsonPath("$.message").value("Invalid tech tag"));
+                .andExpect(jsonPath("$.responseCode").value(expectedResponseCode.getCode()))
+                .andExpect(jsonPath("$.message").value(expectedResponseCode.getMessage()));
 
         // document
         perform
@@ -261,32 +240,19 @@ public class SignupSeniorTest {
     @DisplayName("시니어 회원가입 실패 테스트 - 부적절한 경력사항")
     void seniorSignupInvalidCareer() throws Exception {
         // given
-        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
-                .githubId("testGithubId")
-                .githubOauthId(12345)
-                .nickName("Test NickName")
-                .deviceToken("Test DeviceToken")
-                .profileImageUrl("Test ProfileImageUrl")
-                .introduction("Test Introduction")
-                .tagList(Arrays.asList("tag1", "tag2"))
-                .companyInfo("Test CompanyInfo")
-                .careerPeriod(5)
-                .position("Test Position")
-                .accountNumber("Test AccountNumber")
-                .bankName("국민은행")
-                .build();
 
         // when
         Mockito.when(authService.signupSenior(seniorSignUpRequest)).thenThrow(new InvalidCareerPeriod());
 
         // then
+        ResponseCode expectedResponseCode = ResponseCode.INVALID_CAREER_PERIOD;
         ResultActions perform = mockMvc.perform(post("/v1/signup/senior")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(seniorSignUpRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.responseCode").value(10006))
-                .andExpect(jsonPath("$.message").value("Invalid career period, Career period should be at least 12 months"));
+                .andExpect(jsonPath("$.responseCode").value(expectedResponseCode.getCode()))
+                .andExpect(jsonPath("$.message").value(expectedResponseCode.getMessage()));
 
         // document
         perform
@@ -307,32 +273,19 @@ public class SignupSeniorTest {
     @DisplayName("시니어 회원가입 실패 테스트 - 부적절한 은행명")
     void seniorSignupInvalidBankName() throws Exception {
         // given
-        SeniorSignUpRequest seniorSignUpRequest = SeniorSignUpRequest.builder()
-                .githubId("testGithubId")
-                .githubOauthId(12345)
-                .nickName("Test NickName")
-                .deviceToken("Test DeviceToken")
-                .profileImageUrl("Test ProfileImageUrl")
-                .introduction("Test Introduction")
-                .tagList(Arrays.asList("tag1", "tag2"))
-                .companyInfo("Test CompanyInfo")
-                .careerPeriod(5)
-                .position("Test Position")
-                .accountNumber("Test AccountNumber")
-                .bankName("국민은행")
-                .build();
 
         // when
         Mockito.when(authService.signupSenior(seniorSignUpRequest)).thenThrow(new InvalidBankName());
 
         // then
+        ResponseCode expectedResponseCode = ResponseCode.INVALID_BANK_NAME;
         ResultActions perform = mockMvc.perform(post("/v1/signup/senior")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(seniorSignUpRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.responseCode").value(10007))
-                .andExpect(jsonPath("$.message").value("Invalid Bank name"));
+                .andExpect(jsonPath("$.responseCode").value(expectedResponseCode.getCode()))
+                .andExpect(jsonPath("$.message").value(expectedResponseCode.getMessage()));
 
         // document
         perform
