@@ -23,12 +23,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import swm.hkcc.LGTM.app.global.constant.ResponseCode;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.JuniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SignUpResponse;
 import swm.hkcc.LGTM.app.modules.auth.exception.DuplicateNickName;
 import swm.hkcc.LGTM.app.modules.auth.exception.InvalidTechTag;
 import swm.hkcc.LGTM.app.modules.auth.service.AuthService;
 import swm.hkcc.LGTM.app.modules.auth.utils.GithubUserInfoProvider;
+import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
 import java.util.Arrays;
 
@@ -42,6 +44,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableHead;
+import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableRow;
 
 @SpringBootTest
 @Transactional
@@ -57,6 +61,9 @@ public class SignupJuniorTest {
     @MockBean
     private GithubUserInfoProvider githubUserInfoProvider;
 
+    // given request boy
+    JuniorSignUpRequest juniorSignUpRequest;
+
     @BeforeEach
     public void setUp(@Autowired WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -65,24 +72,24 @@ public class SignupJuniorTest {
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .alwaysDo(print())
                 .build();
+
+        juniorSignUpRequest = JuniorSignUpRequest.builder()
+                .githubId("testGithubId")
+                .githubOauthId(12345)
+                .nickName("test-nickname")
+                .deviceToken("Test_DeviceToken")
+                .profileImageUrl("http://test.ProfileImageUrl.com/img.png")
+                .introduction("Test Introduction")
+                .tagList(Arrays.asList("JAVA", "Python", "JavaScript"))
+                .educationalHistory("대학생")
+                .realName("홍길동")
+                .build();
     }
 
     @Test
     @DisplayName("주니어 회원가입 테스트")
     void juniorSignup() throws Exception {
         // given
-
-        JuniorSignUpRequest juniorSignUpRequest = JuniorSignUpRequest.builder()
-                .githubId("testGithubId")
-                .githubOauthId(12345)
-                .nickName("Test NickName")
-                .deviceToken("Test DeviceToken")
-                .profileImageUrl("Test ProfileImageUrl")
-                .introduction("Test Introduction")
-                .tagList(Arrays.asList("tag1", "tag2"))
-                .educationalHistory("Test EducationalHistory")
-                .realName("Test RealName")
-                .build();
 
         SignUpResponse expectedResponse = SignUpResponse.builder()
                 .memberId(1L)
@@ -116,18 +123,37 @@ public class SignupJuniorTest {
                         resource(ResourceSnippetParameters.builder()
                                 .summary("[회원인증] 주니어 회원가입")
                                 .description(
-                                        "주니어 회원가입 정보 입력 후, 회원가입 정보를 반환한다.\n\n" +
-                                                "View : 회원가입 화면\n\n\n\n" +
-                                                "[Request values]\n\n" +
-                                                "githubId : Github 아이디\n\n" +
-                                                "githubOauthId : Github 의 사용자 식별 번호. 해당 id 이용하여 LGTM의 서비스 이용자를 식별한다.\n\n" +
-                                                "nickName : 닉네임, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다, 동일한 닉네임이 있을 경우 400 에러 반환\n\n" +
-                                                "deviceToken : 디바이스 토큰\n\n" +
-                                                "profileImageUrl : 프로필 이미지 URL\n\n" +
-                                                "introduction : 나의 한줄 소개, 최대 500자, 클라이언트에서 trim()처리하여 보낸다 \n\n" +
-                                                "tagList : 태그 리스트, 텍스트의 리스트로 전달한다. 1개 이상이어야 한다. 선택가능한 태그 외의 문자열이 전달될 경우 400에러 반환\n\n" +
-                                                "educationalHistory : 학력\n\n" +
-                                                "realName : 실명\n\n"
+                                        CustomMDGenerator.builder()
+                                                .h1("[Descriptions]")
+                                                .h3("주니어 회원가입 정보 입력 후, 회원가입 정보를 반환한다.")
+                                                .h3("View : 회원가입 화면")
+                                                .h1("[Request values]")
+                                                .table(
+                                                        tableHead("Request values", "Data Type", "Description"),
+                                                        tableRow("githubId", "String", "Github 아이디"),
+                                                        tableRow("githubOauthId", "Integer", "Github의 사용자 식별 번호. 해당 id 이용하여 LGTM의 서비스 이용자를 식별한다."),
+                                                        tableRow("nickName", "String", "닉네임, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다, 동일한 닉네임이 있을 경우 400 에러 반환"),
+                                                        tableRow("deviceToken", "String", "디바이스 토큰"),
+                                                        tableRow("profileImageUrl", "String", "프로필 이미지 URL"),
+                                                        tableRow("introduction", "String", "나의 한줄 소개, 최대 500자, 클라이언트에서 trim()처리하여 보낸다"),
+                                                        tableRow("tagList", "List<String>", "태그 리스트, 텍스트의 리스트로 전달한다. 1개 이상이어야 한다. 선택가능한 태그 외의 문자열이 전달될 경우 400에러 반환"),
+                                                        tableRow("educationalHistory", "String", "학력"),
+                                                        tableRow("realName", "String", "실명")
+                                                )
+                                                .line()
+                                                .h1("[Errors]")
+                                                .table(
+                                                        tableHead("HTTP Status", "Response Code", "Message"),
+                                                        tableRow(
+                                                                ResponseCode.DUPLICATE_NICK_NAME.getHttpStatus().toString(),
+                                                                ResponseCode.DUPLICATE_NICK_NAME.getCode().toString(),
+                                                                ResponseCode.DUPLICATE_NICK_NAME.getMessage()),
+                                                        tableRow(
+                                                                ResponseCode.INVALID_TECH_TAG.getHttpStatus().toString(),
+                                                                ResponseCode.INVALID_TECH_TAG.getCode().toString(),
+                                                                ResponseCode.INVALID_TECH_TAG.getMessage())
+                                                )
+                                                .build()
                                 )
                                 .requestFields(
                                         fieldWithPath("githubId").type(JsonFieldType.STRING).description("Github 아이디"),
@@ -158,29 +184,19 @@ public class SignupJuniorTest {
     @DisplayName("주니어 회원가입 실패 테스트 - 닉네임 중복")
     void juniorSignupDuplicatedNickname() throws Exception {
         // given
-        JuniorSignUpRequest juniorSignUpRequest = JuniorSignUpRequest.builder()
-                .githubId("testGithubId")
-                .githubOauthId(12345)
-                .nickName("Test NickName")
-                .deviceToken("Test DeviceToken")
-                .profileImageUrl("Test ProfileImageUrl")
-                .introduction("Test Introduction")
-                .tagList(Arrays.asList("tag1", "tag2"))
-                .educationalHistory("Test EducationalHistory")
-                .realName("Test RealName")
-                .build();
 
         // when
         Mockito.when(authService.signupJunior(juniorSignUpRequest)).thenThrow(new DuplicateNickName());
 
         // then
+        ResponseCode expectedResponseCode = ResponseCode.DUPLICATE_NICK_NAME;
         ResultActions perform = mockMvc.perform(post("/v1/signup/junior")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(juniorSignUpRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.responseCode").value(10004))
-                .andExpect(jsonPath("$.message").value("Duplicate nickname"));
+                .andExpect(jsonPath("$.responseCode").value(expectedResponseCode.getCode()))
+                .andExpect(jsonPath("$.message").value(expectedResponseCode.getMessage()));
 
         // document
         perform
@@ -202,29 +218,19 @@ public class SignupJuniorTest {
     @DisplayName("주니어 회원가입 실패 테스트 - 부적절한 태그")
     void juniorSignupInvalidTag() throws Exception {
         // given
-        JuniorSignUpRequest juniorSignUpRequest = JuniorSignUpRequest.builder()
-                .githubId("testGithubId")
-                .githubOauthId(12345)
-                .nickName("Test NickName")
-                .deviceToken("Test DeviceToken")
-                .profileImageUrl("Test ProfileImageUrl")
-                .introduction("Test Introduction")
-                .tagList(Arrays.asList("tag1", "tag2"))
-                .educationalHistory("Test EducationalHistory")
-                .realName("Test RealName")
-                .build();
 
         // when
         Mockito.when(authService.signupJunior(juniorSignUpRequest)).thenThrow(new InvalidTechTag());
 
         // then
+        ResponseCode expectedResponseCode = ResponseCode.INVALID_TECH_TAG;
         ResultActions perform = mockMvc.perform(post("/v1/signup/junior")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(juniorSignUpRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.responseCode").value(10005))
-                .andExpect(jsonPath("$.message").value("Invalid tech tag"));
+                .andExpect(jsonPath("$.responseCode").value(expectedResponseCode.getCode()))
+                .andExpect(jsonPath("$.message").value(expectedResponseCode.getMessage()));
 
         // document
         perform
