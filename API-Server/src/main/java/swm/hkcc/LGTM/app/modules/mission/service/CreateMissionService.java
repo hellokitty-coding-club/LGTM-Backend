@@ -6,5 +6,5 @@ import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionResponse;
 
 @Service
 public interface CreateMissionService {
-    CreateMissionResponse createMission(String memberGithubId, CreateMissionRequest requestBody);
+    CreateMissionResponse createMission(Long memberId, CreateMissionRequest requestBody);
 }
