@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import swm.hkcc.LGTM.app.global.entity.BaseEntity;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
+import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequest;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -64,4 +66,21 @@ public class Mission extends BaseEntity {
     @Column(nullable = false)
     private Integer maxPeopleNumber;
 
+    public static Mission from(CreateMissionRequest request, Member writer) {
+        return Mission.builder()
+                .writer(writer)
+                .missionRepositoryUrl(request.getMissionRepositoryUrl())
+                .title(request.getTitle())
+                .missionStatus(MissionStatus.from(request.getMissionStatus()))
+                .thumbnailImageUrl(request.getThumbnailImageUrl())
+                .description(request.getDescription())
+                .reomnnandTo(request.getReomnnandTo())
+                .notReomnnandTo(request.getNotReomnnandTo())
+                .registrationDueDate(request.getRegistrationDueDate())
+                .assignmentDueDate(request.getAssignmentDueDate())
+                .reviewCompletationDueDate(request.getReviewCompletationDueDate())
+                .price(request.getPrice())
+                .maxPeopleNumber(request.getMaxPeopleNumber())
+                .build();
+    }
 }
