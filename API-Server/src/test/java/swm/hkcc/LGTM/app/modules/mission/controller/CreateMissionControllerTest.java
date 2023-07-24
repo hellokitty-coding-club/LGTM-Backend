@@ -133,5 +133,44 @@ class CreateMissionControllerTest {
                 .andExpect(jsonPath("$.data.writerId").value(1L));
 
         // document
+        actions
+                .andDo(document("post-create-mission",  // 문서의 고유 id
+                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+                        resource(ResourceSnippetParameters.builder()
+                                .summary("[미션] 미션 생성")
+                                .description(
+                                        CustomMDGenerator.builder()
+                                                .h1("미션 생성")
+                                                .build()
+                                )
+                                .tag("미션")
+                                .requestFields(
+                                        // {"missionRepositoryUrl":"https://github.com/abcabc","title":"title","missionStatus":"참가자 모집중","tagList":["tag1","tag2"],"thumbnailImageUrl":"https://abc.com/aa.png","description":"content","reomnnandTo":"ReomnnandTo","notReomnnandTo":"notReomnnandTo","registrationDueDate":[2100,1,1,1,1,1],"assignmentDueDate":[2100,1,1,1,1,1],"reviewCompletationDueDate":[2100,1,1,1,1,1],"price":1000,"maxPeopleNumber":10}
+                                        fieldWithPath("missionRepositoryUrl").type(JsonFieldType.STRING).description("미션 저장소 URL"),
+                                        fieldWithPath("title").type(JsonFieldType.STRING).description("미션 제목"),
+                                        fieldWithPath("missionStatus").type(JsonFieldType.STRING).description("미션 상태"),
+                                        fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("미션 태그 리스트"),
+                                        fieldWithPath("thumbnailImageUrl").type(JsonFieldType.STRING).description("미션 썸네일 이미지 URL"),
+                                        fieldWithPath("description").type(JsonFieldType.STRING).description("미션 설명"),
+                                        fieldWithPath("reomnnandTo").type(JsonFieldType.STRING).description("미션 추천 대상"),
+                                        fieldWithPath("notReomnnandTo").type(JsonFieldType.STRING).description("미션 비추천 대상"),
+                                        // todo: 마감일 형식!!!
+                                        fieldWithPath("registrationDueDate").type(JsonFieldType.STRING).description("미션 참가 신청 마감일"),
+                                        fieldWithPath("assignmentDueDate").type(JsonFieldType.STRING).description("미션 과제 제출 마감일"),
+                                        fieldWithPath("reviewCompletationDueDate").type(JsonFieldType.STRING).description("미션 리뷰 제출 마감일"),
+                                        fieldWithPath("price").type(JsonFieldType.NUMBER).description("미션 가격"),
+                                        fieldWithPath("maxPeopleNumber").type(JsonFieldType.NUMBER).description("미션 최대 참가 인원")
+                                )
+                                .responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
+                                        fieldWithPath("data.writerId").type(JsonFieldType.NUMBER).description("작성자 ID"),
+                                        fieldWithPath("data.missionId").type(JsonFieldType.NUMBER).description("미션 ID")
+                                )
+                                .build())));
+    }
 
 }
