@@ -48,15 +48,15 @@ public class Mission extends BaseEntity {
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date registrationDueDate;
+    private LocalDate registrationDueDate;
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date assignmentDueDate;
+    private LocalDate assignmentDueDate;
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date reviewCompletationDueDate;
+    private LocalDate reviewCompletationDueDate;
 
     @Column(nullable = false)
     private Integer price;
