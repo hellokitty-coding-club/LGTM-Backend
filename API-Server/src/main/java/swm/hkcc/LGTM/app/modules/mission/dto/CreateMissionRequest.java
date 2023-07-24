@@ -1,14 +1,14 @@
 package swm.hkcc.LGTM.app.modules.mission.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
-import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -25,7 +25,7 @@ public class CreateMissionRequest {
     private String title;
 
     @NotBlank
-    private MissionStatus missionStatus; // todo: enum
+    private String missionStatus;
 
     @NotNull
     protected List<String> tagList;
@@ -48,15 +48,18 @@ public class CreateMissionRequest {
 
     @NotNull
     @FutureOrPresent
-    private LocalDateTime registrationDueDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate registrationDueDate;
 
     @NotNull
     @FutureOrPresent
-    private LocalDateTime assignmentDueDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate assignmentDueDate;
 
     @NotNull
     @FutureOrPresent
-    private LocalDateTime reviewCompletationDueDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate reviewCompletationDueDate;
 
     @NotNull
     @Positive
