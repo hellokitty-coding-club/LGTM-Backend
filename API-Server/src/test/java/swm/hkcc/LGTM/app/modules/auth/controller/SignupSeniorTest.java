@@ -33,6 +33,7 @@ import swm.hkcc.LGTM.app.modules.auth.service.AuthService;
 import swm.hkcc.LGTM.app.modules.auth.utils.GithubUserInfoProvider;
 import swm.hkcc.LGTM.app.modules.member.exception.InvalidBankName;
 import swm.hkcc.LGTM.app.modules.member.exception.InvalidCareerPeriod;
+import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
 import java.util.Arrays;
 
@@ -46,6 +47,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static swm.hkcc.LGTM.utils.CustomMDGenerator.*;
 
 @SpringBootTest
 @Transactional
@@ -125,21 +127,48 @@ public class SignupSeniorTest {
                         resource(ResourceSnippetParameters.builder()
                                 .summary("[회원인증] 시니어 회원가입")
                                 .description(
-                                        "시니어 회원가입 정보 입력 후, 회원가입 정보를 반환한다.\n\n" +
-                                                "View : 회원가입 화면\n\n\n\n" +
-                                                "[Request values]\n\n" +
-                                                "githubId : Github 아이디\n\n" +
-                                                "githubOauthId : Github 의 사용자 식별 번호. 해당 id 이용하여 LGTM의 서비스 이용자를 식별한다.\n\n" +
-                                                "nickName : 닉네임, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다, 동일한 닉네임이 있을 경우 400 에러 반환\n\n" +
-                                                "deviceToken : 디바이스 토큰\n\n" +
-                                                "profileImageUrl : 프로필 이미지 URL\n\n" +
-                                                "introduction : 나의 한줄 소개, 최대 500자, 클라이언트에서 trim()처리하여 보낸다 \n\n" +
-                                                "tagList : 태그 리스트, 텍스트의 리스트로 전달한다. 1개 이상이어야 한다. 선택가능한 태그 외의 문자열이 전달될 경우 400에러 반환\n\n" +
-                                                "companyInfo : 회사 정보, 법인명에 해당하는 이름\n\n" +
-                                                "careerPeriod : 경력 기간, 개월 단위로 입력, 1 이상의 정수, 12개월 이상이어야 한다.\n\n" +
-                                                "position : 직급, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다\n\n" +
-                                                "accountNumber : 계좌번호, 숫자와 '-'로만 이루어져야 한다.\n\n" +
-                                                "bankName : 은행명, 등록되지 않은 이름일 경우 400 에러 반환"
+                                        CustomMDGenerator.builder()
+                                                .h1("[Descriptions]")
+                                                .h3("시니어 회원가입 정보 입력 후, 회원가입 정보를 반환한다.")
+                                                .h3("View : 회원가입 화면")
+                                                .h1("[Request values]")
+                                                .table(
+                                                        tableHead("Request values", "Data Type", "Description"),
+                                                        tableRow("githubId", "String", "Github 아이디"),
+                                                        tableRow("githubOauthId", "Integer", "Github의 사용자 식별 번호. 해당 id 이용하여 LGTM의 서비스 이용자를 식별한다."),
+                                                        tableRow("nickName", "String", "닉네임, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다, 동일한 닉네임이 있을 경우 400 에러 반환"),
+                                                        tableRow("deviceToken", "String", "디바이스 토큰"),
+                                                        tableRow("profileImageUrl", "String", "프로필 이미지 URL"),
+                                                        tableRow("introduction", "String", "나의 한줄 소개, 최대 500자, 클라이언트에서 trim()처리하여 보낸다"),
+                                                        tableRow("tagList", "List<String>", "태그 리스트, 텍스트의 리스트로 전달한다. 1개 이상이어야 한다. 선택가능한 태그 외의 문자열이 전달될 경우 400에러 반환"),
+                                                        tableRow("companyInfo", "String", "회사 정보, 법인명에 해당하는 이름"),
+                                                        tableRow("careerPeriod", "Integer", "경력 기간, 개월 단위로 입력, 1 이상의 정수, 12개월 이상이어야 한다."),
+                                                        tableRow("position", "String", "직급, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다"),
+                                                        tableRow("accountNumber", "String", "계좌번호, 숫자와 '-'로만 이루어져야 한다."),
+                                                        tableRow("bankName", "String", "은행명, 등록되지 않은 이름일 경우 400 에러 반환")
+                                                )
+                                                .line()
+                                                .h1("[Errors]")
+                                                .table(
+                                                        tableHead("HTTP Status", "Response Code", "Message"),
+                                                        tableRow(
+                                                                ResponseCode.DUPLICATE_NICK_NAME.getHttpStatus().toString(),
+                                                                ResponseCode.DUPLICATE_NICK_NAME.getCode().toString(),
+                                                                ResponseCode.DUPLICATE_NICK_NAME.getMessage()),
+                                                        tableRow(
+                                                                ResponseCode.INVALID_TECH_TAG.getHttpStatus().toString(),
+                                                                ResponseCode.INVALID_TECH_TAG.getCode().toString(),
+                                                                ResponseCode.INVALID_TECH_TAG.getMessage()),
+                                                        tableRow(
+                                                                ResponseCode.INVALID_CAREER_PERIOD.getHttpStatus().toString(),
+                                                                ResponseCode.INVALID_CAREER_PERIOD.getCode().toString(),
+                                                                ResponseCode.INVALID_CAREER_PERIOD.getMessage()),
+                                                        tableRow(
+                                                                ResponseCode.INVALID_BANK_NAME.getHttpStatus().toString(),
+                                                                ResponseCode.INVALID_BANK_NAME.getCode().toString(),
+                                                                ResponseCode.INVALID_BANK_NAME.getMessage())
+                                                )
+                                                .build()
                                 )
                                 .requestFields(
                                         fieldWithPath("githubId").type(JsonFieldType.STRING).description("Github 아이디"),

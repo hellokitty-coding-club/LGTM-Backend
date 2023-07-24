@@ -30,6 +30,7 @@ import swm.hkcc.LGTM.app.modules.auth.exception.DuplicateNickName;
 import swm.hkcc.LGTM.app.modules.auth.exception.InvalidTechTag;
 import swm.hkcc.LGTM.app.modules.auth.service.AuthService;
 import swm.hkcc.LGTM.app.modules.auth.utils.GithubUserInfoProvider;
+import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
 import java.util.Arrays;
 
@@ -43,6 +44,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static swm.hkcc.LGTM.utils.CustomMDGenerator.*;
 
 @SpringBootTest
 @Transactional
@@ -120,18 +122,37 @@ public class SignupJuniorTest {
                         resource(ResourceSnippetParameters.builder()
                                 .summary("[회원인증] 주니어 회원가입")
                                 .description(
-                                        "주니어 회원가입 정보 입력 후, 회원가입 정보를 반환한다.\n\n" +
-                                                "View : 회원가입 화면\n\n\n\n" +
-                                                "[Request values]\n\n" +
-                                                "githubId : Github 아이디\n\n" +
-                                                "githubOauthId : Github 의 사용자 식별 번호. 해당 id 이용하여 LGTM의 서비스 이용자를 식별한다.\n\n" +
-                                                "nickName : 닉네임, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다, 동일한 닉네임이 있을 경우 400 에러 반환\n\n" +
-                                                "deviceToken : 디바이스 토큰\n\n" +
-                                                "profileImageUrl : 프로필 이미지 URL\n\n" +
-                                                "introduction : 나의 한줄 소개, 최대 500자, 클라이언트에서 trim()처리하여 보낸다 \n\n" +
-                                                "tagList : 태그 리스트, 텍스트의 리스트로 전달한다. 1개 이상이어야 한다. 선택가능한 태그 외의 문자열이 전달될 경우 400에러 반환\n\n" +
-                                                "educationalHistory : 학력\n\n" +
-                                                "realName : 실명\n\n"
+                                        CustomMDGenerator.builder()
+                                                .h1("[Descriptions]")
+                                                .h3("주니어 회원가입 정보 입력 후, 회원가입 정보를 반환한다.")
+                                                .h3("View : 회원가입 화면")
+                                                .h1("[Request values]")
+                                                .table(
+                                                        tableHead("Request values", "Data Type", "Description"),
+                                                        tableRow("githubId", "String", "Github 아이디"),
+                                                        tableRow("githubOauthId", "Integer", "Github의 사용자 식별 번호. 해당 id 이용하여 LGTM의 서비스 이용자를 식별한다."),
+                                                        tableRow("nickName", "String", "닉네임, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다, 동일한 닉네임이 있을 경우 400 에러 반환"),
+                                                        tableRow("deviceToken", "String", "디바이스 토큰"),
+                                                        tableRow("profileImageUrl", "String", "프로필 이미지 URL"),
+                                                        tableRow("introduction", "String", "나의 한줄 소개, 최대 500자, 클라이언트에서 trim()처리하여 보낸다"),
+                                                        tableRow("tagList", "List<String>", "태그 리스트, 텍스트의 리스트로 전달한다. 1개 이상이어야 한다. 선택가능한 태그 외의 문자열이 전달될 경우 400에러 반환"),
+                                                        tableRow("educationalHistory", "String", "학력"),
+                                                        tableRow("realName", "String", "실명")
+                                                )
+                                                .line()
+                                                .h1("[Errors]")
+                                                .table(
+                                                        tableHead("HTTP Status", "Response Code", "Message"),
+                                                        tableRow(
+                                                                ResponseCode.DUPLICATE_NICK_NAME.getHttpStatus().toString(),
+                                                                ResponseCode.DUPLICATE_NICK_NAME.getCode().toString(),
+                                                                ResponseCode.DUPLICATE_NICK_NAME.getMessage()),
+                                                        tableRow(
+                                                                ResponseCode.INVALID_TECH_TAG.getHttpStatus().toString(),
+                                                                ResponseCode.INVALID_TECH_TAG.getCode().toString(),
+                                                                ResponseCode.INVALID_TECH_TAG.getMessage())
+                                                )
+                                                .build()
                                 )
                                 .requestFields(
                                         fieldWithPath("githubId").type(JsonFieldType.STRING).description("Github 아이디"),
