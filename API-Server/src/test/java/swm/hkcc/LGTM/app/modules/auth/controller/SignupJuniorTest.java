@@ -76,13 +76,13 @@ public class SignupJuniorTest {
         juniorSignUpRequest = JuniorSignUpRequest.builder()
                 .githubId("testGithubId")
                 .githubOauthId(12345)
-                .nickName("Test NickName")
-                .deviceToken("Test DeviceToken")
-                .profileImageUrl("Test ProfileImageUrl")
+                .nickName("test-nickname")
+                .deviceToken("Test_DeviceToken")
+                .profileImageUrl("http://test.ProfileImageUrl.com/img.png")
                 .introduction("Test Introduction")
-                .tagList(Arrays.asList("tag1", "tag2"))
-                .educationalHistory("Test EducationalHistory")
-                .realName("Test RealName")
+                .tagList(Arrays.asList("JAVA", "Python", "JavaScript"))
+                .educationalHistory("대학생")
+                .realName("홍길동")
                 .build();
     }
 
