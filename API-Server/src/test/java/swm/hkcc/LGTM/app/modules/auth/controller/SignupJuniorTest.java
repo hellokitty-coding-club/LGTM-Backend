@@ -44,7 +44,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static swm.hkcc.LGTM.utils.CustomMDGenerator.*;
+import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableHead;
+import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableRow;
 
 @SpringBootTest
 @Transactional
@@ -183,17 +184,6 @@ public class SignupJuniorTest {
     @DisplayName("주니어 회원가입 실패 테스트 - 닉네임 중복")
     void juniorSignupDuplicatedNickname() throws Exception {
         // given
-        JuniorSignUpRequest juniorSignUpRequest = JuniorSignUpRequest.builder()
-                .githubId("testGithubId")
-                .githubOauthId(12345)
-                .nickName("Test NickName")
-                .deviceToken("Test DeviceToken")
-                .profileImageUrl("Test ProfileImageUrl")
-                .introduction("Test Introduction")
-                .tagList(Arrays.asList("tag1", "tag2"))
-                .educationalHistory("Test EducationalHistory")
-                .realName("Test RealName")
-                .build();
 
         // when
         Mockito.when(authService.signupJunior(juniorSignUpRequest)).thenThrow(new DuplicateNickName());
@@ -228,17 +218,6 @@ public class SignupJuniorTest {
     @DisplayName("주니어 회원가입 실패 테스트 - 부적절한 태그")
     void juniorSignupInvalidTag() throws Exception {
         // given
-        JuniorSignUpRequest juniorSignUpRequest = JuniorSignUpRequest.builder()
-                .githubId("testGithubId")
-                .githubOauthId(12345)
-                .nickName("Test NickName")
-                .deviceToken("Test DeviceToken")
-                .profileImageUrl("Test ProfileImageUrl")
-                .introduction("Test Introduction")
-                .tagList(Arrays.asList("tag1", "tag2"))
-                .educationalHistory("Test EducationalHistory")
-                .realName("Test RealName")
-                .build();
 
         // when
         Mockito.when(authService.signupJunior(juniorSignUpRequest)).thenThrow(new InvalidTechTag());

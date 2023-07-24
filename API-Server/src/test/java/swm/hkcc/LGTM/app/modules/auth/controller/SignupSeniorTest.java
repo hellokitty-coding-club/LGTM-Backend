@@ -3,7 +3,6 @@ package swm.hkcc.LGTM.app.modules.auth.controller;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static swm.hkcc.LGTM.utils.CustomMDGenerator.*;
+import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableHead;
+import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableRow;
 
 @SpringBootTest
 @Transactional
