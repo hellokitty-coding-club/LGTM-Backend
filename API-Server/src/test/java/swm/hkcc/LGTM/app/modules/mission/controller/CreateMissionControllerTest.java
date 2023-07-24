@@ -35,6 +35,7 @@ import swm.hkcc.LGTM.app.modules.mission.service.CreateMissionServiceImpl;
 import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
@@ -95,7 +96,7 @@ class CreateMissionControllerTest {
         Member member = (Member.builder()
                 .memberId(1L)
                 .build());
-        member.setRoles(List.of(new Authority(1l, "ROLE_USER", member)));
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
 
         CustomUserDetails customUserDetails = new CustomUserDetails(member);
 
