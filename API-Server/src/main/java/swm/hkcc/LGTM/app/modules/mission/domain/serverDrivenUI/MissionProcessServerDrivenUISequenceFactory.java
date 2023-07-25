@@ -8,7 +8,8 @@ import java.util.Optional;
 
 public class MissionProcessServerDrivenUISequenceFactory implements ServerDrivenUISequenceFactory {
     @Override
-    public Optional<List<MissionContentType>> getServerDrivenUISequenceByVersion(int version) {
+    public List<MissionContentType> getServerDrivenUISequenceByVersion(int version) {
+        // todo: implement this method
         return null;
     }
 }
