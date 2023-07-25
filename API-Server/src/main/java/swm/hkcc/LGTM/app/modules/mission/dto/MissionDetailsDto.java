@@ -21,8 +21,6 @@ public class MissionDetailsDto {
     private int price;
     private int currentPeopleNumber;
     private int maxPeopleNumber;
-
     private boolean isScraped;
-
     private int scrapCount;
 }

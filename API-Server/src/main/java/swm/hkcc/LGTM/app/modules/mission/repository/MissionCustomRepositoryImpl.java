@@ -8,10 +8,12 @@ import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
 import swm.hkcc.LGTM.app.modules.registration.domain.PersonalStatus;
+import swm.hkcc.LGTM.app.modules.registration.domain.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static swm.hkcc.LGTM.app.modules.member.domain.QMember.member;
 import static swm.hkcc.LGTM.app.modules.mission.domain.QMission.mission;
@@ -24,6 +26,9 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
     private final MissionRepository missionRepository;
+    private final MissionScrapRepository missionScrapRepository;
+    private final MissionViewRepository missionViewRepository;
+    private final MissionRegistrationRepository missionRegistrationRepository;
 
     @Override
     public List<MissionDto> getOnGoingMissions(Long memberId) {
@@ -31,7 +36,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
 
         return onGoingMissions.stream()
                 .map(this::toMissionDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<Mission> getMissions(BooleanExpression isParticipating, BooleanExpression isNotFinished) {
@@ -84,70 +89,33 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
         return null;
     }
 
-    // todo: get total missions
     @Override
     public List<MissionDetailsDto> getTotalMissions(Long memberId) {
-//        List<Mission> totalMissions = getMissions(isNotFinished());
-//
-//        return totalMissions.stream()
-//                .map(this::toMissionDetailsDto)
-//                .collect(Collectors.toList());
-//
-        return null;
+        List<Mission> missions = getMissions(isNotFinished());
+
+        return missions.stream()
+                .map(mission -> toMissionDetailsDto(memberId, mission))
+                .toList();
     }
 
-//    private MissionDetailsDto toMissionDetailsDto(Mission d) {
-//        Long missionId = d.getMissionId();
-//
-//        return jpaQueryFactory
-//                .select(Projections.constructor(MissionDetailsDto.class,
-//                        mission.missionId,
-//                        mission.title,
-//                        mission.thumbnailImageUrl,
-//                        remainingRegisterDays(d),
-//                        viewCount(),
-//                        mission.price,
-//                        currentPeopleNumber(),
-//                        mission.maxPeopleNumber,
-//                        isScraped(1L),
-//                        scrapCount()))
-//                .from(mission)
-//                .where(mission.missionId.eq(missionId))
-//                .fetchOne();
-//    }
-//
-//    private NumberExpression<Integer> remainingRegisterDays(Mission mission) {
-//        return Expressions.asNumber(ChronoUnit.DAYS.between(LocalDate.now(), mission.getRegistrationDueDate()))
-//                .intValue();
-//    }
-//
-//    private JPQLQuery<Long> viewCount() {
-//        return JPAExpressions
-//                .select(missionView.count())
-//                .from(missionView)
-//                .where(missionView.mission.eq(mission));
-//    }
-//
-//    private JPQLQuery<Long> currentPeopleNumber() {
-//        return JPAExpressions
-//                .select(missionRegistration.count())
-//                .from(missionRegistration)
-//                .where(missionRegistration.mission.eq(mission));
-//    }
-//
-//    private JPQLQuery<Long> scrapCount() {
-//        return JPAExpressions
-//                .select(missionScrap.count())
-//                .from(missionScrap)
-//                .where(missionScrap.mission.eq(mission));
-//    }
-//
-//    private BooleanExpression isScraped(Long memberId) {
-//        return JPAExpressions
-//                .selectFrom(missionScrap)
-//                .where(missionScrap.mission.eq(mission)
-//                        .and(missionScrap.scrapper.memberId.eq(memberId)))
-//                .exists();
-//    }
+    private MissionDetailsDto toMissionDetailsDto(Long memberId, Mission mission) {
+        return MissionDetailsDto.builder()
+                .missionId(mission.getMissionId())
+                .missionTitle(mission.getTitle())
+                .techTagList(getTechTagList(mission.getMissionId()))
+                .missionThumbnailUrl(mission.getThumbnailImageUrl())
+                .remainingRegisterDays(remainingRegisterDays(mission))
+                .viewCount(missionViewRepository.countByMission_MissionId(mission.getMissionId()))
+                .price(mission.getPrice())
+                .currentPeopleNumber(missionRegistrationRepository.countByMission_MissionId(mission.getMissionId()))
+                .maxPeopleNumber(mission.getMaxPeopleNumber())
+                .isScraped(missionScrapRepository.existsByScrapper_MemberIdAndMission_MissionId(memberId, mission.getMissionId()))
+                .scrapCount(missionScrapRepository.countByMission_MissionId(mission.getMissionId()))
+                .build();
+    }
+
+    private int remainingRegisterDays(Mission mission) {
+        return (int) ChronoUnit.DAYS.between(LocalDate.now(), mission.getRegistrationDueDate());
+    }
 
 }
