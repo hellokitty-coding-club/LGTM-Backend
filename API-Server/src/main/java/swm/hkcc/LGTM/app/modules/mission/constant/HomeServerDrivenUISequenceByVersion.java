@@ -21,7 +21,8 @@ public enum HomeServerDrivenUISequenceByVersion implements ServerDrivenUISequenc
                     RECOMMENDED_MISSION_LIST,
                     SECTION_CLOSER,
                     TOTAL_MISSION_TITLE,
-                    TOTAL_MISSION_LIST
+                    TOTAL_MISSION_LIST,
+                    SECTION_CLOSER
             )),
 
     V2_HOME_SERVER_DRIVEN_UI_SEQUENCE(
@@ -33,12 +34,13 @@ public enum HomeServerDrivenUISequenceByVersion implements ServerDrivenUISequenc
                     ON_GOING_MISSION_LIST,
                     SECTION_CLOSER,
                     TOTAL_MISSION_TITLE,
-                    TOTAL_MISSION_LIST
+                    TOTAL_MISSION_LIST,
+                    SECTION_CLOSER
             ));
 
     private final int version;
 
-    private final List<MissionContentType> components;
+    private final List<MissionContentType> contents;
 
     public static Optional<HomeServerDrivenUISequenceByVersion> findByVersion(int version) {
         return Arrays.stream(HomeServerDrivenUISequenceByVersion.values())
