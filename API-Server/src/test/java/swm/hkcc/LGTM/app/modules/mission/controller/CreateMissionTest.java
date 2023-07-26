@@ -82,7 +82,6 @@ class CreateMissionTest {
         createMissionRequest = CreateMissionRequest.builder()
                 .missionRepositoryUrl("https://github.com/abcabc")
                 .title("title")
-                .missionStatus(MissionStatus.RECRUITING.getValue())
                 .tagList(List.of("JAVA", "Spring"))
                 .thumbnailImageUrl("https://abc.com/aa.png")
                 .description("content")
@@ -116,7 +115,6 @@ class CreateMissionTest {
     @DisplayName("미션 생성 동작 테스트")
     void createMission() throws Exception {
         // given
-        String token = "token";
         Mockito.when(createMissionService.createMission(1L, createMissionRequest))
                 .thenReturn(CreateMissionResponse.builder()
                         .missionId(1L)
@@ -157,15 +155,14 @@ class CreateMissionTest {
                                                         tableHead("Request values", "Data Type", "Description"),
                                                         tableRow("missionRepositoryUrl", "String", "미션 저장소 URL. URL 형식이 아니면 Validation 에러 발생"),
                                                         tableRow("title", "String", "미션 제목. 최대 길이 = 100"),
-                                                        tableRow("missionStatus", "String", "미션 상태"),
                                                         tableRow("tagList", "List<String>", "미션 태그 리스트"),
                                                         tableRow("thumbnailImageUrl", "String", "미션 썸네일 이미지 URL. URL 형식이 아니면 Validation 에러 발생"),
                                                         tableRow("description", "String", "미션 설명. 최대 길이 = 1000"),
                                                         tableRow("reomnnandTo", "String", "이런 사람에게 추천해요. 최대 길이 = 1000"),
                                                         tableRow("notReomnnandTo", "String", "이런 사람에게는 추천하지 않아요. 최대 길이 = 1000"),
-                                                        tableRow("registrationDueDate", "LocalDate", "모집 및 입금완료 마감일. yyyy-MM-dd 형식, 미션 등록일보다 미래가 아닐 경우 Validation 에러 발생"),
-                                                        tableRow("assignmentDueDate", "LocalDate", "pr 제출 마감일. yyyy-MM-dd 형식, 미션 등록일보다 미래가 아닐 경우 Validation 에러 발생"),
-                                                        tableRow("reviewCompletationDueDate", "LocalDate", "미션 리뷰 완료 마감일. yyyy-MM-dd 형식, 미션 등록일보다 미래가 아닐 경우 Validation 에러 발생"),
+                                                        tableRow("registrationDueDate", "LocalDate", "모집 및 입금완료 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
+                                                        tableRow("assignmentDueDate", "LocalDate", "pr 제출 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
+                                                        tableRow("reviewCompletationDueDate", "LocalDate", "미션 리뷰 완료 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
                                                         tableRow("price", "Integer", "미션 가격"),
                                                         tableRow("maxPeopleNumber", "Integer", "미션 최대 참가 인원")
                                                 )
@@ -193,7 +190,6 @@ class CreateMissionTest {
                                         // {"missionRepositoryUrl":"https://github.com/abcabc","title":"title","missionStatus":"참가자 모집중","tagList":["tag1","tag2"],"thumbnailImageUrl":"https://abc.com/aa.png","description":"content","reomnnandTo":"ReomnnandTo","notReomnnandTo":"notReomnnandTo","registrationDueDate":[2100,1,1,1,1,1],"assignmentDueDate":[2100,1,1,1,1,1],"reviewCompletationDueDate":[2100,1,1,1,1,1],"price":1000,"maxPeopleNumber":10}
                                         fieldWithPath("missionRepositoryUrl").type(JsonFieldType.STRING).description("미션 저장소 URL"),
                                         fieldWithPath("title").type(JsonFieldType.STRING).description("미션 제목"),
-                                        fieldWithPath("missionStatus").type(JsonFieldType.STRING).description("미션 상태"),
                                         fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("미션 태그 리스트"),
                                         fieldWithPath("thumbnailImageUrl").type(JsonFieldType.STRING).description("미션 썸네일 이미지 URL"),
                                         fieldWithPath("description").type(JsonFieldType.STRING).description("미션 설명"),
@@ -222,7 +218,6 @@ class CreateMissionTest {
     @DisplayName("미션 생성 실패 테스트 - 존재하지 않는 회원")
     void createMissionNotExistMember() throws Exception {
         // given
-        String token = "token";
         Mockito.when(createMissionService.createMission(1L, createMissionRequest))
                 .thenThrow(new NotExistMember());
 
@@ -263,7 +258,6 @@ class CreateMissionTest {
     @DisplayName("미션 생성 실패 테스트 - 시니어가 아닌 회원")
     void createMissionNotSenior() throws Exception {
         // given
-        String token = "token";
         Mockito.when(createMissionService.createMission(1L, createMissionRequest))
                 .thenThrow(new NotSeniorMember());
 
@@ -303,7 +297,6 @@ class CreateMissionTest {
     @DisplayName("미션 생성 실패 테스트 - 부적절한 태그")
     void createMissionInvalidTechTag() throws Exception {
         // given
-        String token = "token";
         Mockito.when(createMissionService.createMission(1L, createMissionRequest))
                 .thenThrow(new InvalidTechTag());
 
