@@ -49,7 +49,6 @@ public class CreateMissionServiceImpl implements CreateMissionService {
     private void validateCreateMissionRequest(CreateMissionRequest request, Member writer) {
         validateSenior(writer);
         validateTagList(request.getTagList());
-        // todo : add validations
     }
 
     private void setTechTagListOfMission(Mission mission, List<String> tagList) {

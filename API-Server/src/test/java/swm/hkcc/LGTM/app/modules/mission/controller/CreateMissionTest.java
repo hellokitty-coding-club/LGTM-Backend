@@ -325,7 +325,7 @@ class CreateMissionTest {
 
         // document
         actions
-                .andDo(document("post-create-mission-not-senior-member",
+                .andDo(document("post-create-mission-invalid-tech-tag",
                         preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
