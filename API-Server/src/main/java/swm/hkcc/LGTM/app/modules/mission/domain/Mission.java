@@ -7,7 +7,6 @@ import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequest;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Getter
@@ -71,7 +70,7 @@ public class Mission extends BaseEntity {
                 .writer(writer)
                 .missionRepositoryUrl(request.getMissionRepositoryUrl())
                 .title(request.getTitle())
-                .missionStatus(MissionStatus.from(request.getMissionStatus()))
+                .missionStatus(MissionStatus.RECRUITING)
                 .thumbnailImageUrl(request.getThumbnailImageUrl())
                 .description(request.getDescription())
                 .reomnnandTo(request.getReomnnandTo())

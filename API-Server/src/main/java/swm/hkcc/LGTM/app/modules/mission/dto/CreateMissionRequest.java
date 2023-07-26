@@ -24,9 +24,6 @@ public class CreateMissionRequest {
     @Size(max = 100)
     private String title;
 
-    @NotBlank
-    private String missionStatus;
-
     @NotNull
     protected List<String> tagList;
 
@@ -57,7 +54,7 @@ public class CreateMissionRequest {
     private LocalDate assignmentDueDate;
 
     @NotNull
-    @FutureOrPresent
+    @FutureOrPresent(message = "리뷰 마감일은 현재 날짜보다 미래여야 합니다.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate reviewCompletationDueDate;
 
