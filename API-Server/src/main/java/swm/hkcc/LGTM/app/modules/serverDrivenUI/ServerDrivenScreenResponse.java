@@ -1,10 +1,15 @@
 package swm.hkcc.LGTM.app.modules.serverDrivenUI;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
+@Getter
+@RequiredArgsConstructor
 public class ServerDrivenScreenResponse {
 
-    private String screenName;
+    private final String screenName;
 
-    private List<ServerDrivenContent<?>> contents;
+    private final List<ServerDrivenContent> contents;
 }
