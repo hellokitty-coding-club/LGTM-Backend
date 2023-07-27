@@ -6,4 +6,5 @@ import swm.hkcc.LGTM.app.modules.member.domain.Junior;
 
 @Repository
 public interface JuniorRepository extends JpaRepository<Junior, Long> {
+    boolean existsByMember_MemberId(Long memberId);
 }
