@@ -1,10 +1,8 @@
 package swm.hkcc.LGTM.app.modules.serverDrivenUI.domain;
 
-import swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType;
-
-import java.util.List;
+import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentSequence;
 
 public interface ServerDrivenUISequenceFactory {
 
-    List<MissionContentType> getServerDrivenUISequenceByVersion(int version);
+    MissionContentSequence getServerDrivenUISequenceByVersion(int version);
 }

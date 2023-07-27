@@ -1,14 +1,13 @@
 package swm.hkcc.LGTM.app.modules.mission.domain.serverDrivenUI;
 
-import swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType;
+import org.springframework.stereotype.Component;
+import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentSequence;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.domain.ServerDrivenUISequenceFactory;
 
-import java.util.List;
-import java.util.Optional;
-
+@Component
 public class MissionProcessServerDrivenUISequenceFactory implements ServerDrivenUISequenceFactory {
     @Override
-    public List<MissionContentType> getServerDrivenUISequenceByVersion(int version) {
+    public MissionContentSequence getServerDrivenUISequenceByVersion(int version) {
         // todo: implement this method
         return null;
     }

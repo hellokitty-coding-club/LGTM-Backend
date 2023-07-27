@@ -13,13 +13,11 @@ import java.util.List;
 @Component
 public class HomeServerDrivenUISequenceFactory implements ServerDrivenUISequenceFactory {
     @Override
-    public List<MissionContentType> getServerDrivenUISequenceByVersion(int version) {
+    public MissionContentSequence getServerDrivenUISequenceByVersion(int version) {
         return HomeServerDrivenUISequenceByVersion.findByVersion(version)
                 .map(HomeServerDrivenUISequenceByVersion::getContents)
+                .map(MissionContentSequence::new)
                 .orElseThrow(() -> new GeneralException(ResponseCode.DATA_ACCESS_ERROR));
     }
 
-    public MissionContentSequence createMissionContentSequenceFromVersion(int version) {
-        return new MissionContentSequence(getServerDrivenUISequenceByVersion(version));
-    }
 }
