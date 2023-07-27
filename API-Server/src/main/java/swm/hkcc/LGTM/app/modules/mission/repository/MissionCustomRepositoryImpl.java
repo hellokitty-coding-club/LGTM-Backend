@@ -3,6 +3,7 @@ package swm.hkcc.LGTM.app.modules.mission.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
@@ -20,6 +21,7 @@ import static swm.hkcc.LGTM.app.modules.mission.domain.QMission.mission;
 import static swm.hkcc.LGTM.app.modules.registration.domain.QMissionRegistration.missionRegistration;
 import static swm.hkcc.LGTM.app.modules.tag.domain.QTechTagPerMission.techTagPerMission;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class MissionCustomRepositoryImpl implements MissionCustomRepository {
@@ -94,11 +96,11 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
         List<Mission> missions = getMissions(isNotFinished());
 
         return missions.stream()
-                .map(mission -> toMissionDetailsDto(memberId, mission))
+                .map(mission -> getMissionDetails(memberId, mission))
                 .toList();
     }
 
-    private MissionDetailsDto toMissionDetailsDto(Long memberId, Mission mission) {
+    private MissionDetailsDto getMissionDetails(Long memberId, Mission mission) {
         return MissionDetailsDto.builder()
                 .missionId(mission.getMissionId())
                 .missionTitle(mission.getTitle())
