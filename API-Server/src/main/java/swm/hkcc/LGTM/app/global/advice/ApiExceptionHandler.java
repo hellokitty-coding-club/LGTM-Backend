@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,6 +16,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import swm.hkcc.LGTM.app.global.constant.ResponseCode;
 import swm.hkcc.LGTM.app.global.dto.ApiResponse;
 import swm.hkcc.LGTM.app.global.exception.GeneralException;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestControllerAdvice
@@ -41,11 +46,27 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Sentry.captureException(e);
-        return handleExceptionInternal(
-                e,
-                ResponseCode.INTERNAL_ERROR,
-                request
-        );
+        StringBuilder sb = new StringBuilder();
+
+        // request info
+        sb.append("request endpoint ").append(request.getDescription(false)).append(" ");
+
+        // field errors info
+        Set<FieldError> fieldErrors = new HashSet<>(e.getBindingResult().getFieldErrors());
+        fieldErrors
+                .forEach(error -> {
+                    sb.append("\n[").append(error.getField()).append(" : ").append(error.getDefaultMessage()).append("]");
+                });
+        // other errors info
+        e.getBindingResult().getAllErrors()
+                .stream()
+                .filter(error -> !fieldErrors.contains(error))
+                .forEach(error -> {
+                    sb.append("\n[").append(error.getDefaultMessage()).append("]");
+                });
+
+        GeneralException ge = new GeneralException(ResponseCode.VALIDATION_ERROR, sb.toString(), e.getCause());
+        return handleExceptionInternal(ge, ge.getResponseCode(), request);
     }
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ResponseCode responseCode, WebRequest request) {
