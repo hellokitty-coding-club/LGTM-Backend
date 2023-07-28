@@ -24,7 +24,6 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public ServerDrivenContents getOngoingMissions(Long memberId) {
-//        validateMemberId(memberId);
         List<MissionDto> missions = missionCustomRepository.getOnGoingMissions(memberId);
 
         return ServerDrivenContents.of(
@@ -33,8 +32,7 @@ public class MissionServiceImpl implements MissionService {
                         .toList());
     }
 
-    // todo: 추천 미션 가져오기 구현 미완료 -> 전체 미션 가져오기로 임시 대체
-    @Override
+    @Override // todo: 추천 미션 가져오기 구현 미완료 -> 전체 미션 가져오기로 임시 대체
     public ServerDrivenContents getRecommendMissions(Long memberId) {
         List<MissionDetailsDto> missions = missionCustomRepository.getTotalMissions(memberId);
 
