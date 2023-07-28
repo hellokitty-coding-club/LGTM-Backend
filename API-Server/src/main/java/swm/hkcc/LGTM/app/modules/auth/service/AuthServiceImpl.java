@@ -77,6 +77,7 @@ public class AuthServiceImpl implements AuthService {
                 .githubId(githubUserInfo.getLogin())
                 .githubOauthId(githubUserInfo.getId())
                 .isRegistered(false)
+                .profileImageUrl(githubUserInfo.getAvatar_url())
                 .build();
 
     }
