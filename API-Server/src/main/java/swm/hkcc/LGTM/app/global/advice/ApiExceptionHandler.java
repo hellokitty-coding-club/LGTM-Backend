@@ -5,7 +5,9 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -36,13 +38,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(e, ResponseCode.INTERNAL_ERROR, request);
     }
 
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        Sentry.captureException(e);
+        return handleExceptionInternal(
+                e,
+                ResponseCode.INTERNAL_ERROR,
+                request
+        );
+    }
+
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ResponseCode responseCode, WebRequest request) {
-        log.info("exception occurred from {} class : {}", e.getClass().getName() ,e.getMessage());
+        log.info("exception occurred from {} class : {}", e.getClass().getName(), e.getMessage());
         return handleExceptionInternal(e, responseCode, HttpHeaders.EMPTY, responseCode.getHttpStatus(), request);
     }
 
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ResponseCode responseCode, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        log.info("exception occurred from {} class : {}", e.getClass().getName() ,e.getMessage());
+        log.info("exception occurred from {} class : {}", e.getClass().getName(), e.getMessage());
         return super.handleExceptionInternal(
                 e,
                 ApiResponse.of(false, responseCode.getCode(), responseCode.getMessage(e)),
