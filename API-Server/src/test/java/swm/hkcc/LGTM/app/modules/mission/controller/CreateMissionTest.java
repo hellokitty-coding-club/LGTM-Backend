@@ -33,6 +33,7 @@ import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
 import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
 import swm.hkcc.LGTM.app.modules.member.exception.NotSeniorMember;
+import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequest;
 import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionResponse;
@@ -116,10 +117,11 @@ class CreateMissionTest {
     void createMission() throws Exception {
         // given
         Mockito.when(createMissionService.createMission(1L, createMissionRequest))
-                .thenReturn(CreateMissionResponse.builder()
-                        .missionId(1L)
-                        .writerId(1L)
-                        .build());
+                .thenReturn(
+                        Mission.builder()
+                                .missionId(1L)
+                                .writer(Member.builder().memberId(1L).build())
+                                .build());
 
         // when
 

@@ -2,19 +2,17 @@ package swm.hkcc.LGTM.app.modules.mission.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 @Builder
+@EqualsAndHashCode
 public class CreateMissionRequest {
     @NotBlank
     @URL
@@ -54,7 +52,7 @@ public class CreateMissionRequest {
     private LocalDate assignmentDueDate;
 
     @NotNull
-    @FutureOrPresent(message = "리뷰 마감일은 현재 날짜보다 미래여야 합니다.")
+    @FutureOrPresent
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate reviewCompletationDueDate;
 
