@@ -16,26 +16,26 @@ public enum HomeServerDrivenUISequenceByVersion implements ServerDrivenUISequenc
             1,
             List.of(ON_GOING_MISSION_TITLE,
                     ON_GOING_MISSION_LIST,
-                    SECTION_CLOSER,
+                    SECTION_DARK_CLOSER,
                     RECOMMENDED_MISSION_TITLE,
                     RECOMMENDED_MISSION_LIST,
-                    SECTION_CLOSER,
+                    SECTION_LIGHT_CLOSER,
                     TOTAL_MISSION_TITLE,
                     TOTAL_MISSION_LIST,
-                    SECTION_CLOSER
+                    SECTION_LIGHT_CLOSER
             )),
 
     V2_HOME_SERVER_DRIVEN_UI_SEQUENCE(
             2,
             List.of(RECOMMENDED_MISSION_TITLE,
                     RECOMMENDED_MISSION_LIST,
-                    SECTION_CLOSER,
+                    SECTION_DARK_CLOSER,
                     ON_GOING_MISSION_TITLE,
                     ON_GOING_MISSION_LIST,
-                    SECTION_CLOSER,
+                    SECTION_LIGHT_CLOSER,
                     TOTAL_MISSION_TITLE,
                     TOTAL_MISSION_LIST,
-                    SECTION_CLOSER
+                    SECTION_LIGHT_CLOSER
             ));
 
     private final int version;

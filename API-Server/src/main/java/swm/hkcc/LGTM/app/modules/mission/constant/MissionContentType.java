@@ -19,7 +19,9 @@ public enum MissionContentType {
 
     TOTAL_MISSION_LIST(ViewType.ITEM),
 
-    SECTION_CLOSER(ViewType.CLOSER);
+    SECTION_DARK_CLOSER(ViewType.CLOSER),
+
+    SECTION_LIGHT_CLOSER(ViewType.CLOSER);
 
     private final ViewType viewType;
 
