@@ -76,4 +76,8 @@ public class Member extends BaseEntity {
                 .isAgreeWithEventInfo(request.isAgreeWithEventInfo())
                 .build();
     }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
 }
