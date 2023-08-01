@@ -16,35 +16,19 @@ public class ServerDrivenContent<T> {
 
     private T content;
 
-    public static ServerDrivenContent from(MissionDto missionDto, Theme theme, ViewType viewType) {
-        return ServerDrivenContent.builder()
-                .viewType(viewType)
-                .theme(theme)
-                .content(missionDto)
-                .build();
-    }
-
-    public static ServerDrivenContent from(MissionDetailsDto missionDetailsDto, Theme theme, ViewType viewType) {
-        return ServerDrivenContent.builder()
-                .viewType(viewType)
-                .theme(theme)
-                .content(missionDetailsDto)
-                .build();
-    }
-
-    public static ServerDrivenContent from(MissionTitleDto missionTitleDto, Theme theme, ViewType viewType) {
-        return ServerDrivenContent.builder()
-                .viewType(viewType)
-                .theme(theme)
-                .content(missionTitleDto)
-                .build();
-    }
-
     public static ServerDrivenContent from(Theme theme, ViewType viewType) {
         return ServerDrivenContent.builder()
                 .viewType(viewType)
                 .theme(theme)
                 .content("")
+                .build();
+    }
+
+    public static ServerDrivenContent from(Object content, Theme theme, ViewType viewType) {
+        return ServerDrivenContent.builder()
+                .viewType(viewType)
+                .theme(theme)
+                .content(content)
                 .build();
     }
 

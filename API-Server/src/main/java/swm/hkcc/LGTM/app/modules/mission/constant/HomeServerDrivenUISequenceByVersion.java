@@ -14,28 +14,28 @@ import static swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType.*;
 public enum HomeServerDrivenUISequenceByVersion implements ServerDrivenUISequenceByVersion {
     V1_HOME_SERVER_DRIVEN_UI_SEQUENCE(
             1,
-            List.of(ON_GOING_MISSION_TITLE,
-                    ON_GOING_MISSION_LIST,
-                    SECTION_DARK_CLOSER,
-                    RECOMMENDED_MISSION_TITLE,
-                    RECOMMENDED_MISSION_LIST,
-                    SECTION_LIGHT_CLOSER,
-                    TOTAL_MISSION_TITLE,
-                    TOTAL_MISSION_LIST,
-                    SECTION_LIGHT_CLOSER
+            List.of(ON_GOING_MISSION_TITLE_V1,
+                    ON_GOING_MISSION_LIST_V1,
+                    SECTION_DARK_CLOSER_V1,
+                    RECOMMENDED_MISSION_TITLE_V1,
+                    RECOMMENDED_MISSION_LIST_V1,
+                    SECTION_LIGHT_CLOSER_V1,
+                    TOTAL_MISSION_TITLE_V1,
+                    TOTAL_MISSION_LIST_V1,
+                    SECTION_LIGHT_CLOSER_V1
             )),
 
     V2_HOME_SERVER_DRIVEN_UI_SEQUENCE(
             2,
-            List.of(RECOMMENDED_MISSION_TITLE,
-                    RECOMMENDED_MISSION_LIST,
-                    SECTION_DARK_CLOSER,
-                    ON_GOING_MISSION_TITLE,
-                    ON_GOING_MISSION_LIST,
-                    SECTION_LIGHT_CLOSER,
-                    TOTAL_MISSION_TITLE,
-                    TOTAL_MISSION_LIST,
-                    SECTION_LIGHT_CLOSER
+            List.of(RECOMMENDED_MISSION_TITLE_V1,
+                    RECOMMENDED_MISSION_LIST_V1,
+                    SECTION_DARK_CLOSER_V1,
+                    ON_GOING_MISSION_TITLE_V1,
+                    ON_GOING_MISSION_LIST_V1,
+                    SECTION_LIGHT_CLOSER_V1,
+                    TOTAL_MISSION_TITLE_V1,
+                    TOTAL_MISSION_LIST_V1,
+                    SECTION_LIGHT_CLOSER_V1
             ));
 
     private final int version;

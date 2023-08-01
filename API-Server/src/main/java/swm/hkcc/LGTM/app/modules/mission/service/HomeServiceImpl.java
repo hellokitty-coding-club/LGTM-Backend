@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentSequence;
-import swm.hkcc.LGTM.app.modules.mission.domain.holder.MissionCloserHolder;
 import swm.hkcc.LGTM.app.modules.mission.domain.holder.MissionItemHolder;
-import swm.hkcc.LGTM.app.modules.mission.domain.holder.MissionTitleHolder;
 import swm.hkcc.LGTM.app.modules.mission.domain.serverDrivenUI.HomeServerDrivenUISequenceFactory;
-import swm.hkcc.LGTM.app.modules.serverDrivenUI.*;
+import swm.hkcc.LGTM.app.modules.mission.dto.MissionTitleDto;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContent;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContents;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenScreenResponse;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.ViewType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +22,8 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 @Service
 public class HomeServiceImpl implements HomeService{
-
-    public static final MissionContentType DARK_MISSION_CONTENT_TYPE = MissionContentType.ON_GOING_MISSION_LIST;
     private final HomeServerDrivenUISequenceFactory sequenceFactory;
     private final MissionItemHolder missionItemHolder;
-    private final MissionTitleHolder missionTitleHolder;
-    private final MissionCloserHolder missionCloserHolder;
 
     private static final String RESPONSE_SCREEN_NAME = "Home";
 
@@ -49,10 +47,10 @@ public class HomeServiceImpl implements HomeService{
             return;
         }
         if (missionContentType.getViewType() == ViewType.TITLE) {
-            serverDrivenContentList.add(missionTitleHolder.getMissionTitle(missionContentType));
+            serverDrivenContentList.add(getMissionTitle(missionContentType));
             return;
         }
-        serverDrivenContentList.add(missionCloserHolder.getMissionCloser(missionContentType));
+        serverDrivenContentList.add(getMissionCloser(missionContentType));
     }
 
     private void addMissionContentsOrEmptyView(List<ServerDrivenContent> serverDrivenContentList, ServerDrivenContents missionContents, MissionContentType missionContentType) {
@@ -63,14 +61,28 @@ public class HomeServiceImpl implements HomeService{
         addMissionList(missionContents, serverDrivenContentList);
     }
 
-    private static void addEmptyView(List<ServerDrivenContent> serverDrivenContentList, MissionContentType missionContentType) {
-        if (missionContentType == DARK_MISSION_CONTENT_TYPE)
-            serverDrivenContentList.add(ServerDrivenContent.from(Theme.DARK, ViewType.EMPTY));
-        else
-            serverDrivenContentList.add(ServerDrivenContent.from(Theme.LIGHT, ViewType.EMPTY));
+    private void addEmptyView(List<ServerDrivenContent> serverDrivenContentList, MissionContentType missionContentType) {
+            serverDrivenContentList.add(ServerDrivenContent.from(missionContentType.getTheme(), ViewType.EMPTY));
     }
 
     private void addMissionList(ServerDrivenContents missionContents, List<ServerDrivenContent> contentList) {
         contentList.addAll(missionContents.getContents());
+    }
+
+    private ServerDrivenContent getMissionTitle(MissionContentType missionContentType) {
+        return ServerDrivenContent.from(
+                MissionTitleDto.builder()
+                        .title(missionContentType.getTitleName())
+                        .build(),
+                missionContentType.getTheme(),
+                missionContentType.getViewType()
+        );
+    }
+
+    private ServerDrivenContent getMissionCloser(MissionContentType missionContentType) {
+        return ServerDrivenContent.from(
+                missionContentType.getTheme(),
+                missionContentType.getViewType()
+        );
     }
 }
