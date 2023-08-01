@@ -132,7 +132,7 @@ class UpdateDeviceTokenControllerTest {
                                                 )
                                                 .build()
                                 )
-                                .tag("멤버")
+                                .tag("Member")
                                 .queryParameters(
                                         parameterWithName("deviceToken").description("디바이스 토큰")
                                 )

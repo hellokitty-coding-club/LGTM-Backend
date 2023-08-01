@@ -85,7 +85,7 @@ class AdminDeleteMemberTest {
                         resource(ResourceSnippetParameters.builder()
                                 .description("유저 삭제")
                                 .summary("유저 삭제")
-                                .tag("admin")
+                                .tag("Admin")
                                 .pathParameters(
                                         parameterWithName("id").type(SimpleType.NUMBER).description("유저 id")
                                 )
