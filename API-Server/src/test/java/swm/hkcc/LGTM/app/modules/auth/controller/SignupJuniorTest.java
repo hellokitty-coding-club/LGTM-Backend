@@ -80,6 +80,7 @@ public class SignupJuniorTest {
                 .deviceToken("Test_DeviceToken")
                 .profileImageUrl("http://test.ProfileImageUrl.com/img.png")
                 .introduction("Test Introduction")
+                .isAgreeWithEventInfo(true)
                 .tagList(Arrays.asList("JAVA", "Python", "JavaScript"))
                 .educationalHistory("대학생")
                 .realName("홍길동")
@@ -136,6 +137,7 @@ public class SignupJuniorTest {
                                                         tableRow("deviceToken", "String", "디바이스 토큰"),
                                                         tableRow("profileImageUrl", "String", "프로필 이미지 URL"),
                                                         tableRow("introduction", "String", "나의 한줄 소개, 최대 500자, 클라이언트에서 trim()처리하여 보낸다"),
+                                                        tableRow("agreeWithEventInfo", "boolean", "이벤트, 광고성 정보 안내 수신 여부"),
                                                         tableRow("tagList", "List<String>", "태그 리스트, 텍스트의 리스트로 전달한다. 1개 이상이어야 한다. 선택가능한 태그 외의 문자열이 전달될 경우 400에러 반환"),
                                                         tableRow("educationalHistory", "String", "학력"),
                                                         tableRow("realName", "String", "실명")
@@ -161,6 +163,7 @@ public class SignupJuniorTest {
                                         fieldWithPath("nickName").type(JsonFieldType.STRING).description("닉네임"),
                                         fieldWithPath("deviceToken").type(JsonFieldType.STRING).description("디바이스 토큰"),
                                         fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+                                        fieldWithPath("agreeWithEventInfo").type(JsonFieldType.BOOLEAN).description("이벤트, 광고성 정보 안내 수신 여부"),
                                         fieldWithPath("introduction").type(JsonFieldType.STRING).description("나의 한줄 소개"),
                                         fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("태그 리스트"),
                                         fieldWithPath("educationalHistory").type(JsonFieldType.STRING).description("학력"),

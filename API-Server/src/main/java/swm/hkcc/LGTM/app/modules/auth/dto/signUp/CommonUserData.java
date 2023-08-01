@@ -35,5 +35,8 @@ public class CommonUserData {
     protected String introduction;
 
     @NotNull
+    protected boolean isAgreeWithEventInfo;
+
+    @NotNull
     protected List<String> tagList;
 }

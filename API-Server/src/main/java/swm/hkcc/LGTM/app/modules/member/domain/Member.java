@@ -42,6 +42,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String introduction;
 
+    @Column
+    private boolean isAgreeWithEventInfo;
+
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Junior junior;
 
@@ -70,6 +73,7 @@ public class Member extends BaseEntity {
                 .deviceToken(request.getDeviceToken())
                 .profileImageUrl(request.getProfileImageUrl())
                 .introduction(request.getIntroduction())
+                .isAgreeWithEventInfo(request.isAgreeWithEventInfo())
                 .build();
     }
 }
