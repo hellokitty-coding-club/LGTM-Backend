@@ -28,6 +28,13 @@ public enum ResponseCode {
     INVALID_AUTHENTICATION(10007, HttpStatus.BAD_REQUEST, "유효하지 않은 인증 정보입니다. 다시 시도해주세요."),
     UNSPECIFIED_MEMBER_TYPE(10008, HttpStatus.INTERNAL_SERVER_ERROR, "회원이 시니어, 주니어 둘 다 속하지 않습니다. 회원가입 과정에서 문제가 발생했을 가능성이 있습니다."),
 
+
+
+    // Member Authority
+    NOT_EXIST_MEMBER(10100, HttpStatus.BAD_REQUEST, "존재하지 않는 회원입니다."),
+    NOT_SENIOR_MEMBER(10101, HttpStatus.BAD_REQUEST, "시니어 회원만 접근할 수 있습니다."),
+    NOT_JUNIOR_MEMBER(10102, HttpStatus.BAD_REQUEST, "주니어 회원만 접근할 수 있습니다."),
+
     INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
     DATA_ACCESS_ERROR(20001, HttpStatus.INTERNAL_SERVER_ERROR, "Data access error");
 
