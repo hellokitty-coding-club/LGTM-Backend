@@ -126,6 +126,7 @@ public class SignupSeniorTest {
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
                         resource(ResourceSnippetParameters.builder()
+                                .tag("Authorization")
                                 .summary("[회원인증] 시니어 회원가입")
                                 .description(
                                         CustomMDGenerator.builder()

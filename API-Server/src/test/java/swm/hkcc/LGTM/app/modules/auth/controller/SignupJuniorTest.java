@@ -208,6 +208,7 @@ public class SignupJuniorTest {
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
                         resource(ResourceSnippetParameters.builder()
+                                .tag("Authorization")
                                 .responseFields(
                                         fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
                                         fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
