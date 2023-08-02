@@ -33,7 +33,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String refreshToken;
 
-    @Column(nullable = false)
+    @Column(nullable = true, unique = false)
     private String deviceToken;
 
     @Column(nullable = false)
