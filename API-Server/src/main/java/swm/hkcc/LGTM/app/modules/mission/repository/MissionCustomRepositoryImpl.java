@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
+import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.registration.domain.PersonalStatus;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
 
     @Override
     public List<Mission> getOnGoingMissions(Long memberId) {
-        return getMissions(isMemberParticipating(memberId), isNotFinished());
+        return getMissions(isMemberParticipating(memberId), isNotCompleted());
     }
 
     @Override // todo: get recommended missions
@@ -33,25 +34,25 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
 
     @Override
     public List<Mission> getTotalMissions(Long memberId) {
-        return getMissions(isNotFinished());
+        return getMissions(isMissionNotFinished());
     }
 
-    private List<Mission> getMissions(BooleanExpression isParticipating, BooleanExpression isNotFinished) {
+    private List<Mission> getMissions(BooleanExpression isParticipating, BooleanExpression isNotCompleted) {
         return jpaQueryFactory
                 .select(mission)
                 .from(mission)
                 .join(missionRegistration).on(mission.missionId.eq(missionRegistration.mission.missionId))
                 .join(member).on(member.memberId.eq(missionRegistration.junior.memberId))
-                .where(isParticipating.and(isNotFinished))
+                .where(isParticipating.and(isNotCompleted))
                 .fetch();
     }
 
-    private List<Mission> getMissions(BooleanExpression isNotFinished) {
+    private List<Mission> getMissions(BooleanExpression isMissionNotFinished) {
         return jpaQueryFactory
                 .select(mission)
                 .from(mission)
                 .join(missionRegistration).on(mission.missionId.eq(missionRegistration.mission.missionId))
-                .where(isNotFinished)
+                .where(isMissionNotFinished)
                 .fetch();
     }
 
@@ -59,8 +60,11 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
         return member.memberId.eq(memberId);
     }
 
-    private BooleanExpression isNotFinished() {
+    private BooleanExpression isNotCompleted() {
         return missionRegistration.status.ne(PersonalStatus.MISSION_FINISHED);
     }
 
+    private BooleanExpression isMissionNotFinished() {
+        return mission.missionStatus.ne(MissionStatus.MISSION_FINISHED);
+    }
 }
