@@ -9,7 +9,7 @@ import swm.hkcc.LGTM.app.global.entity.BaseEntity;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TechTag extends BaseEntity {
+public class TechTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
