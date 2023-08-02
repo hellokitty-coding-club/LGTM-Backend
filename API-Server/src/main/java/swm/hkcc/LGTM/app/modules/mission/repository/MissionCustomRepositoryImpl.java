@@ -51,7 +51,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
         return jpaQueryFactory
                 .select(mission)
                 .from(mission)
-                .join(missionRegistration).on(mission.missionId.eq(missionRegistration.mission.missionId))
                 .where(isMissionNotFinished)
                 .fetch();
     }
