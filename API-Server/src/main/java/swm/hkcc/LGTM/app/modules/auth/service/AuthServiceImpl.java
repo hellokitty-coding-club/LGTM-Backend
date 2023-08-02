@@ -111,6 +111,7 @@ public class AuthServiceImpl implements AuthService {
         validateSignUpRequest(request);
         Member member = Member.from(request);
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+        memberRepository.eraseDeviceToken(request.getDeviceToken());
         Member savedMember = memberRepository.save(member);
         setTagListOfMember(member, request.getTagList());
         updateRefreshToken(savedMember);
