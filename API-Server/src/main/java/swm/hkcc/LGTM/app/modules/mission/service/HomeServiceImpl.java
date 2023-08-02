@@ -5,14 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType;
+import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentSequence;
 import swm.hkcc.LGTM.app.modules.mission.domain.holder.MissionItemHolder;
 import swm.hkcc.LGTM.app.modules.mission.domain.serverDrivenUI.HomeServerDrivenUISequenceFactory;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionTitleDto;
-import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContent;
-import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContents;
-import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenScreenResponse;
-import swm.hkcc.LGTM.app.modules.serverDrivenUI.ViewType;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +39,13 @@ public class HomeServiceImpl implements HomeService{
 
     private void processMissionContentType(Long memberId, MissionContentType missionContentType, List<ServerDrivenContent> serverDrivenContentList) {
         if (missionContentType.getViewType() == ViewType.ITEM) {
-            Function<Long, ServerDrivenContents> missionListFunction = missionItemHolder.getMissionListFunction(missionContentType);
-            ServerDrivenContents missionContents = missionListFunction.apply(memberId);
+            Function<Long, MissionContentData> missionListFunction = missionItemHolder.getMissionListFunction(missionContentType);
+            MissionContentData missionContentData = missionListFunction.apply(memberId);
+
+            ServerDrivenContents missionContents = ServerDrivenContents.of(
+                    missionContentData.getMissionData().stream()
+                            .map(missionData -> ServerDrivenContent.from(missionData, missionContentType.getTheme(), missionContentType.getViewType()))
+                            .toList());
             addMissionContentsOrEmptyView(serverDrivenContentList, missionContents, missionContentType);
             return;
         }
