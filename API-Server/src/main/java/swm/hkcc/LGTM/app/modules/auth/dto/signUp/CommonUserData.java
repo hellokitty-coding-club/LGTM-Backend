@@ -24,7 +24,6 @@ public class CommonUserData {
     @NotNull
     protected String nickName;
 
-    @NotNull
     protected String deviceToken;
 
     @NotNull
