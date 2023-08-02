@@ -1,8 +1,6 @@
 package swm.hkcc.LGTM.app.modules.member.controller;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +38,6 @@ import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.docume
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -91,7 +88,7 @@ class UpdateDeviceTokenControllerTest {
     @DisplayName("디바이스 토큰 업데이트 동작 테스트")
     void updateDeviceToken() throws Exception {
         // given
-        Mockito.when(memberService.updateDeviceToken(Mockito.anyLong(), Mockito.anyString())).thenReturn(true);
+        Mockito.when(memberService.updateDeviceToken(Mockito.anyLong(), Mockito.any())).thenReturn(true);
 
         // when
 
@@ -120,8 +117,13 @@ class UpdateDeviceTokenControllerTest {
                                                 .h1("[Request Parameters]")
                                                 .table(
                                                         tableHead("Name", "Type", "Description"),
-                                                        tableRow("deviceToken", "String", "디바이스 토큰")
+                                                        tableRow("deviceToken", "String", "디바이스 토큰, Null이거나 빈 문자열로 요청 가능")
                                                 )
+                                                .br()
+                                                .ul("device token이 추출이 안되는 기기일 경우 null값을 허용한다")
+                                                .ul("null로 수정이 된 경우에도, 정상 device token이 보내질때와 동일하게 200번 code가 도착한다")
+                                                .ul("빈문자열이나 공백이 보내져도 200OK 발생하므로 클라이언트에서 1차 검증 필요")
+                                                .br()
                                                 .h1("[Errors]")
                                                 .table(
                                                         tableHead("HTTP Status", "Response Code", "Message"),
@@ -151,7 +153,7 @@ class UpdateDeviceTokenControllerTest {
     @DisplayName("디바이스 토큰 업데이트 실패 테스트 - 존재하지 않는 회원")
     void createMissionNotExistMember() throws Exception {
         // given
-        Mockito.when(memberService.updateDeviceToken(Mockito.anyLong(), Mockito.anyString()))
+        Mockito.when(memberService.updateDeviceToken(Mockito.anyLong(), Mockito.any()))
                 .thenThrow(new NotExistMember());
 
         // when
