@@ -10,7 +10,10 @@ import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentSequence;
 import swm.hkcc.LGTM.app.modules.mission.domain.holder.MissionItemHolder;
 import swm.hkcc.LGTM.app.modules.mission.domain.serverDrivenUI.HomeServerDrivenUISequenceFactory;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionTitleDto;
-import swm.hkcc.LGTM.app.modules.serverDrivenUI.*;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContent;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContents;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenScreenResponse;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.ViewType;
 
 import java.util.ArrayList;
 import java.util.List;

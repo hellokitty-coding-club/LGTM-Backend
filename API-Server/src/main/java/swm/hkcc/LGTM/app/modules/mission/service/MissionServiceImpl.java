@@ -7,7 +7,7 @@ import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
-import swm.hkcc.LGTM.app.modules.mission.repository.MissionCustomRepository;
+import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionScrapRepository;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionViewRepository;
 import swm.hkcc.LGTM.app.modules.registration.domain.repository.MissionRegistrationRepository;
@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 public class MissionServiceImpl implements MissionService {
 
-    private final MissionCustomRepository missionCustomRepository;
+    private final MissionRepository missionRepository;
     private final MissionScrapRepository missionScrapRepository;
     private final MissionViewRepository missionViewRepository;
     private final MissionRegistrationRepository missionRegistrationRepository;
@@ -31,7 +31,7 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public MissionContentData getOngoingMissions(Long memberId) {
-        List<Mission> missions = missionCustomRepository.getOnGoingMissions(memberId);
+        List<Mission> missions = missionRepository.getOnGoingMissions(memberId);
 
         return MissionContentData.of(
                 missions.stream()
@@ -42,7 +42,7 @@ public class MissionServiceImpl implements MissionService {
 
     @Override // todo: 추천 미션 가져오기 구현 미완료 -> 전체 미션 가져오기로 임시 대체
     public MissionContentData getRecommendMissions(Long memberId) {
-        List<Mission> missions = missionCustomRepository.getTotalMissions(memberId);
+        List<Mission> missions = missionRepository.getTotalMissions(memberId);
 
         return MissionContentData.of(
                 missions.stream()
@@ -53,7 +53,7 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public MissionContentData getTotalMissions(Long memberId) {
-        List<Mission> missions = missionCustomRepository.getTotalMissions(memberId);
+        List<Mission> missions = missionRepository.getTotalMissions(memberId);
 
         return MissionContentData.of(
                 missions.stream()
