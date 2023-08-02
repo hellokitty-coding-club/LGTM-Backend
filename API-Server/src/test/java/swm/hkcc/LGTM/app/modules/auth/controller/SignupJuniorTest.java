@@ -134,7 +134,7 @@ public class SignupJuniorTest {
                                                         tableRow("githubId", "String", "Github 아이디"),
                                                         tableRow("githubOauthId", "Integer", "Github의 사용자 식별 번호. 해당 id 이용하여 LGTM의 서비스 이용자를 식별한다."),
                                                         tableRow("nickName", "String", "닉네임, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다, 동일한 닉네임이 있을 경우 400 에러 반환"),
-                                                        tableRow("deviceToken", "String", "디바이스 토큰, 등록할 수 없는 경우, NULL로 보낸다"),
+                                                        tableRow("deviceToken", "String", "디바이스 토큰, \n device token이 추출이 안되는 기기일 경우 null값을 허용한다"),
                                                         tableRow("profileImageUrl", "String", "프로필 이미지 URL"),
                                                         tableRow("introduction", "String", "나의 한줄 소개, 최대 500자, 클라이언트에서 trim()처리하여 보낸다"),
                                                         tableRow("agreeWithEventInfo", "boolean", "이벤트, 광고성 정보 안내 수신 여부"),

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -18,7 +20,6 @@ import swm.hkcc.LGTM.app.global.dto.ApiResponse;
 import swm.hkcc.LGTM.app.global.exception.GeneralException;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -66,6 +67,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 });
 
         GeneralException ge = new GeneralException(ResponseCode.VALIDATION_ERROR, sb.toString(), e.getCause());
+        return handleExceptionInternal(ge, ge.getResponseCode(), request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        GeneralException ge = new GeneralException(ResponseCode.VALIDATION_ERROR, ex.getMessage(), ex.getCause());
+        return handleExceptionInternal(ge, ge.getResponseCode(), request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        GeneralException ge = new GeneralException(ResponseCode.VALIDATION_ERROR, ex.getMessage(), ex.getCause());
         return handleExceptionInternal(ge, ge.getResponseCode(), request);
     }
 
