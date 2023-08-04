@@ -97,6 +97,7 @@ public class SignupJuniorTest {
                 .githubId("testGithubId")
                 .accessToken("testAccessToken")
                 .refreshToken("testRefreshToken")
+                .memberType("JUNIOR")
                 .build();
 
         // when
@@ -113,7 +114,8 @@ public class SignupJuniorTest {
                 .andExpect(jsonPath("$.data.memberId").value(1L))
                 .andExpect(jsonPath("$.data.githubId").value("testGithubId"))
                 .andExpect(jsonPath("$.data.accessToken").value("testAccessToken"))
-                .andExpect(jsonPath("$.data.refreshToken").value("testRefreshToken"));
+                .andExpect(jsonPath("$.data.refreshToken").value("testRefreshToken"))
+                .andExpect(jsonPath("$.data.memberType").value("JUNIOR"));
 
         // document
         perform
@@ -177,7 +179,8 @@ public class SignupJuniorTest {
                                         fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("회원 아이디"),
                                         fieldWithPath("data.githubId").type(JsonFieldType.STRING).description("Github 아이디"),
                                         fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
-                                        fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
+                                        fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰"),
+                                        fieldWithPath("data.memberType").type(JsonFieldType.STRING).description("회원 타입")
                                 )
                                 .build())
                 ));
