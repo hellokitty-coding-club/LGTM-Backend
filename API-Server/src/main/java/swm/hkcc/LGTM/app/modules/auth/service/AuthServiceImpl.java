@@ -178,6 +178,7 @@ public class AuthServiceImpl implements AuthService {
                 .githubId(member.getGithubId())
                 .accessToken(createAccessToken(member))
                 .refreshToken(member.getRefreshToken())
+                .memberType(getMemberType(member.getMemberId()))
                 .build();
     }
 
