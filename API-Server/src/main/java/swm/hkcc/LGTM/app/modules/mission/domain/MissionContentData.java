@@ -1,5 +1,6 @@
 package swm.hkcc.LGTM.app.modules.mission.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
@@ -8,7 +9,7 @@ import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
 import java.util.List;
 
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MissionContentData <T>{
 
     private final List<T> missionData;
