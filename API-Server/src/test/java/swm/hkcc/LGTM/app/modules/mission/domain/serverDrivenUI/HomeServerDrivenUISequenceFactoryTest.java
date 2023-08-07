@@ -1,6 +1,7 @@
 package swm.hkcc.LGTM.app.modules.mission.domain.serverDrivenUI;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,6 +27,7 @@ public class HomeServerDrivenUISequenceFactoryTest {
     }
 
     @Test
+    @DisplayName("valid한 version을 입력했을 때, 해당하는 MissionContentSequence를 반환한다.")
     public void testGetServerDrivenUISequenceByVersion_ValidVersion() {
         // Given
         int validVersion = 1;
@@ -40,6 +42,7 @@ public class HomeServerDrivenUISequenceFactoryTest {
     }
 
     @Test
+    @DisplayName("invalid한 version을 입력했을 때, Exception이 발생한다.")
     public void testGetServerDrivenUISequenceByVersion_InvalidVersion() {
         // Given
         int invalidVersion = -1;
