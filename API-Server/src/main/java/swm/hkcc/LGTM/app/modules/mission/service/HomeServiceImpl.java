@@ -68,7 +68,7 @@ public class HomeServiceImpl implements HomeService{
     }
 
     private void addEmptyView(List<ServerDrivenContent> serverDrivenContentList, MissionContentType missionContentType) {
-            serverDrivenContentList.add(ServerDrivenContent.from(missionContentType.getTheme(), ViewType.EMPTY));
+            serverDrivenContentList.add(missionItemHolder.getMissionEmptyView(missionContentType));
     }
 
     private void addMissionList(ServerDrivenContents missionContents, List<ServerDrivenContent> contentList) {
