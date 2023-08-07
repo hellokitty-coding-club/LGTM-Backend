@@ -10,7 +10,7 @@ import swm.hkcc.LGTM.app.modules.mission.dto.MissionTitleDto;
 @Getter
 public class ServerDrivenContent<T> {
 
-    private ViewType viewType;
+    private String viewTypeName;
 
     private Theme theme;
 
@@ -18,7 +18,7 @@ public class ServerDrivenContent<T> {
 
     public static ServerDrivenContent from(Theme theme, ViewType viewType) {
         return ServerDrivenContent.builder()
-                .viewType(viewType)
+                .viewTypeName(viewType.getName())
                 .theme(theme)
                 .content("")
                 .build();
@@ -26,7 +26,7 @@ public class ServerDrivenContent<T> {
 
     public static ServerDrivenContent from(Object content, Theme theme, ViewType viewType) {
         return ServerDrivenContent.builder()
-                .viewType(viewType)
+                .viewTypeName(viewType.getName())
                 .theme(theme)
                 .content(content)
                 .build();
