@@ -32,7 +32,7 @@ public class HomeServerDrivenUISequenceFactoryTest {
         List<MissionContentType> contents = HomeServerDrivenUISequenceByVersion.V1_HOME_SERVER_DRIVEN_UI_SEQUENCE.getContents();
 
         // When
-        MissionContentSequence result = homeServerDrivenUISequenceFactory.getServerDrivenUISequenceByVersion(validVersion);
+        MissionContentSequence result = homeServerDrivenUISequenceFactory.getServerDrivenUISequence(validVersion);
 
         // Then
         assertNotNull(result);
@@ -46,7 +46,7 @@ public class HomeServerDrivenUISequenceFactoryTest {
 
         // When & Then
         assertThrows(GeneralException.class,
-                () -> homeServerDrivenUISequenceFactory.getServerDrivenUISequenceByVersion(invalidVersion),
+                () -> homeServerDrivenUISequenceFactory.getServerDrivenUISequence(invalidVersion),
                 ResponseCode.DATA_ACCESS_ERROR.getMessage());
     }
 }

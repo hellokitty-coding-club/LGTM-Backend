@@ -31,7 +31,7 @@ public class HomeServiceImpl implements HomeService{
     @Override
     @Transactional(readOnly = true)
     public ServerDrivenScreenResponse getHomeScreen(Long memberId, int version) {
-        MissionContentSequence contentSequence = sequenceFactory.getServerDrivenUISequenceByVersion(version);
+        MissionContentSequence contentSequence = sequenceFactory.getServerDrivenUISequence(version);
         List<ServerDrivenContent> serverDrivenContentList = new ArrayList<>();
 
         contentSequence.getMissionContents()

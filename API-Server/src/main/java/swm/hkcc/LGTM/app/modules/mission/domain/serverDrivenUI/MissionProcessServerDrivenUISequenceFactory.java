@@ -7,7 +7,7 @@ import swm.hkcc.LGTM.app.modules.serverDrivenUI.domain.ServerDrivenUISequenceFac
 @Component
 public class MissionProcessServerDrivenUISequenceFactory implements ServerDrivenUISequenceFactory {
     @Override
-    public MissionContentSequence getServerDrivenUISequenceByVersion(int version) {
+    public MissionContentSequence getServerDrivenUISequence(int version) {
         // todo: implement this method
         return null;
     }
