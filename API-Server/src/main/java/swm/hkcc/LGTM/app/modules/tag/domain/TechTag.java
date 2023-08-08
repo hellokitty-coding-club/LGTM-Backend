@@ -2,14 +2,16 @@ package swm.hkcc.LGTM.app.modules.tag.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import swm.hkcc.LGTM.app.global.entity.BaseEntity;
+
+import java.io.Serializable;
 
 @Entity
 @Getter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TechTag {
+public class TechTag implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
