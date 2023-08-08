@@ -13,7 +13,7 @@ import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
 import swm.hkcc.LGTM.app.modules.mission.repository.*;
-import swm.hkcc.LGTM.app.modules.registration.domain.repository.MissionRegistrationRepository;
+import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
 
 import java.time.LocalDate;
