@@ -29,12 +29,14 @@ import swm.hkcc.LGTM.app.modules.member.domain.Authority;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
 import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
+import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
 import java.util.Collections;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
+import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
@@ -58,6 +60,9 @@ class UpdateDeviceTokenControllerTest {
 
     @MockBean
     private MemberService memberService;
+
+    @MockBean
+    private MemberRepository memberRepository;
 
     @BeforeEach
     public void setUp(@Autowired WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentationContextProvider) {
@@ -87,13 +92,25 @@ class UpdateDeviceTokenControllerTest {
     @Test
     @DisplayName("디바이스 토큰 업데이트 동작 테스트")
     void updateDeviceToken() throws Exception {
+
         // given
+        Member member = (Member.builder()
+                .memberId(1L)
+                .build());
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+
         Mockito.when(memberService.updateDeviceToken(Mockito.anyLong(), Mockito.any())).thenReturn(true);
+        Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
+                .thenReturn(java.util.Optional.ofNullable(member));
 
         // when
 
         // then
         ResultActions actions = mockMvc.perform(patch("/v1/member/device-token")
+                        .header(
+                                "Authorization",
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tanVuaW9yIiwiaWF0IjoxNjkwNTAyNzYzLCJleHAiOjE3ODUxMTA3NjN9.7mRkcMUMazWl5qK3wnS5f3fCRcu287FJRWYFa-d3EFk"
+                        )
                         .queryParam("deviceToken", "testDeviceToken")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -117,7 +134,7 @@ class UpdateDeviceTokenControllerTest {
                                                 .h1("[Request Parameters]")
                                                 .table(
                                                         tableHead("Name", "Type", "Description"),
-                                                        tableRow("deviceToken", "String", "디바이스 토큰, Null이거나 빈 문자열로 요청 가능")
+                                                        tableRow("deviceToken", "String", "디바이스 토큰")
                                                 )
                                                 .br()
                                                 .ul("device token이 추출이 안되는 기기일 경우 null값을 허용한다")
@@ -136,7 +153,10 @@ class UpdateDeviceTokenControllerTest {
                                 )
                                 .tag("Member")
                                 .queryParameters(
-                                        parameterWithName("deviceToken").description("디바이스 토큰")
+                                        parameterWithName("deviceToken").optional().description("디바이스 토큰")
+                                )
+                                .requestHeaders(
+                                        headerWithName("Authorization").description("access token")
                                 )
                                 .responseFields(
                                         fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
@@ -153,14 +173,24 @@ class UpdateDeviceTokenControllerTest {
     @DisplayName("디바이스 토큰 업데이트 실패 테스트 - 존재하지 않는 회원")
     void createMissionNotExistMember() throws Exception {
         // given
+        Member member = (Member.builder()
+                .memberId(1L)
+                .build());
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         Mockito.when(memberService.updateDeviceToken(Mockito.anyLong(), Mockito.any()))
                 .thenThrow(new NotExistMember());
+        Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
+                .thenReturn(java.util.Optional.ofNullable(member));
 
         // when
 
         // then
         ResponseCode expectedResponseCode = ResponseCode.NOT_EXIST_MEMBER;
         ResultActions actions = mockMvc.perform(patch("/v1/member/device-token")
+                        .header(
+                                "Authorization",
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tanVuaW9yIiwiaWF0IjoxNjkwNTAyNzYzLCJleHAiOjE3ODUxMTA3NjN9.7mRkcMUMazWl5qK3wnS5f3fCRcu287FJRWYFa-d3EFk"
+                        )
                         .queryParam("deviceToken", "testDeviceToken")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
