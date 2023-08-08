@@ -4,6 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
@@ -23,16 +24,19 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
+    @Cacheable(value = "on_going_missions", key = "#memberId")
     public List<Mission> getOnGoingMissions(Long memberId) {
         return getMissions(isMemberParticipating(memberId), isNotCompleted());
     }
 
     @Override // todo: get recommended missions
+    @Cacheable(value = "recommended_missions", key = "#memberId")
     public List<Mission> getRecommendedMissions(Long memberId) {
         return null;
     }
 
     @Override
+    @Cacheable(value = "total_missions", key = "#memberId")
     public List<Mission> getTotalMissions(Long memberId) {
         return getMissions(isMissionNotFinished());
     }
