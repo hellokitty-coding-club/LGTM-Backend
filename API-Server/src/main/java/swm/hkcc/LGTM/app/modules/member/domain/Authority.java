@@ -2,17 +2,17 @@ package swm.hkcc.LGTM.app.modules.member.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Entity
 @Getter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Authority {
+public class Authority implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
