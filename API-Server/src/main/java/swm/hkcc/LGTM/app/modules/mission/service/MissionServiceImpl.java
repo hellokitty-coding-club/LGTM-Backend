@@ -42,7 +42,7 @@ public class MissionServiceImpl implements MissionService {
 
     @Override // todo: 추천 미션 가져오기 구현 미완료 -> 전체 미션 가져오기로 임시 대체
     public MissionContentData getRecommendMissions(Long memberId) {
-        List<Mission> missions = missionRepository.getTotalMissions(memberId);
+        List<Mission> missions = missionRepository.getTotalMissions();
 
         return MissionContentData.of(
                 missions.stream()
@@ -53,7 +53,7 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public MissionContentData getTotalMissions(Long memberId) {
-        List<Mission> missions = missionRepository.getTotalMissions(memberId);
+        List<Mission> missions = missionRepository.getTotalMissions();
 
         return MissionContentData.of(
                 missions.stream()
