@@ -58,6 +58,7 @@ class IntroControllerTest {
                         preprocessResponse(prettyPrint()),              // response JSON 정렬하여 출력
 
                         resource(ResourceSnippetParameters.builder()
+                                .tag("Global")
 
                                 .summary("인트로 API")
                                 .description("앱 버전 정보를 조회한다.")

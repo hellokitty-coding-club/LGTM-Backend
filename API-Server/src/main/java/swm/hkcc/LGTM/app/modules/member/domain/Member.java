@@ -34,7 +34,7 @@ public class Member extends BaseEntity implements Serializable {
     @Column(nullable = false, unique = true)
     private String refreshToken;
 
-    @Column(nullable = false)
+    @Column(nullable = true, unique = false)
     private String deviceToken;
 
     @Column(nullable = false)
@@ -42,6 +42,9 @@ public class Member extends BaseEntity implements Serializable {
 
     @Column(nullable = false)
     private String introduction;
+
+    @Column
+    private boolean isAgreeWithEventInfo;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Junior junior;
@@ -71,6 +74,11 @@ public class Member extends BaseEntity implements Serializable {
                 .deviceToken(request.getDeviceToken())
                 .profileImageUrl(request.getProfileImageUrl())
                 .introduction(request.getIntroduction())
+                .isAgreeWithEventInfo(request.isAgreeWithEventInfo())
                 .build();
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

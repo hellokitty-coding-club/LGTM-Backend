@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class TokenProvider {
@@ -41,9 +43,8 @@ public class TokenProvider {
     }
 
     // 토큰 생성
-    public String createToken(Long userId, String githubId, TokenType tokenType) {
+    public String createToken(String githubId, TokenType tokenType) {
         Claims claims = Jwts.claims();
-        claims.put("userId", userId);
         claims.put("githubId", githubId);
         Date now = new Date();
 
@@ -77,7 +78,12 @@ public class TokenProvider {
 
     // 토큰에 담겨있는 유저 account 획득
     public String getAccount(String token) {
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("githubId", String.class);
     }
 
     // Authorization Header를 통해 인증을 한다.

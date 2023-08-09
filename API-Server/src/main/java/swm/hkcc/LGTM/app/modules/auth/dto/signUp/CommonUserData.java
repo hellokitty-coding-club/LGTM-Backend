@@ -24,7 +24,6 @@ public class CommonUserData {
     @NotNull
     protected String nickName;
 
-    @NotNull
     protected String deviceToken;
 
     @NotNull
@@ -33,6 +32,9 @@ public class CommonUserData {
     @NotNull
     @Size(max = 1000)
     protected String introduction;
+
+    @NotNull
+    protected boolean isAgreeWithEventInfo;
 
     @NotNull
     protected List<String> tagList;

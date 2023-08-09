@@ -50,6 +50,8 @@ public class SecurityConfig {
                 .requestMatchers("/v1/signup/**", "/v1/intro").permitAll()
                 .requestMatchers("/login/**").permitAll() // for temporary test
                 .requestMatchers("/docs/**", "/v3/api-docs/swagger-config").permitAll()
+                .requestMatchers("/admin/**").permitAll() // todo : .hasRole("ADMIN")
+                .requestMatchers("/**").hasRole("USER")
                 .anyRequest().denyAll()
                 .and()
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)

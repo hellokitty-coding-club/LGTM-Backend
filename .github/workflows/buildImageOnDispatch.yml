@@ -1,15 +1,11 @@
-name: Build Image and Push to ECR
+name: (manual) Build Image and Push to ECR
 
-on:
-  push:
-    branches:
-      - 'main'
-      - 'develop'
-
+on: workflow_dispatch
+      
 env:
       ECR_ROOT: ${{ secrets.AWS_ECR_ROOT }}
       ECR_REPOSITORY: lgtm-api-server
-      IMAGE_NAME: lgtm-api-server:${{ github.ref_name }}_0.0.${{ github.run_number }} 
+      IMAGE_NAME: lgtm-api-server:0.0.${{ github.run_number }} 
       
 jobs:
   build:
