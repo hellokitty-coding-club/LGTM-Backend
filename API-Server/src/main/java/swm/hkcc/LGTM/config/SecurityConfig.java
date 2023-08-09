@@ -44,9 +44,7 @@ public class SecurityConfig {
                         }
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers("/v1/**").hasRole("USER")
+                .and().authorizeHttpRequests()
                 .requestMatchers("/v1/signup/**", "/v1/intro").permitAll()
                 .requestMatchers("/login/**").permitAll() // for temporary test
                 .requestMatchers("/docs/**", "/v3/api-docs/swagger-config").permitAll()
