@@ -150,7 +150,7 @@ class MissionCustomRepositoryImplTest {
         Long memberId = member.getMemberId();
 
         // When
-        List<Mission> totalMissions = missionRepository.getTotalMissions(memberId);
+        List<Mission> totalMissions = missionRepository.getTotalMissions();
 
         // Then
         assertThat(totalMissions).isNotNull();
