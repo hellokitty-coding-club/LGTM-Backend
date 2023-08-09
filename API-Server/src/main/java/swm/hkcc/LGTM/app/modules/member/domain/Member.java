@@ -5,16 +5,17 @@ import lombok.*;
 import swm.hkcc.LGTM.app.global.entity.BaseEntity;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.CommonUserData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@ToString
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +34,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String refreshToken;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String deviceToken;
 
     @Column(nullable = false)
@@ -48,7 +49,7 @@ public class Member extends BaseEntity {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Senior senior;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Builder.Default
     private List<Authority> roles = new ArrayList<>();
 

@@ -13,7 +13,7 @@ import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
 import swm.hkcc.LGTM.app.modules.mission.repository.*;
-import swm.hkcc.LGTM.app.modules.registration.domain.repository.MissionRegistrationRepository;
+import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
 
 import java.time.LocalDate;
@@ -67,7 +67,7 @@ public class MissionServiceImplTest {
     @DisplayName("맞춤 추천 미션을 가져온다. MissionDetailDto의 리스트를 담은 MissionContentData를 반환한다.")
     public void getRecommendMissions() {
         // Given
-        when(missionRepository.getTotalMissions(1L))
+        when(missionRepository.getTotalMissions())
                 .thenReturn(Arrays.asList(createMockMission(1L), createMockMission(2L), createMockMission(3L)));
 
         // When
@@ -86,7 +86,7 @@ public class MissionServiceImplTest {
     @DisplayName("전체 미션을 가져온다. MissionDetailDto의 리스트를 담은 MissionContentData를 반환한다.")
     public void getTotalMissions() {
         // Given
-        when(missionRepository.getTotalMissions(1L))
+        when(missionRepository.getTotalMissions())
                 .thenReturn(Arrays.asList(createMockMission(1L), createMockMission(2L)));
 
         // When

@@ -22,3 +22,8 @@ spring:
     sql:
       init:
         mode: never
+
+  data:
+    redis:
+      host: ${PROD_REDIS_HOST}
+      port: ${PROD_REDIS_PORT}

@@ -7,7 +7,7 @@ import java.util.List;
 public interface MissionCustomRepository {
     List<Mission> getOnGoingMissions(Long memberId);
 
-    List<Mission> getRecommendedMissions(Long memberId);
+    List<Mission> getRecommendedMissions();
 
-    List<Mission> getTotalMissions(Long memberId);
+    List<Mission> getTotalMissions();
 }

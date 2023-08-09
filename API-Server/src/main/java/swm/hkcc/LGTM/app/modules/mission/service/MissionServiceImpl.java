@@ -10,7 +10,7 @@ import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionScrapRepository;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionViewRepository;
-import swm.hkcc.LGTM.app.modules.registration.domain.repository.MissionRegistrationRepository;
+import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
 
@@ -44,7 +44,7 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public MissionContentData getTotalMissions(Long memberId) {
-        List<Mission> missions = missionRepository.getTotalMissions(memberId);
+        List<Mission> missions = missionRepository.getTotalMissions();
 
         List<MissionDetailsDto> missionDetailsDtos = missions.stream()
                 .map(mission -> {
