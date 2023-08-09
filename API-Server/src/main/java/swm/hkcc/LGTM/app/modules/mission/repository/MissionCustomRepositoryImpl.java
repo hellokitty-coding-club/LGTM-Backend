@@ -30,14 +30,13 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     }
 
     @Override // todo: get recommended missions
-    @Cacheable(value = "recommended_missions", key = "#memberId")
-    public List<Mission> getRecommendedMissions(Long memberId) {
+    public List<Mission> getRecommendedMissions () {
         return null;
     }
 
     @Override
-    @Cacheable(value = "total_missions", key = "#memberId")
-    public List<Mission> getTotalMissions(Long memberId) {
+    @Cacheable(value = "total_missions")
+    public List<Mission> getTotalMissions() {
         return getMissions(isMissionNotFinished());
     }
 
