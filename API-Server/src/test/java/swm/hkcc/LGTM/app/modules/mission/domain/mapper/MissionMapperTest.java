@@ -27,7 +27,6 @@ class MissionMapperTest {
         missionSample = Mission.builder()
                 .missionId(1L)
                 .title("Test Title")
-                .thumbnailImageUrl("Test URL")
                 .registrationDueDate(LocalDate.now().plusDays(5))
                 .price(100)
                 .maxPeopleNumber(50)
@@ -48,7 +47,6 @@ class MissionMapperTest {
 
         assertEquals(missionSample.getMissionId(), result.getMissionId());
         assertEquals(missionSample.getTitle(), result.getMissionTitle());
-        assertEquals(missionSample.getThumbnailImageUrl(), result.getMissionThumbnailUrl());
         assertEquals(techTagSampleList, result.getTechTagList());
     }
 
@@ -64,7 +62,6 @@ class MissionMapperTest {
 
         assertEquals(missionSample.getMissionId(), result.getMissionId());
         assertEquals(missionSample.getTitle(), result.getMissionTitle());
-        assertEquals(missionSample.getThumbnailImageUrl(), result.getMissionThumbnailUrl());
         assertEquals(techTagSampleList, result.getTechTagList());
         assertEquals(5, result.getRemainingRegisterDays());
         assertEquals(missionSample.getPrice(), result.getPrice());

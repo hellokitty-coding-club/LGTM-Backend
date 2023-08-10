@@ -35,10 +35,6 @@ public class Mission extends BaseEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private MissionStatus missionStatus;
 
-    @Lob
-    @Column(nullable = false)
-    private String thumbnailImageUrl;
-
     @Column(nullable = false, length = 1000)
     private String description;
 
@@ -72,7 +68,6 @@ public class Mission extends BaseEntity implements Serializable {
                 .missionRepositoryUrl(request.getMissionRepositoryUrl())
                 .title(request.getTitle())
                 .missionStatus(MissionStatus.RECRUITING)
-                .thumbnailImageUrl(request.getThumbnailImageUrl())
                 .description(request.getDescription())
                 .reomnnandTo(request.getReomnnandTo())
                 .notReomnnandTo(request.getNotReomnnandTo())

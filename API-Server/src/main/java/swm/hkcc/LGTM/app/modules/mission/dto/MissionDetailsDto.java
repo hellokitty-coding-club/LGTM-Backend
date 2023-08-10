@@ -15,7 +15,6 @@ public class MissionDetailsDto {
     private Long missionId;
     private String missionTitle;
     private List<TechTag> techTagList;
-    private String missionThumbnailUrl;
     private int remainingRegisterDays;
     private int viewCount;
     private int price;

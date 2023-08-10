@@ -15,7 +15,6 @@ public class MissionMapper {
                 .missionId(ongoingMission.getMissionId())
                 .missionTitle(ongoingMission.getTitle())
                 .techTagList(techTags)
-                .missionThumbnailUrl(ongoingMission.getThumbnailImageUrl())
                 .build();
     }
 
@@ -24,7 +23,6 @@ public class MissionMapper {
                 .missionId(mission.getMissionId())
                 .missionTitle(mission.getTitle())
                 .techTagList(techTags)
-                .missionThumbnailUrl(mission.getThumbnailImageUrl())
                 .remainingRegisterDays((int) ChronoUnit.DAYS.between(LocalDate.now(), mission.getRegistrationDueDate()))
                 .viewCount(viewCount)
                 .price(mission.getPrice())

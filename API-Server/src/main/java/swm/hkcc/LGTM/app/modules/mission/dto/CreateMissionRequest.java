@@ -26,10 +26,6 @@ public class CreateMissionRequest {
     protected List<String> tagList;
 
     @NotBlank
-    @URL
-    private String thumbnailImageUrl;
-
-    @NotBlank
     @Size(max = 1000)
     private String description;
 

@@ -84,7 +84,6 @@ class CreateMissionTest {
                 .missionRepositoryUrl("https://github.com/abcabc")
                 .title("title")
                 .tagList(List.of("JAVA", "Spring"))
-                .thumbnailImageUrl("https://abc.com/aa.png")
                 .description("content")
                 .reomnnandTo("ReomnnandTo")
                 .notReomnnandTo("notReomnnandTo")
@@ -158,7 +157,6 @@ class CreateMissionTest {
                                                         tableRow("missionRepositoryUrl", "String", "미션 저장소 URL. URL 형식이 아니면 Validation 에러 발생"),
                                                         tableRow("title", "String", "미션 제목. 최대 길이 = 100"),
                                                         tableRow("tagList", "List<String>", "미션 태그 리스트"),
-                                                        tableRow("thumbnailImageUrl", "String", "미션 썸네일 이미지 URL. URL 형식이 아니면 Validation 에러 발생"),
                                                         tableRow("description", "String", "미션 설명. 최대 길이 = 1000"),
                                                         tableRow("reomnnandTo", "String", "이런 사람에게 추천해요. 최대 길이 = 1000"),
                                                         tableRow("notReomnnandTo", "String", "이런 사람에게는 추천하지 않아요. 최대 길이 = 1000"),
@@ -189,11 +187,10 @@ class CreateMissionTest {
                                 )
                                 .tag("미션")
                                 .requestFields(
-                                        // {"missionRepositoryUrl":"https://github.com/abcabc","title":"title","missionStatus":"참가자 모집중","tagList":["tag1","tag2"],"thumbnailImageUrl":"https://abc.com/aa.png","description":"content","reomnnandTo":"ReomnnandTo","notReomnnandTo":"notReomnnandTo","registrationDueDate":[2100,1,1,1,1,1],"assignmentDueDate":[2100,1,1,1,1,1],"reviewCompletationDueDate":[2100,1,1,1,1,1],"price":1000,"maxPeopleNumber":10}
+                                        // {"missionRepositoryUrl":"https://github.com/abcabc","title":"title","missionStatus":"참가자 모집중","tagList":["tag1","tag2"],"description":"content","reomnnandTo":"ReomnnandTo","notReomnnandTo":"notReomnnandTo","registrationDueDate":[2100,1,1,1,1,1],"assignmentDueDate":[2100,1,1,1,1,1],"reviewCompletationDueDate":[2100,1,1,1,1,1],"price":1000,"maxPeopleNumber":10}
                                         fieldWithPath("missionRepositoryUrl").type(JsonFieldType.STRING).description("미션 저장소 URL"),
                                         fieldWithPath("title").type(JsonFieldType.STRING).description("미션 제목"),
                                         fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("미션 태그 리스트"),
-                                        fieldWithPath("thumbnailImageUrl").type(JsonFieldType.STRING).description("미션 썸네일 이미지 URL"),
                                         fieldWithPath("description").type(JsonFieldType.STRING).description("미션 설명"),
                                         fieldWithPath("reomnnandTo").type(JsonFieldType.STRING).description("미션 추천 대상"),
                                         fieldWithPath("notReomnnandTo").type(JsonFieldType.STRING).description("미션 비추천 대상"),

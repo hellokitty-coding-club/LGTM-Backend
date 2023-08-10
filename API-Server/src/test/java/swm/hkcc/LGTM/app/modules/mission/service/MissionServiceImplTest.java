@@ -118,7 +118,6 @@ public class MissionServiceImplTest {
                 .missionRepositoryUrl("TestRepositoryUrl")
                 .title("Test Mission ")
                 .missionStatus(MissionStatus.MISSION_PROCEEDING)
-                .thumbnailImageUrl("TestThumbnailUrl")
                 .description("TestDescription")
                 .reomnnandTo("TestRecommendTo")
                 .notReomnnandTo("TestNotRecommendTo")
