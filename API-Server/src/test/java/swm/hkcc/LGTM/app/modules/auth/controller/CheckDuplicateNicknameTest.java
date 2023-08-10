@@ -86,6 +86,7 @@ class CheckDuplicateNicknameTest {
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
                         resource(ResourceSnippetParameters.builder()
+                                .tag("Authorization")
                                 .summary("[회원인증] 닉네임 중복 검사")
                                 .description("닉네임 중복 검사 후, 중복 여부를 반환한다.\n\n" +
                                         "View : 회원가입 화면 > 닉네임 입력 화면\n\n\n\n" +

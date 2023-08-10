@@ -80,6 +80,7 @@ public class SignupJuniorTest {
                 .deviceToken("Test_DeviceToken")
                 .profileImageUrl("http://test.ProfileImageUrl.com/img.png")
                 .introduction("Test Introduction")
+                .isAgreeWithEventInfo(true)
                 .tagList(Arrays.asList("JAVA", "Python", "JavaScript"))
                 .educationalHistory("대학생")
                 .realName("홍길동")
@@ -96,6 +97,7 @@ public class SignupJuniorTest {
                 .githubId("testGithubId")
                 .accessToken("testAccessToken")
                 .refreshToken("testRefreshToken")
+                .memberType("JUNIOR")
                 .build();
 
         // when
@@ -112,7 +114,8 @@ public class SignupJuniorTest {
                 .andExpect(jsonPath("$.data.memberId").value(1L))
                 .andExpect(jsonPath("$.data.githubId").value("testGithubId"))
                 .andExpect(jsonPath("$.data.accessToken").value("testAccessToken"))
-                .andExpect(jsonPath("$.data.refreshToken").value("testRefreshToken"));
+                .andExpect(jsonPath("$.data.refreshToken").value("testRefreshToken"))
+                .andExpect(jsonPath("$.data.memberType").value("JUNIOR"));
 
         // document
         perform
@@ -133,9 +136,10 @@ public class SignupJuniorTest {
                                                         tableRow("githubId", "String", "Github 아이디"),
                                                         tableRow("githubOauthId", "Integer", "Github의 사용자 식별 번호. 해당 id 이용하여 LGTM의 서비스 이용자를 식별한다."),
                                                         tableRow("nickName", "String", "닉네임, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다, 동일한 닉네임이 있을 경우 400 에러 반환"),
-                                                        tableRow("deviceToken", "String", "디바이스 토큰"),
+                                                        tableRow("deviceToken", "String", "디바이스 토큰, \n device token이 추출이 안되는 기기일 경우 null값을 허용한다"),
                                                         tableRow("profileImageUrl", "String", "프로필 이미지 URL"),
                                                         tableRow("introduction", "String", "나의 한줄 소개, 최대 500자, 클라이언트에서 trim()처리하여 보낸다"),
+                                                        tableRow("agreeWithEventInfo", "boolean", "이벤트, 광고성 정보 안내 수신 여부"),
                                                         tableRow("tagList", "List<String>", "태그 리스트, 텍스트의 리스트로 전달한다. 1개 이상이어야 한다. 선택가능한 태그 외의 문자열이 전달될 경우 400에러 반환"),
                                                         tableRow("educationalHistory", "String", "학력"),
                                                         tableRow("realName", "String", "실명")
@@ -159,8 +163,9 @@ public class SignupJuniorTest {
                                         fieldWithPath("githubId").type(JsonFieldType.STRING).description("Github 아이디"),
                                         fieldWithPath("githubOauthId").type(JsonFieldType.NUMBER).description("Github Oauth ID"),
                                         fieldWithPath("nickName").type(JsonFieldType.STRING).description("닉네임"),
-                                        fieldWithPath("deviceToken").type(JsonFieldType.STRING).description("디바이스 토큰"),
+                                        fieldWithPath("deviceToken").type(JsonFieldType.STRING).optional().description("디바이스 토큰"),
                                         fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
+                                        fieldWithPath("agreeWithEventInfo").type(JsonFieldType.BOOLEAN).description("이벤트, 광고성 정보 안내 수신 여부"),
                                         fieldWithPath("introduction").type(JsonFieldType.STRING).description("나의 한줄 소개"),
                                         fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("태그 리스트"),
                                         fieldWithPath("educationalHistory").type(JsonFieldType.STRING).description("학력"),
@@ -174,7 +179,8 @@ public class SignupJuniorTest {
                                         fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("회원 아이디"),
                                         fieldWithPath("data.githubId").type(JsonFieldType.STRING).description("Github 아이디"),
                                         fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("액세스 토큰"),
-                                        fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰")
+                                        fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("리프레시 토큰"),
+                                        fieldWithPath("data.memberType").type(JsonFieldType.STRING).description("회원 타입")
                                 )
                                 .build())
                 ));
@@ -205,6 +211,7 @@ public class SignupJuniorTest {
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
                         resource(ResourceSnippetParameters.builder()
+                                .tag("Authorization")
                                 .responseFields(
                                         fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
                                         fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),

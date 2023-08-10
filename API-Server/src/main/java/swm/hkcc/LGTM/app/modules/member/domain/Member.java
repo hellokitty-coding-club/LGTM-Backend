@@ -5,16 +5,17 @@ import lombok.*;
 import swm.hkcc.LGTM.app.global.entity.BaseEntity;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.CommonUserData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@ToString
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +34,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String refreshToken;
 
-    @Column(unique = true)
+    @Column(nullable = true, unique = false)
     private String deviceToken;
 
     @Column(nullable = false)
@@ -41,6 +42,9 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false)
     private String introduction;
+
+    @Column
+    private boolean isAgreeWithEventInfo;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Junior junior;
@@ -70,6 +74,11 @@ public class Member extends BaseEntity {
                 .deviceToken(request.getDeviceToken())
                 .profileImageUrl(request.getProfileImageUrl())
                 .introduction(request.getIntroduction())
+                .isAgreeWithEventInfo(request.isAgreeWithEventInfo())
                 .build();
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

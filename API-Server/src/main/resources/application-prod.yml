@@ -22,3 +22,8 @@ spring:
     sql:
       init:
         mode: never
+
+  data:
+    redis:
+      cluster:
+        nodes: ${PROD_REDIS_NODES}

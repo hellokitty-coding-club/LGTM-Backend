@@ -6,13 +6,15 @@ import lombok.*;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.SeniorSignUpRequest;
 import swm.hkcc.LGTM.app.modules.member.exception.InvalidCareerPeriod;
 
+import java.io.Serializable;
+
 @Entity
 @Getter
 @ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Senior {
+public class Senior implements Serializable {
 
     private static final Integer MINIMUM_CAREER_PERIOD = 12;
 

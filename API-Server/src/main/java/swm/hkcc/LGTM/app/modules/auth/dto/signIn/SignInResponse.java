@@ -30,4 +30,10 @@ public class SignInResponse {
     @Builder.Default
     private String refreshToken = "";
 
+    @Builder.Default
+    private String profileImageUrl = "";
+
+    @Builder.Default
+    private String memberType = "";
+
 }

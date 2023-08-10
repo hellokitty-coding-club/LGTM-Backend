@@ -32,6 +32,11 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
+        
+    - name: Start Redis
+      uses: supercharge/redis-github-action@1.6.0
+      with:
+        redis-version: '7'
 
     - name: Build and test Spring Boot project
       run: |

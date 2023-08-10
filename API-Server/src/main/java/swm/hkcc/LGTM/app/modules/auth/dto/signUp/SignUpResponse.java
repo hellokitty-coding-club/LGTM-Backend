@@ -18,4 +18,8 @@ public class SignUpResponse {
 
     @NotNull
     private String refreshToken;
+
+    @NotNull
+    private String memberType = "";
+
 }
