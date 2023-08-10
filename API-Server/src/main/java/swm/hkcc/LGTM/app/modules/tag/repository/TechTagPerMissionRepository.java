@@ -13,5 +13,4 @@ public interface TechTagPerMissionRepository extends JpaRepository<TechTagPerMis
     @Cacheable(value = "tech_tag_per_mission", key = "#missionId")
     @Query("select tpm.techTag from TechTagPerMission tpm where tpm.mission.missionId = :missionId")
     List<TechTag> findTechTagsByMissionId(@Param("missionId") Long missionId);
-
 }
