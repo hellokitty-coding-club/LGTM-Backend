@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.cache.CacheKeyPrefix;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,24 +21,23 @@ import swm.hkcc.LGTM.app.global.cache.CacheKey;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Configuration
 @EnableCaching
 @EnableRedisRepositories
-@Profile("test")
-public class RedisConfig {
+@Profile({"prod", "dev"})
+public class RedisClusterConfig {
 
-    @Value("${spring.data.redis.host}")
-    private String host;
-
-    @Value("${spring.data.redis.port}")
-    private int port;
+    @Value("${spring.data.redis.cluster.nodes}")
+    private List<String> clusterNodes;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(host, port);
+        RedisClusterConfiguration clusterConfiguration = new RedisClusterConfiguration(clusterNodes);
+        return new LettuceConnectionFactory(clusterConfiguration);
     }
 
     @Bean
@@ -77,4 +77,3 @@ public class RedisConfig {
                 .build();
     }
 }
-

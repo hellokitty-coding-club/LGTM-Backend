@@ -25,5 +25,5 @@ spring:
 
   data:
     redis:
-      host: ${DEV_REDIS_HOST}
-      port: ${DEV_REDIS_PORT}
+      cluster:
+        nodes: ${DEV_REDIS_NODES}
