@@ -14,6 +14,8 @@ import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
 import swm.hkcc.LGTM.app.modules.tag.service.TechTagService;
 import swm.hkcc.LGTM.app.modules.tag.service.TechTagValidator;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -30,13 +32,17 @@ public class CreateMissionServiceImpl implements CreateMissionService {
         Member writer = memberRepository.findById(memberId)
                 .orElseThrow(NotExistMember::new);
 
-        memberValidator.validateSenior(writer);
-        techTagValidator.validateTagList(request.getTagList());
+        validateRequest(writer, request.getTagList());
 
         Mission mission = Mission.from(request, writer);
         missionRepository.save(mission);
         techTagService.setTechTagListOfMission(mission, request.getTagList());
 
         return mission;
+    }
+
+    private void validateRequest(Member writer, List<String> tagList) {
+        memberValidator.validateSenior(writer);
+        techTagValidator.validateTagList(tagList);
     }
 }
