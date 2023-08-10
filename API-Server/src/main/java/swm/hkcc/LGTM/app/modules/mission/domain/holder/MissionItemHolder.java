@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
+import swm.hkcc.LGTM.app.modules.mission.dto.MissionEmptyViewTypeDto;
 import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContent;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ViewType;
@@ -31,11 +32,17 @@ public class MissionItemHolder {
 
     public ServerDrivenContent getMissionEmptyView(MissionContentType missionContentType) {
         return switch (missionContentType) {
-            case TOTAL_MISSION_LIST_V1 -> ServerDrivenContent.from(TOTAL_MISSION_EMPTY_VIEW, missionContentType.getTheme(), ViewType.EMPTY);
-            case ON_GOING_MISSION_LIST_V1 -> ServerDrivenContent.from(ONGOING_MISSION_EMPTY_VIEW, missionContentType.getTheme(), ViewType.EMPTY);
-            case RECOMMENDED_MISSION_LIST_V1 -> ServerDrivenContent.from(RECOMMENDED_MISSION_EMPTY_VIEW, missionContentType.getTheme(), ViewType.EMPTY);
+            case TOTAL_MISSION_LIST_V1 -> ServerDrivenContent.from(convertToDto(TOTAL_MISSION_EMPTY_VIEW), missionContentType.getTheme(), ViewType.EMPTY);
+            case ON_GOING_MISSION_LIST_V1 -> ServerDrivenContent.from(convertToDto(ONGOING_MISSION_EMPTY_VIEW), missionContentType.getTheme(), ViewType.EMPTY);
+            case RECOMMENDED_MISSION_LIST_V1 -> ServerDrivenContent.from(convertToDto(RECOMMENDED_MISSION_EMPTY_VIEW), missionContentType.getTheme(), ViewType.EMPTY);
             default -> null;
         };
+    }
+
+    private MissionEmptyViewTypeDto convertToDto(String emptyViewTypeName) {
+        return MissionEmptyViewTypeDto.builder()
+                .emptyViewTypeName(emptyViewTypeName)
+                .build();
     }
 
 }

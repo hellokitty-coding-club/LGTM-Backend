@@ -11,6 +11,7 @@ import swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
+import swm.hkcc.LGTM.app.modules.mission.dto.MissionEmptyViewTypeDto;
 import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContent;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ViewType;
@@ -84,9 +85,18 @@ class MissionItemHolderTest {
         ServerDrivenContent recommendedMissionEmptyView = missionItemHolder.getMissionEmptyView(recommendedMissionContentType);
 
         // then
-        assertThat(totalMissionEmptyView.getContent()).isEqualTo(MissionItemHolder.TOTAL_MISSION_EMPTY_VIEW);
-        assertThat(onGoingMissionEmptyView.getContent()).isEqualTo(MissionItemHolder.ONGOING_MISSION_EMPTY_VIEW);
-        assertThat(recommendedMissionEmptyView.getContent()).isEqualTo(MissionItemHolder.RECOMMENDED_MISSION_EMPTY_VIEW);
+        assertThat(totalMissionEmptyView.getContent())
+                .isEqualTo(MissionEmptyViewTypeDto.builder()
+                                        .emptyViewTypeName(MissionItemHolder.TOTAL_MISSION_EMPTY_VIEW)
+                                        .build());
+        assertThat(onGoingMissionEmptyView.getContent())
+                .isEqualTo(MissionEmptyViewTypeDto.builder()
+                                        .emptyViewTypeName(MissionItemHolder.ONGOING_MISSION_EMPTY_VIEW)
+                                        .build());
+        assertThat(recommendedMissionEmptyView.getContent())
+                .isEqualTo(MissionEmptyViewTypeDto.builder()
+                                        .emptyViewTypeName(MissionItemHolder.RECOMMENDED_MISSION_EMPTY_VIEW)
+                                        .build());
 
         assertThat(totalMissionEmptyView.getViewTypeName()).isEqualTo(ViewType.EMPTY.getName());
         assertThat(onGoingMissionEmptyView.getViewTypeName()).isEqualTo(ViewType.EMPTY.getName());
