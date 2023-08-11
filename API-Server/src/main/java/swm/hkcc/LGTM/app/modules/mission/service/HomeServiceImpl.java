@@ -9,6 +9,7 @@ import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentSequence;
 import swm.hkcc.LGTM.app.modules.mission.domain.holder.MissionItemHolder;
 import swm.hkcc.LGTM.app.modules.mission.domain.serverDrivenUI.HomeServerDrivenUISequenceFactory;
+import swm.hkcc.LGTM.app.modules.mission.dto.MissionCloserDto;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionTitleDto;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContent;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContents;
@@ -87,6 +88,9 @@ public class HomeServiceImpl implements HomeService{
 
     private ServerDrivenContent getMissionCloser(MissionContentType missionContentType) {
         return ServerDrivenContent.from(
+                MissionCloserDto.builder()
+                        .closer(missionContentType.getViewType().getName())
+                        .build(),
                 missionContentType.getTheme(),
                 missionContentType.getViewType()
         );
