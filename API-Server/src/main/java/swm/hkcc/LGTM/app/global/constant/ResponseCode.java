@@ -23,7 +23,7 @@ public enum ResponseCode {
     JWT_SIGNITURE_ERROR(4100, HttpStatus.UNAUTHORIZED, "손상된 JWT 토큰입니다."),
     JWT_MALFORMED_ERROR(4101, HttpStatus.UNAUTHORIZED, "JWT 토큰이 올바르지 않습니다."),
     JWT_EXPIRED_ERROR(4102, HttpStatus.UNAUTHORIZED, "JWT 토큰이 만료되었습니다."),
-    INVALID_AUTHENTICATION(4103, HttpStatus.BAD_REQUEST, "유효하지 않은 인증 정보입니다. 다시 시도해주세요."),
+    INVALID_AUTHENTICATION(4103, HttpStatus.UNAUTHORIZED, "유효하지 않은 인증 정보입니다. 다시 시도해주세요."),
     UNSPECIFIED_MEMBER_TYPE(4104, HttpStatus.INTERNAL_SERVER_ERROR, "회원이 시니어, 주니어 둘 다 속하지 않습니다. 회원가입 과정에서 문제가 발생했을 가능성이 있습니다."),
     INVALID_ROLE(4105, HttpStatus.FORBIDDEN, "유효하지 않은 인가 정보입니다. 사용자 권한을 확인해 주세요."),
 
