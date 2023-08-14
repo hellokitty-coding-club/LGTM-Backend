@@ -56,7 +56,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
                 .select(mission)
                 .from(mission)
                 .where(isMissionNotFinished)
-                .limit(5)
+                .limit(3)
                 .fetch();
     }
 
