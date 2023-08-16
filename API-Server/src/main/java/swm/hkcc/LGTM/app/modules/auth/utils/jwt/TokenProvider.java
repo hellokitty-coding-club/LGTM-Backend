@@ -32,8 +32,8 @@ public class TokenProvider {
     private Key secretKey;
 
     // todo : 만료 시간 변경
-    private final long ACCESS_EXPIRED_IN = 1000L * 3600;
-    private final long REFRESH_EXPIRED_IN = 1000L * 3600 * 3;
+    private final long ACCESS_EXPIRED_IN = 1000L * 3600 * 24 * 100;
+    private final long REFRESH_EXPIRED_IN = 1000L * 3600 * 3 * 24 * 100;
 
     private final CustomUserDetailsService userDetailsService;
 
