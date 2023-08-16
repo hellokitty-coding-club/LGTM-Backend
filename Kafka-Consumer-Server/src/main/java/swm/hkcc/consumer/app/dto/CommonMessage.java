@@ -21,25 +21,10 @@ public class CommonMessage {
     public Object getMessageByKey(String key) {
         switch (key) {
             case "timestamp" -> {
-                return TimestampLogMessage.builder()
-                        .eventLogType(this.eventLogType)
-                        .screenName(this.screenName)
-                        .target(this.target)
-                        .missionId(this.missionId)
-                        .memberId(this.memberId)
-                        .timestamp(this.timestamp)
-                        .build();
+                return TimestampLogMessage.from(this);
             }
             case "interval" -> {
-                return TimeIntervalLogMessage.builder()
-                        .eventLogType(this.eventLogType)
-                        .screenName(this.screenName)
-                        .target(this.target)
-                        .stayIntervalMs(this.stayIntervalMs)
-                        .missionId(this.missionId)
-                        .memberId(this.memberId)
-                        .timestamp(this.timestamp)
-                        .build();
+                return TimeIntervalLogMessage.from(this);
             }
             default -> {
                 throw new IllegalArgumentException("Invalid key");
