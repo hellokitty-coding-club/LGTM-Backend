@@ -1,0 +1,34 @@
+server:
+  port: 8081
+
+spring:
+  profiles:
+    default: dev
+
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          github:
+#            clientId: ${GITHUB_CLIENT_ID}
+#            clientSecret: ${GITHUB_CLIENT_SECRET}
+#            redirectUri: ${GITHUB_REDIRECT_URI}
+#            baseUri: "https://github.com/login/oauth/authorize"
+
+jwt:
+  header: Authorization
+  secret: ${JWT_SECRET}
+  token-validity-in-seconds: 8640000
+
+#springdoc:
+#  default-consumes-media-type: application/json;charset=UTF-8
+#  default-produces-media-type: application/json;charset=UTF-8
+#  swagger-ui:
+#    url: /docs/open-api-3.0.1.json
+#    path: /docs/swagger
+
+sentry:
+  dsn: https://676d18b6fc9640c2884dcccc04591419@o4505549721305088.ingest.sentry.io/4505550015954944
+  # Set traces-sample-rate to 1.0 to capture 100% of transactions for performance monitoring.
+  # We recommend adjusting this value in production.
+  traces-sample-rate: 1.0
