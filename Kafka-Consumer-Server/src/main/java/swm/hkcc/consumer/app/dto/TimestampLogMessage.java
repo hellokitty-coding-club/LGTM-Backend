@@ -30,4 +30,15 @@ public class TimestampLogMessage {
         this.timestamp = timestamp;
     }
 
+    public static TimestampLogMessage from(CommonMessage message) {
+        return TimestampLogMessage.builder()
+                .eventLogType(message.getEventLogType())
+                .screenName(message.getScreenName())
+                .target(message.getTarget())
+                .missionId(message.getMissionId())
+                .memberId(message.getMemberId())
+                .timestamp(message.getTimestamp())
+                .build();
+    }
+
 }

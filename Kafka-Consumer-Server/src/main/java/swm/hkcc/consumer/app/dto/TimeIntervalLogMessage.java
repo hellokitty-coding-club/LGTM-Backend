@@ -31,4 +31,16 @@ public class TimeIntervalLogMessage {
         this.timestamp = timestamp;
     }
 
+    public static TimeIntervalLogMessage from(CommonMessage message) {
+        return TimeIntervalLogMessage.builder()
+                .eventLogType(message.getEventLogType())
+                .screenName(message.getScreenName())
+                .target(message.getTarget())
+                .stayIntervalMs(message.getStayIntervalMs())
+                .missionId(message.getMissionId())
+                .memberId(message.getMemberId())
+                .timestamp(message.getTimestamp())
+                .build();
+    }
+
 }
