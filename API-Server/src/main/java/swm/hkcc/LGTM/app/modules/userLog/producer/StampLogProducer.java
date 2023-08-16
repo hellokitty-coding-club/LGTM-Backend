@@ -1,5 +1,6 @@
 package swm.hkcc.LGTM.app.modules.userLog.producer;
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +14,7 @@ import swm.hkcc.LGTM.app.modules.userLog.dto.TimestampLogMessage;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserLogProducer {
+public class StampLogProducer {
 
     private final KafkaTemplate<String, TimestampLogMessage> kafkaTemplate;
 
@@ -21,7 +22,7 @@ public class UserLogProducer {
     private String TOPIC_NAME;
     private final static String KEY = "timestamp";
 
-    public void sendMessage(TimestampLogMessage data) {
+    public String sendMessage(TimestampLogMessage data) {
         Message<TimestampLogMessage> message = MessageBuilder
                 .withPayload(data)
                 .setHeader(KafkaHeaders.TOPIC, TOPIC_NAME)
@@ -29,5 +30,7 @@ public class UserLogProducer {
                 .build();
 
         kafkaTemplate.send(message);
+
+        return TOPIC_NAME;
     }
 }
