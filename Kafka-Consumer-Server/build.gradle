@@ -44,3 +44,7 @@ dependencies {
     // sentry
     implementation 'io.sentry:sentry-spring-boot-starter-jakarta:6.25.0'
 }
+
+test {
+    useJUnitPlatform()
+}
