@@ -42,7 +42,11 @@ public enum ResponseCode {
     // 101xx : Member Authority
     NOT_EXIST_MEMBER(10100, HttpStatus.BAD_REQUEST, "존재하지 않는 회원입니다."),
     NOT_SENIOR_MEMBER(10101, HttpStatus.BAD_REQUEST, "시니어 회원만 접근할 수 있습니다."),
-    NOT_JUNIOR_MEMBER(10102, HttpStatus.BAD_REQUEST, "주니어 회원만 접근할 수 있습니다.");
+    NOT_JUNIOR_MEMBER(10102, HttpStatus.BAD_REQUEST, "주니어 회원만 접근할 수 있습니다."),
+
+    // 102xx : Server Driven UI
+    USER_AB_TEST_GROUP_NOT_FOUND(10200, HttpStatus.INTERNAL_SERVER_ERROR, "사용자의 AB Test Group을 찾을 수 없습니다."),
+    ;
 
     private final Integer code;
     private final HttpStatus httpStatus;
