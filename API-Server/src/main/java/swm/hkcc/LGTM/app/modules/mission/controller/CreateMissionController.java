@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import swm.hkcc.LGTM.app.global.dto.ApiDataResponse;
+import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequest;
@@ -25,13 +26,13 @@ public class CreateMissionController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @Valid @RequestBody CreateMissionRequest requestBody
     ) {
-        Long memberId = customUserDetails.getMemberId();
+        Member member = customUserDetails.getMember();
 
-        Mission mission = createMissionService.createMission(memberId, requestBody);
+        Mission mission = createMissionService.createMission(member, requestBody);
 
         return ApiDataResponse.of(CreateMissionResponse.builder()
                 .missionId(mission.getMissionId())
-                .writerId(memberId)
+                .writerId(member.getMemberId())
                 .build());
     }
 }
