@@ -23,16 +23,13 @@ import java.util.List;
 public class CreateMissionServiceImpl implements CreateMissionService {
     private final TechTagService techTagService;
     private final MissionRepository missionRepository;
-    private final MemberRepository memberRepository;
     private final MemberValidator memberValidator;
     private final TechTagValidator techTagValidator;
 
     @Override
-    public Mission createMission(Long memberId, CreateMissionRequest request) {
-        Member writer = memberRepository.findById(memberId)
-                .orElseThrow(NotExistMember::new);
-
-        validateRequest(writer, request.getTagList());
+    public Mission createMission(Member writer, CreateMissionRequest request) {
+        validateRequest(writer, request);
+        request.trim();
 
         Mission mission = Mission.from(request, writer);
         missionRepository.save(mission);
