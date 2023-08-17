@@ -34,9 +34,7 @@ import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
 import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
 import swm.hkcc.LGTM.app.modules.member.exception.NotSeniorMember;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
-import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequest;
-import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionResponse;
 import swm.hkcc.LGTM.app.modules.mission.service.CreateMissionServiceImpl;
 import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
@@ -46,6 +44,7 @@ import java.util.List;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -115,7 +114,7 @@ class CreateMissionTest {
     @DisplayName("미션 생성 동작 테스트")
     void createMission() throws Exception {
         // given
-        Mockito.when(createMissionService.createMission(1L, createMissionRequest))
+        Mockito.when(createMissionService.createMission(any(), createMissionRequest))
                 .thenReturn(
                         Mission.builder()
                                 .missionId(1L)
@@ -217,7 +216,7 @@ class CreateMissionTest {
     @DisplayName("미션 생성 실패 테스트 - 존재하지 않는 회원")
     void createMissionNotExistMember() throws Exception {
         // given
-        Mockito.when(createMissionService.createMission(1L, createMissionRequest))
+        Mockito.when(createMissionService.createMission(any(), createMissionRequest))
                 .thenThrow(new NotExistMember());
 
         // when
@@ -257,7 +256,7 @@ class CreateMissionTest {
     @DisplayName("미션 생성 실패 테스트 - 시니어가 아닌 회원")
     void createMissionNotSenior() throws Exception {
         // given
-        Mockito.when(createMissionService.createMission(1L, createMissionRequest))
+        Mockito.when(createMissionService.createMission(any(), createMissionRequest))
                 .thenThrow(new NotSeniorMember());
 
         // when
@@ -296,7 +295,7 @@ class CreateMissionTest {
     @DisplayName("미션 생성 실패 테스트 - 부적절한 태그")
     void createMissionInvalidTechTag() throws Exception {
         // given
-        Mockito.when(createMissionService.createMission(1L, createMissionRequest))
+        Mockito.when(createMissionService.createMission(any(), createMissionRequest))
                 .thenThrow(new InvalidTechTag());
 
         // when
