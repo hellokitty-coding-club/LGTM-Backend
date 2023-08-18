@@ -36,10 +36,10 @@ public class MissionController {
     }
 
 
-    @GetMapping("/detail/{missionId}")
+    @GetMapping("/detail")
     public ApiDataResponse<MissionDetailViewResponse> getMission(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @PathVariable("missionId") Long missionId
+            @RequestParam Long missionId
     ) {
         Long memberId = customUserDetails.getMemberId();
         return ApiDataResponse.of(missionService.getMissionDetail(memberId, missionId));
