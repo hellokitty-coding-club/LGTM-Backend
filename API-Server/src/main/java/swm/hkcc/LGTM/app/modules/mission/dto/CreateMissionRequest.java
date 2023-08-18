@@ -31,11 +31,11 @@ public class CreateMissionRequest {
 
     @NotBlank
     @Size(max = 1000)
-    private String reomnnandTo;
+    private String recommendTo;
 
     @NotBlank
     @Size(max = 1000)
-    private String notReomnnandTo;
+    private String notRecommendTo;
 
     @NotNull
     @FutureOrPresent

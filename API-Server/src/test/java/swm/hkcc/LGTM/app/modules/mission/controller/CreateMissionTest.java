@@ -85,8 +85,8 @@ class CreateMissionTest {
                 .title("title")
                 .tagList(List.of("JAVA", "Spring"))
                 .description("content")
-                .reomnnandTo("ReomnnandTo")
-                .notReomnnandTo("notReomnnandTo")
+                .recommendTo("RecommendTo")
+                .notRecommendTo("notRecommendTo")
                 .registrationDueDate(referenceDate)
                 .assignmentDueDate(referenceDate)
                 .reviewCompletationDueDate(referenceDate)
@@ -158,8 +158,8 @@ class CreateMissionTest {
                                                         tableRow("title", "String", "미션 제목. 최대 길이 = 100 이상일 경우 Validation 에러 발생. 서버에서 자체적으로 trim() 처리"),
                                                         tableRow("tagList", "List<String>", "미션 태그 리스트. 0개인 경우 Validation 에러 발생, 존재하지 않는 태그인 경우 "+ResponseCode.NOT_SENIOR_MEMBER.getCode().toString()+"번 에러 발생"),
                                                         tableRow("description", "String", "미션 설명. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
-                                                        tableRow("reomnnandTo", "String", "이런 사람에게 추천해요. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
-                                                        tableRow("notReomnnandTo", "String", "이런 사람에게는 추천하지 않아요. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
+                                                        tableRow("recommendTo", "String", "이런 사람에게 추천해요. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
+                                                        tableRow("notRecommendTo", "String", "이런 사람에게는 추천하지 않아요. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
                                                         tableRow("registrationDueDate", "LocalDate", "모집 및 입금완료 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
                                                         tableRow("assignmentDueDate", "LocalDate", "pr 제출 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
                                                         tableRow("reviewCompletationDueDate", "LocalDate", "미션 리뷰 완료 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
@@ -196,8 +196,8 @@ class CreateMissionTest {
                                         fieldWithPath("title").type(JsonFieldType.STRING).description("미션 제목"),
                                         fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("미션 태그 리스트"),
                                         fieldWithPath("description").type(JsonFieldType.STRING).description("미션 설명"),
-                                        fieldWithPath("reomnnandTo").type(JsonFieldType.STRING).description("미션 추천 대상"),
-                                        fieldWithPath("notReomnnandTo").type(JsonFieldType.STRING).description("미션 비추천 대상"),
+                                        fieldWithPath("recommendTo").type(JsonFieldType.STRING).description("미션 추천 대상"),
+                                        fieldWithPath("notRecommendTo").type(JsonFieldType.STRING).description("미션 비추천 대상"),
                                         fieldWithPath("registrationDueDate").type(JsonFieldType.STRING).description("미션 참가 신청 마감일"),
                                         fieldWithPath("assignmentDueDate").type(JsonFieldType.STRING).description("미션 과제 제출 마감일"),
                                         fieldWithPath("reviewCompletationDueDate").type(JsonFieldType.STRING).description("미션 리뷰 제출 마감일"),
