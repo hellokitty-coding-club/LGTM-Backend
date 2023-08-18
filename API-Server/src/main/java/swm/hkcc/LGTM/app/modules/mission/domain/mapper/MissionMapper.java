@@ -1,6 +1,10 @@
 package swm.hkcc.LGTM.app.modules.mission.domain.mapper;
 
+import swm.hkcc.LGTM.app.modules.member.domain.Member;
+import swm.hkcc.LGTM.app.modules.member.domain.Senior;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
+import swm.hkcc.LGTM.app.modules.mission.dto.MemberProfile;
+import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailViewResponse;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
@@ -30,6 +34,33 @@ public class MissionMapper {
                 .maxPeopleNumber(mission.getMaxPeopleNumber())
                 .isScraped(isScraped)
                 .scrapCount(scrapCount)
+                .build();
+    }
+
+    public static MissionDetailViewResponse missionAndMemberToDetailView(Mission mission, boolean isScraped, Senior missionWriter, List<TechTag> techTagList, int currentPeopleNumber, String memberType) {
+        Member member = missionWriter.getMember();
+        return MissionDetailViewResponse.builder()
+                .missionId(mission.getMissionId())
+                .missionStatus(mission.getMissionStatus().name())
+                .missionTitle(mission.getTitle())
+                .techTagList(techTagList)
+                .missionRepositoryUrl(mission.getMissionRepositoryUrl())
+                .registrationDueDate(mission.getRegistrationDueDate())
+                .maxPeopleNumber(mission.getMaxPeopleNumber())
+                .currentPeopleNumber(currentPeopleNumber)
+                .price(mission.getPrice())
+                .description(mission.getDescription())
+                .recommendTo(mission.getReomnnandTo())
+                .notRecommendTo(mission.getNotReomnnandTo())
+                .isScraped(isScraped)
+                .memberType(memberType)
+                .memberProfile(MemberProfile.builder()
+                        .memberId(member.getMemberId())
+                        .nickName(member.getNickName())
+                        .profileImageUrl(member.getProfileImageUrl())
+                        .githubId(member.getGithubId())
+                        .company(missionWriter.getCompanyInfo())
+                        .build())
                 .build();
     }
 
