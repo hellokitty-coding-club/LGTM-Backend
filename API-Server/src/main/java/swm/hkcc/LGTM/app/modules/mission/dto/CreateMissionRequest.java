@@ -62,8 +62,5 @@ public class CreateMissionRequest {
 
     public void trim() {
         this.title = this.title.trim();
-        this.description = this.description.trim();
-        this.reomnnandTo = this.reomnnandTo.trim();
-        this.notReomnnandTo = this.notReomnnandTo.trim();
     }
 }
