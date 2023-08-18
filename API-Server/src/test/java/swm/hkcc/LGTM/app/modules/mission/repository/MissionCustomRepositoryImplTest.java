@@ -61,8 +61,8 @@ class MissionCustomRepositoryImplTest {
                 .reomnnandTo("To Everyone")
                 .notReomnnandTo("To No One")
                 .registrationDueDate(LocalDate.now())
-                .assignmentDueDate(LocalDate.now().plusDays(7))
-                .reviewCompletationDueDate(LocalDate.now().plusDays(14))
+//                .assignmentDueDate(LocalDate.now().plusDays(7))
+//                .reviewCompletationDueDate(LocalDate.now().plusDays(14))
                 .price(100)
                 .maxPeopleNumber(10)
                 .build();
@@ -76,8 +76,8 @@ class MissionCustomRepositoryImplTest {
                 .reomnnandTo("To Everyone")
                 .notReomnnandTo("To No One")
                 .registrationDueDate(LocalDate.now())
-                .assignmentDueDate(LocalDate.now().plusDays(7))
-                .reviewCompletationDueDate(LocalDate.now().plusDays(14))
+//                .assignmentDueDate(LocalDate.now().plusDays(7))
+//                .reviewCompletationDueDate(LocalDate.now().plusDays(14))
                 .price(200)
                 .maxPeopleNumber(20)
                 .build();
@@ -91,8 +91,6 @@ class MissionCustomRepositoryImplTest {
                 .reomnnandTo("To Everyone")
                 .notReomnnandTo("To No One")
                 .registrationDueDate(LocalDate.now())
-                .assignmentDueDate(LocalDate.now().plusDays(7))
-                .reviewCompletationDueDate(LocalDate.now().plusDays(14))
                 .price(300)
                 .maxPeopleNumber(30)
                 .build();

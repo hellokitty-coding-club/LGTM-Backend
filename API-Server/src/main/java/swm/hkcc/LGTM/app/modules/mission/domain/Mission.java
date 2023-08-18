@@ -49,14 +49,6 @@ public class Mission extends BaseEntity implements Serializable {
     private LocalDate registrationDueDate;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private LocalDate assignmentDueDate;
-
-    @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private LocalDate reviewCompletationDueDate;
-
-    @Column(nullable = false)
     private Integer price;
 
     @Column(nullable = false)
@@ -69,11 +61,9 @@ public class Mission extends BaseEntity implements Serializable {
                 .title(request.getTitle())
                 .missionStatus(MissionStatus.RECRUITING)
                 .description(request.getDescription())
-                .reomnnandTo(request.getReomnnandTo())
-                .notReomnnandTo(request.getNotReomnnandTo())
+                .reomnnandTo(request.getRecommendTo())
+                .notReomnnandTo(request.getNotRecommendTo())
                 .registrationDueDate(request.getRegistrationDueDate())
-                .assignmentDueDate(request.getAssignmentDueDate())
-                .reviewCompletationDueDate(request.getReviewCompletationDueDate())
                 .price(request.getPrice())
                 .maxPeopleNumber(request.getMaxPeopleNumber())
                 .build();

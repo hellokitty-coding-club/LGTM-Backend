@@ -122,8 +122,6 @@ public class MissionServiceImplTest {
                 .reomnnandTo("TestRecommendTo")
                 .notReomnnandTo("TestNotRecommendTo")
                 .registrationDueDate(LocalDate.now())
-                .assignmentDueDate(LocalDate.now())
-                .reviewCompletationDueDate(LocalDate.now())
                 .price(1000)
                 .maxPeopleNumber(10)
                 .build();

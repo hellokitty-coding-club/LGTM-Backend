@@ -88,8 +88,6 @@ class CreateMissionTest {
                 .recommendTo("RecommendTo")
                 .notRecommendTo("notRecommendTo")
                 .registrationDueDate(referenceDate)
-                .assignmentDueDate(referenceDate)
-                .reviewCompletationDueDate(referenceDate)
                 .price(1000)
                 .maxPeopleNumber(10)
                 .build();
@@ -161,8 +159,6 @@ class CreateMissionTest {
                                                         tableRow("recommendTo", "String", "이런 사람에게 추천해요. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
                                                         tableRow("notRecommendTo", "String", "이런 사람에게는 추천하지 않아요. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
                                                         tableRow("registrationDueDate", "LocalDate", "모집 및 입금완료 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
-                                                        tableRow("assignmentDueDate", "LocalDate", "pr 제출 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
-                                                        tableRow("reviewCompletationDueDate", "LocalDate", "미션 리뷰 완료 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
                                                         tableRow("price", "Integer", "미션 가격"),
                                                         tableRow("maxPeopleNumber", "Integer", "미션 최대 참가 인원")
                                                 )
@@ -191,7 +187,6 @@ class CreateMissionTest {
                                 )
                                 .tag("미션")
                                 .requestFields(
-                                        // {"missionRepositoryUrl":"https://github.com/abcabc","title":"title","missionStatus":"참가자 모집중","tagList":["tag1","tag2"],"description":"content","reomnnandTo":"ReomnnandTo","notReomnnandTo":"notReomnnandTo","registrationDueDate":[2100,1,1,1,1,1],"assignmentDueDate":[2100,1,1,1,1,1],"reviewCompletationDueDate":[2100,1,1,1,1,1],"price":1000,"maxPeopleNumber":10}
                                         fieldWithPath("missionRepositoryUrl").type(JsonFieldType.STRING).description("미션 저장소 URL"),
                                         fieldWithPath("title").type(JsonFieldType.STRING).description("미션 제목"),
                                         fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("미션 태그 리스트"),
@@ -199,8 +194,6 @@ class CreateMissionTest {
                                         fieldWithPath("recommendTo").type(JsonFieldType.STRING).description("미션 추천 대상"),
                                         fieldWithPath("notRecommendTo").type(JsonFieldType.STRING).description("미션 비추천 대상"),
                                         fieldWithPath("registrationDueDate").type(JsonFieldType.STRING).description("미션 참가 신청 마감일"),
-                                        fieldWithPath("assignmentDueDate").type(JsonFieldType.STRING).description("미션 과제 제출 마감일"),
-                                        fieldWithPath("reviewCompletationDueDate").type(JsonFieldType.STRING).description("미션 리뷰 제출 마감일"),
                                         fieldWithPath("price").type(JsonFieldType.NUMBER).description("미션 가격"),
                                         fieldWithPath("maxPeopleNumber").type(JsonFieldType.NUMBER).description("미션 최대 참가 인원")
                                 )
