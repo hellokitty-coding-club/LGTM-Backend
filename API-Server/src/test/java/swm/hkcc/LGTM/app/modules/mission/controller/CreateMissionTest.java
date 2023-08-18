@@ -105,6 +105,12 @@ class CreateMissionTest {
                                 .missionId(1L)
                                 .writer(Member.builder().memberId(1L).build())
                                 .build());
+
+        Member member = Member.builder()
+                .memberId(1L)
+                .githubId("test-token-senior")
+                .build();
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
 
@@ -145,9 +151,9 @@ class CreateMissionTest {
                                                 .h1("[Request values]")
                                                 .table(
                                                         tableHead("Request values", "Data Type", "Description"),
-                                                        tableRow("missionRepositoryUrl", "String", "미션 저장소 URL. URL 형식이 아니면 Validation 에러 발생, 접근이 불가능한 URL인 경우 "+ResponseCode.INVALID_GITHUB_URL.getCode().toString()+"번 에러 발생"),
+                                                        tableRow("missionRepositoryUrl", "String", "미션 저장소 URL. URL 형식이 아니면 Validation 에러 발생, 접근이 불가능한 URL인 경우 " + ResponseCode.INVALID_GITHUB_URL.getCode().toString() + "번 에러 발생"),
                                                         tableRow("title", "String", "미션 제목. 최대 길이 = 100 이상일 경우 Validation 에러 발생. 서버에서 자체적으로 trim() 처리"),
-                                                        tableRow("tagList", "List<String>", "미션 태그 리스트. 0개인 경우 Validation 에러 발생, 존재하지 않는 태그인 경우 "+ResponseCode.NOT_SENIOR_MEMBER.getCode().toString()+"번 에러 발생"),
+                                                        tableRow("tagList", "List<String>", "미션 태그 리스트. 0개인 경우 Validation 에러 발생, 존재하지 않는 태그인 경우 " + ResponseCode.NOT_SENIOR_MEMBER.getCode().toString() + "번 에러 발생"),
                                                         tableRow("description", "String", "미션 설명. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
                                                         tableRow("recommendTo", "String", "이런 사람에게 추천해요. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
                                                         tableRow("notRecommendTo", "String", "이런 사람에게는 추천하지 않아요. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
@@ -212,6 +218,11 @@ class CreateMissionTest {
         Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
                 .thenThrow(new NotExistMember());
 
+        Member member = Member.builder()
+                .memberId(1L)
+                .githubId("test-token-senior")
+                .build();
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
 
@@ -260,6 +271,11 @@ class CreateMissionTest {
         Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
                 .thenThrow(new NotSeniorMember());
 
+        Member member = Member.builder()
+                .memberId(1L)
+                .githubId("test-token-senior")
+                .build();
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
 
@@ -308,6 +324,11 @@ class CreateMissionTest {
         Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
                 .thenThrow(new InvalidTechTag());
 
+        Member member = Member.builder()
+                .memberId(1L)
+                .githubId("test-token-senior")
+                .build();
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
 
@@ -356,11 +377,24 @@ class CreateMissionTest {
         Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
                 .thenThrow(new InvalidGithubUrl());
 
+        Member member = Member.builder()
+                .memberId(1L)
+                .githubId("test-token-senior")
+                .build();
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+        Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
+                .thenReturn(java.util.Optional.ofNullable(member));
+
         // when
 
         // then
         ResponseCode expectedResponseCode = ResponseCode.INVALID_GITHUB_URL;
         ResultActions actions = mockMvc.perform(post("/v1/mission")
+                        .header(
+                                "Authorization",
+                                // todo : mock member로부터 토큰 생성해서 넣기
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
+                        )
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 new ObjectMapper()
@@ -374,7 +408,7 @@ class CreateMissionTest {
 
         // document
         actions
-                .andDo(document("post-create-mission-invalid-github-url",
+                .andDo(document("post-create-mission-not-senior-member",
                         preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
@@ -386,7 +420,6 @@ class CreateMissionTest {
 
                                 ).build())
                 ));
-
     }
 
 }
