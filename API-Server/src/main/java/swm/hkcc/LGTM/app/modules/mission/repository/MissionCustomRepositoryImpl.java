@@ -24,7 +24,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    @Cacheable(value = "on_going_missions", key = "#memberId")
+//    @Cacheable(value = "on_going_missions", key = "#memberId")
     public List<Mission> getOnGoingMissions(Long memberId) {
         return getMissions(isMemberParticipating(memberId), isNotCompleted());
     }
@@ -35,7 +35,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     }
 
     @Override
-    @Cacheable(value = "total_missions")
+//    @Cacheable(value = "total_missions")
     public List<Mission> getTotalMissions() {
         return getMissions(isMissionNotFinished());
     }
