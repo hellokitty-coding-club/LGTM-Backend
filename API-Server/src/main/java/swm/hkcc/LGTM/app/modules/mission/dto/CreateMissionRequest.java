@@ -29,13 +29,11 @@ public class CreateMissionRequest {
     @Size(max = 1000)
     private String description;
 
-    @NotBlank
     @Size(max = 1000)
-    private String reomnnandTo;
+    private String recommendTo;
 
-    @NotBlank
     @Size(max = 1000)
-    private String notReomnnandTo;
+    private String notRecommendTo;
 
     @NotNull
     @FutureOrPresent
@@ -50,7 +48,7 @@ public class CreateMissionRequest {
     @NotNull
     @FutureOrPresent
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private LocalDate reviewCompletationDueDate;
+    private LocalDate reviewCompletionDueDate;
 
     @NotNull
     @Positive
