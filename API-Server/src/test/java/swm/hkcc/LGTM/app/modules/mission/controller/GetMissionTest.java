@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import swm.hkcc.LGTM.app.global.constant.ResponseCode;
+import swm.hkcc.LGTM.app.modules.member.domain.Authority;
 import swm.hkcc.LGTM.app.modules.member.domain.Bank;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.domain.Senior;
@@ -39,6 +40,7 @@ import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
 import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +49,7 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -72,6 +75,9 @@ public class GetMissionTest {
 
     @MockBean
     private SeniorRepository seniorRepository;
+
+    @MockBean
+    private MemberRepository memberRepository;
 
     @MockBean
     private MissionScrapRepository missionScrapRepository;
@@ -101,6 +107,7 @@ public class GetMissionTest {
         // given
         Mission mockMission = createMockMission();
         Senior mockSenior = createMockSenior();
+        Member mockMember = createMockMember();
         List<TechTag> mockTechTags = createMockTechTags();
 
         given(missionRepository.findById(anyLong())).willReturn(Optional.of(mockMission));
@@ -109,6 +116,8 @@ public class GetMissionTest {
         given(techTagPerMissionRepository.findTechTagsByMissionId(anyLong())).willReturn(mockTechTags);
         given(missionRegistrationRepository.countByMission_MissionId(anyLong())).willReturn(5);
         given(memberService.getMemberType(anyLong())).willReturn("JUNIOR");
+        given(memberRepository.findOneByGithubId(anyString())).willReturn(Optional.ofNullable(mockMember));
+
         // when
 
         // then
@@ -138,7 +147,7 @@ public class GetMissionTest {
                 .andExpect(jsonPath("$.data.missionRepositoryUrl").value("https://www.github.com/kxxhyorim"))
                 .andExpect(jsonPath("$.data.registrationDueDate").value("2100-01-01"))
                 .andExpect(jsonPath("$.data.maxPeopleNumber").value(10))
-                .andExpect(jsonPath("$.data.currentPeopleNumber").value(0))
+                .andExpect(jsonPath("$.data.currentPeopleNumber").value(5))
                 .andExpect(jsonPath("$.data.price").value(10000))
                 .andExpect(jsonPath("$.data.description").value("content"))
                 .andExpect(jsonPath("$.data.recommendTo").value("ReomnnandTo"))
@@ -149,7 +158,7 @@ public class GetMissionTest {
                 .andExpect(jsonPath("$.data.memberProfile.profileImageUrl").value("https://avatars.githubusercontent.com/u/899645?v=4"))
                 .andExpect(jsonPath("$.data.memberProfile.githubId").value("test-token-senior"))
                 .andExpect(jsonPath("$.data.memberProfile.company").value("(주)TestCompany"))
-                .andExpect(jsonPath("$.data.scraped").value(false));
+                .andExpect(jsonPath("$.data.scraped").value(true));
 
         // document
         actions
@@ -275,6 +284,20 @@ public class GetMissionTest {
                 .position("Senior Developer")
                 .accountNumber("1234-5678-910")
                 .bank(Bank.K_BANK)
+                .member(createMockMember())
                 .build();
+    }
+
+    private Member createMockMember() {
+        Member member = Member.builder()
+                .memberId(48L)
+                .githubId("test-token-senior")
+                .nickName("test-token-senior")
+                .profileImageUrl("https://avatars.githubusercontent.com/u/899645?v=4")
+                .introduction("Test Junior Developer")
+                .build();
+
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+        return member;
     }
 }
