@@ -29,11 +29,9 @@ public class CreateMissionRequest {
     @Size(max = 1000)
     private String description;
 
-    @NotBlank
     @Size(max = 1000)
     private String recommendTo;
 
-    @NotBlank
     @Size(max = 1000)
     private String notRecommendTo;
 

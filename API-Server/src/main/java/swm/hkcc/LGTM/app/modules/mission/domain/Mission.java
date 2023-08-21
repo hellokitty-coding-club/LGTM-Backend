@@ -38,11 +38,11 @@ public class Mission extends BaseEntity implements Serializable {
     @Column(nullable = false, length = 1000)
     private String description;
 
-    @Column(nullable = false, length = 1000)
-    private String reomnnandTo;
+    @Column(nullable = true, length = 1000)
+    private String recommendTo;
 
-    @Column(nullable = false, length = 1000)
-    private String notReomnnandTo;
+    @Column(nullable = true, length = 1000)
+    private String notRecommendTo;
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
@@ -61,8 +61,8 @@ public class Mission extends BaseEntity implements Serializable {
                 .title(request.getTitle())
                 .missionStatus(MissionStatus.RECRUITING)
                 .description(request.getDescription())
-                .reomnnandTo(request.getRecommendTo())
-                .notReomnnandTo(request.getNotRecommendTo())
+                .recommendTo(request.getRecommendTo())
+                .notRecommendTo(request.getNotRecommendTo())
                 .registrationDueDate(request.getRegistrationDueDate())
                 .price(request.getPrice())
                 .maxPeopleNumber(request.getMaxPeopleNumber())

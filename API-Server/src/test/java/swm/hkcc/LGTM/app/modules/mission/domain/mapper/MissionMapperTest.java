@@ -33,8 +33,8 @@ class MissionMapperTest {
                 .description("Test Description")
                 .missionRepositoryUrl("Test Repository URL")
                 .missionStatus(MissionStatus.MISSION_PROCEEDING)
-                .reomnnandTo("Developers")
-                .notReomnnandTo("Designers")
+                .recommendTo("Developers")
+                .notRecommendTo("Designers")
                 .build();
     }
 
