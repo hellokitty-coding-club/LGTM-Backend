@@ -23,6 +23,7 @@ import swm.hkcc.LGTM.app.modules.member.domain.Senior;
 import swm.hkcc.LGTM.app.modules.member.repository.JuniorRepository;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.member.repository.SeniorRepository;
+import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTagPerMember;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMemberRepository;
@@ -37,15 +38,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class AuthServiceImpl implements AuthService {
-    private static final String JUNIOR = "JUNIOR";
-    private static final String SENIOR = "SENIOR";
-
     private final MemberRepository memberRepository;
     private final JuniorRepository juniorRepository;
     private final SeniorRepository seniorRepository;
     private final TechTagRepository techTagRepository;
     private final TechTagPerMemberRepository techTagPerMemberRepository;
     private final TokenProvider tokenProvider;
+    private final MemberService memberService;
 
     @Override
     @Transactional
@@ -68,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
                     .accessToken(createAccessToken(updatedMember))
                     .refreshToken(refreshToken)
                     .profileImageUrl(githubUserInfo.getAvatar_url())
-                    .memberType(getMemberType(updatedMember.getMemberId()))
+                    .memberType(memberService.getMemberType(updatedMember.getMemberId()))
                     .build();
         }
 
@@ -178,27 +177,8 @@ public class AuthServiceImpl implements AuthService {
                 .githubId(member.getGithubId())
                 .accessToken(createAccessToken(member))
                 .refreshToken(member.getRefreshToken())
-                .memberType(getMemberType(member.getMemberId()))
+                .memberType(memberService.getMemberType(member.getMemberId()))
                 .build();
     }
 
-    private String getMemberType(Long memberId) {
-        if (isJunior(memberId)) {
-            return JUNIOR;
-        }
-        else if (isSenior(memberId)) {
-            return SENIOR;
-        }
-        else {
-            throw new UnspecifiedMemberType();
-        }
-    }
-
-    private boolean isJunior(Long memberId) {
-        return juniorRepository.existsByMember_MemberId(memberId);
-    }
-
-    private boolean isSenior(Long memberId) {
-        return seniorRepository.existsByMember_MemberId(memberId);
-    }
 }

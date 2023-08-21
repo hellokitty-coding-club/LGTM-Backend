@@ -119,11 +119,9 @@ public class MissionServiceImplTest {
                 .title("Test Mission ")
                 .missionStatus(MissionStatus.MISSION_PROCEEDING)
                 .description("TestDescription")
-                .reomnnandTo("TestRecommendTo")
-                .notReomnnandTo("TestNotRecommendTo")
+                .recommendTo("TestRecommendTo")
+                .notRecommendTo("TestNotRecommendTo")
                 .registrationDueDate(LocalDate.now())
-                .assignmentDueDate(LocalDate.now())
-                .reviewCompletationDueDate(LocalDate.now())
                 .price(1000)
                 .maxPeopleNumber(10)
                 .build();

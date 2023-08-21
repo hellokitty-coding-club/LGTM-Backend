@@ -33,10 +33,8 @@ class MissionMapperTest {
                 .description("Test Description")
                 .missionRepositoryUrl("Test Repository URL")
                 .missionStatus(MissionStatus.MISSION_PROCEEDING)
-                .reomnnandTo("Developers")
-                .notReomnnandTo("Designers")
-                .assignmentDueDate(LocalDate.now().plusDays(10))
-                .reviewCompletationDueDate(LocalDate.now().plusDays(15))
+                .recommendTo("Developers")
+                .notRecommendTo("Designers")
                 .build();
     }
 

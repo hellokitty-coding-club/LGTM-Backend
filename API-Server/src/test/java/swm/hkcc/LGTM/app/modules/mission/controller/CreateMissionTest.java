@@ -33,6 +33,7 @@ import swm.hkcc.LGTM.app.modules.member.exception.NotSeniorMember;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequest;
+import swm.hkcc.LGTM.app.modules.mission.exception.InvalidGithubUrl;
 import swm.hkcc.LGTM.app.modules.mission.service.CreateMissionServiceImpl;
 import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
@@ -43,6 +44,7 @@ import java.util.List;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -85,11 +87,9 @@ class CreateMissionTest {
                 .title("title")
                 .tagList(List.of("JAVA", "Spring"))
                 .description("content")
-                .reomnnandTo("ReomnnandTo")
-                .notReomnnandTo("notReomnnandTo")
+                .recommendTo("RecommendTo")
+                .notRecommendTo("notRecommendTo")
                 .registrationDueDate(referenceDate)
-                .assignmentDueDate(referenceDate)
-                .reviewCompletationDueDate(referenceDate)
                 .price(1000)
                 .maxPeopleNumber(10)
                 .build();
@@ -99,17 +99,18 @@ class CreateMissionTest {
     @DisplayName("미션 생성 동작 테스트")
     void createMission() throws Exception {
         // given
-        Member member = (Member.builder()
-                .memberId(1L)
-                .build());
-        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
-
-        Mockito.when(createMissionService.createMission(1L, createMissionRequest))
+        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
                 .thenReturn(
                         Mission.builder()
                                 .missionId(1L)
                                 .writer(Member.builder().memberId(1L).build())
                                 .build());
+
+        Member member = Member.builder()
+                .memberId(1L)
+                .githubId("test-token-senior")
+                .build();
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
 
@@ -150,15 +151,13 @@ class CreateMissionTest {
                                                 .h1("[Request values]")
                                                 .table(
                                                         tableHead("Request values", "Data Type", "Description"),
-                                                        tableRow("missionRepositoryUrl", "String", "미션 저장소 URL. URL 형식이 아니면 Validation 에러 발생"),
-                                                        tableRow("title", "String", "미션 제목. 최대 길이 = 100"),
-                                                        tableRow("tagList", "List<String>", "미션 태그 리스트"),
-                                                        tableRow("description", "String", "미션 설명. 최대 길이 = 1000"),
-                                                        tableRow("reomnnandTo", "String", "이런 사람에게 추천해요. 최대 길이 = 1000"),
-                                                        tableRow("notReomnnandTo", "String", "이런 사람에게는 추천하지 않아요. 최대 길이 = 1000"),
+                                                        tableRow("missionRepositoryUrl", "String", "미션 저장소 URL. URL 형식이 아니면 Validation 에러 발생, 접근이 불가능한 URL인 경우 " + ResponseCode.INVALID_GITHUB_URL.getCode().toString() + "번 에러 발생"),
+                                                        tableRow("title", "String", "미션 제목. 최대 길이 = 100 이상일 경우 Validation 에러 발생. 서버에서 자체적으로 trim() 처리"),
+                                                        tableRow("tagList", "List<String>", "미션 태그 리스트. 0개인 경우 Validation 에러 발생, 존재하지 않는 태그인 경우 " + ResponseCode.NOT_SENIOR_MEMBER.getCode().toString() + "번 에러 발생"),
+                                                        tableRow("description", "String", "미션 설명. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
+                                                        tableRow("recommendTo", "String", "이런 사람에게 추천해요. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
+                                                        tableRow("notRecommendTo", "String", "이런 사람에게는 추천하지 않아요. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
                                                         tableRow("registrationDueDate", "LocalDate", "모집 및 입금완료 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
-                                                        tableRow("assignmentDueDate", "LocalDate", "pr 제출 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
-                                                        tableRow("reviewCompletationDueDate", "LocalDate", "미션 리뷰 완료 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
                                                         tableRow("price", "Integer", "미션 가격"),
                                                         tableRow("maxPeopleNumber", "Integer", "미션 최대 참가 인원")
                                                 )
@@ -177,23 +176,23 @@ class CreateMissionTest {
                                                         tableRow(
                                                                 ResponseCode.NOT_SENIOR_MEMBER.getHttpStatus().toString(),
                                                                 ResponseCode.NOT_SENIOR_MEMBER.getCode().toString(),
-                                                                ResponseCode.NOT_SENIOR_MEMBER.getMessage())
+                                                                ResponseCode.NOT_SENIOR_MEMBER.getMessage()),
+                                                        tableRow(
+                                                                ResponseCode.INVALID_GITHUB_URL.getHttpStatus().toString(),
+                                                                ResponseCode.INVALID_GITHUB_URL.getCode().toString(),
+                                                                ResponseCode.INVALID_GITHUB_URL.getMessage())
                                                 )
                                                 .build()
                                 )
                                 .tag("미션")
                                 .requestFields(
-                                        // {"missionRepositoryUrl":"https://github.com/abcabc","title":"title","missionStatus":"참가자 모집중","tagList":["tag1","tag2"],"description":"content","reomnnandTo":"ReomnnandTo","notReomnnandTo":"notReomnnandTo","registrationDueDate":[2100,1,1,1,1,1],"assignmentDueDate":[2100,1,1,1,1,1],"reviewCompletationDueDate":[2100,1,1,1,1,1],"price":1000,"maxPeopleNumber":10}
                                         fieldWithPath("missionRepositoryUrl").type(JsonFieldType.STRING).description("미션 저장소 URL"),
                                         fieldWithPath("title").type(JsonFieldType.STRING).description("미션 제목"),
                                         fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("미션 태그 리스트"),
                                         fieldWithPath("description").type(JsonFieldType.STRING).description("미션 설명"),
-                                        fieldWithPath("reomnnandTo").type(JsonFieldType.STRING).description("미션 추천 대상"),
-                                        fieldWithPath("notReomnnandTo").type(JsonFieldType.STRING).description("미션 비추천 대상"),
-                                        // todo: 마감일 형식!!!
+                                        fieldWithPath("recommendTo").type(JsonFieldType.STRING).description("미션 추천 대상"),
+                                        fieldWithPath("notRecommendTo").type(JsonFieldType.STRING).description("미션 비추천 대상"),
                                         fieldWithPath("registrationDueDate").type(JsonFieldType.STRING).description("미션 참가 신청 마감일"),
-                                        fieldWithPath("assignmentDueDate").type(JsonFieldType.STRING).description("미션 과제 제출 마감일"),
-                                        fieldWithPath("reviewCompletationDueDate").type(JsonFieldType.STRING).description("미션 리뷰 제출 마감일"),
                                         fieldWithPath("price").type(JsonFieldType.NUMBER).description("미션 가격"),
                                         fieldWithPath("maxPeopleNumber").type(JsonFieldType.NUMBER).description("미션 최대 참가 인원")
                                 )
@@ -216,13 +215,14 @@ class CreateMissionTest {
     @DisplayName("미션 생성 실패 테스트 - 존재하지 않는 회원")
     void createMissionNotExistMember() throws Exception {
         // given
-        Member member = (Member.builder()
-                .memberId(1L)
-                .build());
-        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
-        Mockito.when(createMissionService.createMission(1L, createMissionRequest))
+        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
                 .thenThrow(new NotExistMember());
 
+        Member member = Member.builder()
+                .memberId(1L)
+                .githubId("test-token-senior")
+                .build();
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
 
@@ -268,13 +268,14 @@ class CreateMissionTest {
     @DisplayName("미션 생성 실패 테스트 - 시니어가 아닌 회원")
     void createMissionNotSenior() throws Exception {
         // given
-        Member member = (Member.builder()
-                .memberId(1L)
-                .build());
-        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
-        Mockito.when(createMissionService.createMission(1L, createMissionRequest))
+        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
                 .thenThrow(new NotSeniorMember());
 
+        Member member = Member.builder()
+                .memberId(1L)
+                .githubId("test-token-senior")
+                .build();
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
 
@@ -319,13 +320,15 @@ class CreateMissionTest {
     @DisplayName("미션 생성 실패 테스트 - 부적절한 태그")
     void createMissionInvalidTechTag() throws Exception {
         // given
-        Member member = (Member.builder()
-                .memberId(1L)
-                .build());
-        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
-        Mockito.when(createMissionService.createMission(1L, createMissionRequest))
+
+        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
                 .thenThrow(new InvalidTechTag());
 
+        Member member = Member.builder()
+                .memberId(1L)
+                .githubId("test-token-senior")
+                .build();
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
 
@@ -365,6 +368,58 @@ class CreateMissionTest {
                                 ).build())
                 ));
 
+    }
+
+    @Test
+    @DisplayName("미션 생성 실패 테스트 - 부적절한 레포지토리 url")
+    void createMissionInvalidGihubUrl() throws Exception {
+        // given
+        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
+                .thenThrow(new InvalidGithubUrl());
+
+        Member member = Member.builder()
+                .memberId(1L)
+                .githubId("test-token-senior")
+                .build();
+        member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+        Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
+                .thenReturn(java.util.Optional.ofNullable(member));
+
+        // when
+
+        // then
+        ResponseCode expectedResponseCode = ResponseCode.INVALID_GITHUB_URL;
+        ResultActions actions = mockMvc.perform(post("/v1/mission")
+                        .header(
+                                "Authorization",
+                                // todo : mock member로부터 토큰 생성해서 넣기
+                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
+                        )
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                new ObjectMapper()
+                                        .registerModule(new JavaTimeModule())
+                                        .writeValueAsString(createMissionRequest)
+                        ))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.responseCode").value(expectedResponseCode.getCode()))
+                .andExpect(jsonPath("$.message").value(expectedResponseCode.getMessage()));
+
+        // document
+        actions
+                .andDo(document("post-create-mission-not-senior-member",
+                        preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
+                        preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
+
+                        resource(ResourceSnippetParameters.builder()
+                                .responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지")
+
+                                ).build())
+                ));
     }
 
 }
