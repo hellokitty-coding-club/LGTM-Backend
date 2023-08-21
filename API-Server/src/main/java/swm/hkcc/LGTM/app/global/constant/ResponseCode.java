@@ -46,6 +46,7 @@ public enum ResponseCode {
 
     // 102xx : Mission
     NOT_EXIST_MISSION(10200, HttpStatus.BAD_REQUEST, "존재하지 않는 미션입니다."),
+    INVALID_GITHUB_URL(10201, HttpStatus.BAD_REQUEST, "유효하지 않은 Github Repository URL입니다. public repository인 github 주소인지 확인해주세요.");
     ;
 
     private final Integer code;

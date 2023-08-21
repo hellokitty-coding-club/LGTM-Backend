@@ -41,20 +41,14 @@ public class CreateMissionRequest {
     private LocalDate registrationDueDate;
 
     @NotNull
-    @FutureOrPresent
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private LocalDate assignmentDueDate;
-
-    @NotNull
-    @FutureOrPresent
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private LocalDate reviewCompletionDueDate;
-
-    @NotNull
     @Positive
     private Integer price;
 
     @NotNull
     @Positive
     private Integer maxPeopleNumber;
+
+    public void trimTitle() {
+        this.title = this.title.trim();
+    }
 }

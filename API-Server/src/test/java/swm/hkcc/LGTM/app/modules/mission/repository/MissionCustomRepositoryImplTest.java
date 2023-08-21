@@ -61,8 +61,6 @@ class MissionCustomRepositoryImplTest {
                 .recommendTo("To Everyone")
                 .notRecommendTo("To No One")
                 .registrationDueDate(LocalDate.now())
-                .assignmentDueDate(LocalDate.now().plusDays(7))
-                .reviewCompletionDueDate(LocalDate.now().plusDays(14))
                 .price(100)
                 .maxPeopleNumber(10)
                 .build();
@@ -76,8 +74,6 @@ class MissionCustomRepositoryImplTest {
                 .recommendTo("To Everyone")
                 .notRecommendTo("To No One")
                 .registrationDueDate(LocalDate.now())
-                .assignmentDueDate(LocalDate.now().plusDays(7))
-                .reviewCompletionDueDate(LocalDate.now().plusDays(14))
                 .price(200)
                 .maxPeopleNumber(20)
                 .build();
@@ -91,8 +87,6 @@ class MissionCustomRepositoryImplTest {
                 .recommendTo("To Everyone")
                 .notRecommendTo("To No One")
                 .registrationDueDate(LocalDate.now())
-                .assignmentDueDate(LocalDate.now().plusDays(7))
-                .reviewCompletionDueDate(LocalDate.now().plusDays(14))
                 .price(300)
                 .maxPeopleNumber(30)
                 .build();

@@ -35,8 +35,6 @@ class MissionMapperTest {
                 .missionStatus(MissionStatus.MISSION_PROCEEDING)
                 .recommendTo("Developers")
                 .notRecommendTo("Designers")
-                .assignmentDueDate(LocalDate.now().plusDays(10))
-                .reviewCompletionDueDate(LocalDate.now().plusDays(15))
                 .build();
     }
 
