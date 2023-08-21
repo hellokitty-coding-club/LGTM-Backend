@@ -48,7 +48,7 @@ public class CreateMissionRequest {
     @Positive
     private Integer maxPeopleNumber;
 
-    public void trim() {
+    public void trimTitle() {
         this.title = this.title.trim();
     }
 }

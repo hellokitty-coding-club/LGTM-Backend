@@ -31,7 +31,7 @@ public class CreateMissionServiceImpl implements CreateMissionService {
     @Override
     public Mission createMission(Member writer, CreateMissionRequest request) {
         validateRequest(writer, request);
-        request.trim();
+        request.trimTitle();
 
         Mission mission = Mission.from(request, writer);
         missionRepository.save(mission);
