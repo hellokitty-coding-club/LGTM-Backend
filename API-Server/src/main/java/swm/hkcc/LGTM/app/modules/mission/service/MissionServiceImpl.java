@@ -41,8 +41,22 @@ public class MissionServiceImpl implements MissionService {
     private final MemberService memberService;
 
     @Override
-    public MissionContentData getOngoingMissions(Long memberId) {
-        List<Mission> missions = missionRepository.getOnGoingMissions(memberId);
+    public MissionContentData getJuniorOngoingMissions(Long memberId) {
+        List<Mission> missions = missionRepository.getJuniorOnGoingMissions(memberId);
+
+        return MissionContentData.of(
+                missions.stream()
+                        .map(mission -> MissionMapper.missionToMissionDto(
+                                mission,
+                                techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId())
+                        ))
+                        .toList()
+        );
+    }
+
+    @Override
+    public MissionContentData getSeniorOngoingMissions(Long memberId) {
+        List<Mission> missions = missionRepository.getSeniorOngoingMissions(memberId);
 
         return MissionContentData.of(
                 missions.stream()
