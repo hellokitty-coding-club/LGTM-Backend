@@ -14,13 +14,22 @@ import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionHistory;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
+import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
+import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
+import swm.hkcc.LGTM.app.modules.registration.exception.AlreadyRegisteredMission;
 import swm.hkcc.LGTM.app.modules.registration.exception.FullRegisterMembers;
 import swm.hkcc.LGTM.app.modules.registration.exception.MissRegisterDeadline;
+import swm.hkcc.LGTM.app.modules.registration.exception.TooManyLockError;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionHistoryRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
+import swm.hkcc.LGTM.app.modules.registration.repository.RedisLockRepository;
+import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import static swm.hkcc.LGTM.app.modules.registration.mapper.RegistrationMapper.toRegistrationSeniorResponse;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -43,6 +52,33 @@ public class RegistrationService {
         } finally {
             redisLockRepository.unlock(mission.getMissionId());
         }
+    }
+
+
+
+    public RegistrationSeniorResponse getSeniorEnrollInfo(Member senior, Long missionId) {
+        // validations
+        // 시니어가 아닌 경우
+        validateMemberPosition(senior, ExpectedPosition.SENIOR);
+        // 자신이 참가한 미션이 아닌 경우
+        // 존재하지 않는 미션
+
+
+        // 미션 정보 조회
+        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+        List<TechTag> techTagList = techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId());
+
+        List<MemberRegisterSimpleInfo> memberInfoList = missionRegistrationRepository.getRegisteredMembersByMission(missionId);
+        memberInfoList.forEach(memberInfo -> {
+            if (memberInfo.getProcessStatus().isPayed()) {
+                memberInfo.setPaymentDate(missionRegistrationRepository.getStatusDateTime(ProcessStatus.MISSION_PROCEEDING, mission, senior).orElse(null));
+            }
+            if (memberInfo.getProcessStatus().isPullRequestCreated()) {
+                memberInfo.setMissionFinishedDate(missionRegistrationRepository.getStatusDateTime(ProcessStatus.CODE_REVIEW, mission, senior).orElse(null));
+            }
+        });
+
+        return toRegistrationSeniorResponse(mission, techTagList, memberInfoList);
     }
 
     private void validateJunior(Member junior) {
@@ -89,7 +125,7 @@ public class RegistrationService {
             Thread.sleep(100);
         }
         if (retries <= 0) {
-            throw new RuntimeException("Unable to acquire lock for mission: " + missionId);
+            throw new TooManyLockError();
         }
     }
 
