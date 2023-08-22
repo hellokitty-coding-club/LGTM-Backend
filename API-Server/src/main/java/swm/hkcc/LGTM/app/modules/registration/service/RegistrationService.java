@@ -16,10 +16,7 @@ import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
-import swm.hkcc.LGTM.app.modules.registration.exception.AlreadyRegisteredMission;
-import swm.hkcc.LGTM.app.modules.registration.exception.FullRegisterMembers;
-import swm.hkcc.LGTM.app.modules.registration.exception.MissRegisterDeadline;
-import swm.hkcc.LGTM.app.modules.registration.exception.TooManyLockError;
+import swm.hkcc.LGTM.app.modules.registration.exception.*;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionHistoryRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.RedisLockRepository;
@@ -44,7 +41,7 @@ public class RegistrationService {
 
     public long registerJunior(Member junior, Long missionId) throws InterruptedException {
         validateMemberPosition(junior, ExpectedPosition.JUNIOR);
-        Mission mission = getValidMission(missionId, junior.getMemberId());
+        Mission mission = getValidToRegisterMission(missionId, junior.getMemberId());
 
         acquireLock(mission.getMissionId());
         try {
@@ -54,18 +51,10 @@ public class RegistrationService {
         }
     }
 
-
-
     public RegistrationSeniorResponse getSeniorEnrollInfo(Member senior, Long missionId) {
-        // validations
-        // 시니어가 아닌 경우
         validateMemberPosition(senior, ExpectedPosition.SENIOR);
-        // 자신이 참가한 미션이 아닌 경우
-        // 존재하지 않는 미션
+        Mission mission = getValidMissionForSenior(missionId, senior.getMemberId());
 
-
-        // 미션 정보 조회
-        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
         List<TechTag> techTagList = techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId());
 
         List<MemberRegisterSimpleInfo> memberInfoList = missionRegistrationRepository.getRegisteredMembersByMission(missionId);
@@ -77,7 +66,6 @@ public class RegistrationService {
                 memberInfo.setMissionFinishedDate(missionRegistrationRepository.getStatusDateTime(ProcessStatus.CODE_REVIEW, mission, senior).orElse(null));
             }
         });
-
         return toRegistrationSeniorResponse(mission, techTagList, memberInfoList);
     }
 
@@ -101,7 +89,7 @@ public class RegistrationService {
         }
     }
 
-    private Mission getValidMission(Long missionId, Long memberId) {
+    private Mission getValidToRegisterMission(Long missionId, Long memberId) {
         Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
         // 이미 등록된 미션인지
         if (missionRegistrationRepository.countByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), memberId) > 0) {
@@ -115,6 +103,15 @@ public class RegistrationService {
         int countRegisters = missionRegistrationRepository.countByMission_MissionId(mission.getMissionId());
         if (mission.getMaxPeopleNumber() <= countRegisters) {
             throw new FullRegisterMembers();
+        }
+        return mission;
+    }
+
+    private Mission getValidMissionForSenior(Long missionId, Long memberId) {
+        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+        // 자신의 미션이 아닌 경우
+        if (mission.getWriter().getMemberId() != memberId) {
+            throw new NotMyMission();
         }
         return mission;
     }
