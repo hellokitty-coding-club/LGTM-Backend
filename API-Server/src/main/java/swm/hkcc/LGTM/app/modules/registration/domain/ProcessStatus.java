@@ -3,7 +3,7 @@ package swm.hkcc.LGTM.app.modules.registration.domain;
 import lombok.Getter;
 
 @Getter
-public enum PersonalStatus {
+public enum ProcessStatus {
 
     WAITING_FOR_PAYMENT("입금 대기중"),
     PAYMENT_CONFIRMATION("입금 확인중"),
