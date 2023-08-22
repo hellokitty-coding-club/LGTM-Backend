@@ -69,18 +69,6 @@ public class RegistrationService {
         return toRegistrationSeniorResponse(mission, techTagList, memberInfoList);
     }
 
-    private void validateJunior(Member junior) {
-        if (junior.getJunior() == null) {
-            throw new NotJuniorMember();
-        }
-    }
-
-    private void validateSenior(Member senior) {
-        if (senior.getSenior() == null) {
-            throw new NotSeniorMember();
-        }
-    }
-
     private void validateMemberPosition(Member member, ExpectedPosition expectedRole) {
         if (expectedRole == ExpectedPosition.JUNIOR && member.getJunior() == null) {
             throw new NotJuniorMember();
