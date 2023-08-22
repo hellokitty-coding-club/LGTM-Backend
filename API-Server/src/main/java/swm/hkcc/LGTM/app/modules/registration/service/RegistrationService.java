@@ -36,6 +36,10 @@ public class RegistrationService {
     public long registerJunior(Member junior, Long missionId) throws InterruptedException {
         validateJunior(junior);
         Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+        if (missionRegistrationRepository.countByMission_MissionIdAndJunior_MemberId(missionId, junior.getMemberId()) > 0) {
+            throw new AlreadyRegisteredMission();
+        }
+
         int countRegisters = missionRegistrationRepository.countByMission_MissionId(missionId);
 
         validateMission(mission, countRegisters);
