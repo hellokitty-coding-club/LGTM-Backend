@@ -27,10 +27,19 @@ public class RegistrationController {
     public ApiDataResponse<Boolean> enrollMission(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long missionId
-    ) {
+    ) throws InterruptedException {
         Member junior = customUserDetails.getMember();
         registrationService.registerJunior(junior, missionId);
         return ApiDataResponse.of(true);
     }
 
+
+    @GetMapping("/senior")
+    public ApiDataResponse<RegistrationSeniorResponse> getSeniorEnrollPage(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long missionId
+    ) {
+        Member senior = customUserDetails.getMember();
+        return ApiDataResponse.of(registrationService.getSeniorEnrollInfo(senior, missionId));
+    }
 }
