@@ -31,31 +31,35 @@ public class RegistrationService {
     private final MissionRegistrationRepository missionRegistrationRepository;
     private final MissionHistoryRepository missionHistoryRepository;
     private final TechTagPerMissionRepository techTagPerMissionRepository;
+    private final RedisLockRepository redisLockRepository;
 
-    public long registerJunior(Member junior, Long missionId) {
-        // todo : 이미 참가한 미션인 경우
+    public long registerJunior(Member junior, Long missionId) throws InterruptedException {
         validateJunior(junior);
         Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
         int countRegisters = missionRegistrationRepository.countByMission_MissionId(missionId);
 
         validateMission(mission, countRegisters);
 
-        MissionRegistration missionRegistration = MissionRegistration.builder()
-                .mission(mission)
-                .junior(junior)
-                .status(ProcessStatus.WAITING_FOR_PAYMENT)
-                .build();
-        missionRegistrationRepository.save(missionRegistration);
+        while (!redisLockRepository.lock(mission.getMissionId())) {
+            Thread.sleep(100);
+        }
+        try {
+            MissionRegistration missionRegistration = MissionRegistration.builder()
+                    .mission(mission)
+                    .junior(junior)
+                    .status(ProcessStatus.WAITING_FOR_PAYMENT)
+                    .build();
+            missionRegistrationRepository.save(missionRegistration);
 
-        MissionHistory missionHistory = MissionHistory.builder()
-                .registration(missionRegistration)
-                .status(ProcessStatus.WAITING_FOR_PAYMENT)
-                .build();
-
-        missionHistoryRepository.save(missionHistory);
-
-        // todo : 동시성 처리
-        return missionRegistration.getRegistrationId();
+            MissionHistory missionHistory = MissionHistory.builder()
+                    .registration(missionRegistration)
+                    .status(ProcessStatus.WAITING_FOR_PAYMENT)
+                    .build();
+            missionHistoryRepository.save(missionHistory);
+            return missionRegistration.getRegistrationId();
+        } finally {
+            redisLockRepository.unlock(mission.getMissionId());
+        }
     }
 
     private void validateJunior(Member junior) {
