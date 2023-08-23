@@ -4,7 +4,9 @@ import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailViewResponse;
 
 public interface MissionService {
-    MissionContentData getOngoingMissions(Long memberId);
+    MissionContentData getJuniorOngoingMissions(Long memberId);
+
+    MissionContentData getSeniorOngoingMissions(Long memberId);
 
     MissionContentData getRecommendMissions(Long memberId);
 

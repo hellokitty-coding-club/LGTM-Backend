@@ -21,11 +21,15 @@ public class MissionItemHolder {
 
     private final MissionService missionService;
 
-    public Function<Long, MissionContentData> getMissionListFunction(MissionContentType missionContentType) {
+    public Function<Long, MissionContentData> getMissionListFunction(MissionContentType missionContentType, String memberType) {
         return switch (missionContentType) {
             case TOTAL_MISSION_LIST_V1 -> missionService::getTotalMissions;
-            case ON_GOING_MISSION_LIST_V1 -> missionService::getOngoingMissions;
             case RECOMMENDED_MISSION_LIST_V1 -> missionService::getRecommendMissions;
+            case ON_GOING_MISSION_LIST_V1 -> switch (memberType) {
+                case "JUNIOR" -> missionService::getJuniorOngoingMissions;
+                case "SENIOR" -> missionService::getSeniorOngoingMissions;
+                default -> null;
+            };
             default -> null;
         };
     }

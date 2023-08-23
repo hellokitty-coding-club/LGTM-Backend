@@ -25,8 +25,14 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
 
     @Override
     @Cacheable(value = "on_going_missions", key = "#memberId")
-    public List<Mission> getOnGoingMissions(Long memberId) {
+    public List<Mission> getJuniorOnGoingMissions(Long memberId) {
         return getMissions(isMemberParticipating(memberId), isNotCompleted());
+    }
+
+    @Override
+    @Cacheable(value = "on_going_missions", key = "#memberId")
+    public List<Mission> getSeniorOngoingMissions(Long memberId) {
+        return getMissions(memberId, isMissionNotFinished());
     }
 
     @Override // todo: get recommended missions
@@ -47,6 +53,17 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
                 .join(missionRegistration).on(mission.missionId.eq(missionRegistration.mission.missionId))
                 .join(member).on(member.memberId.eq(missionRegistration.junior.memberId))
                 .where(isParticipating.and(isNotCompleted))
+                .orderBy(mission.createdAt.desc())
+                .limit(3)
+                .fetch();
+    }
+
+    private List<Mission> getMissions(Long memberId, BooleanExpression isMissionNotFinished) {
+        return jpaQueryFactory
+                .select(mission)
+                .from(mission)
+                .where(isMissionNotFinished.and(isWriterMatchingMember(memberId)))
+                .orderBy(mission.createdAt.desc())
                 .limit(3)
                 .fetch();
     }
@@ -56,6 +73,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
                 .select(mission)
                 .from(mission)
                 .where(isMissionNotFinished)
+                .orderBy(mission.createdAt.desc())
                 .limit(3)
                 .fetch();
     }
@@ -71,4 +89,9 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     private BooleanExpression isMissionNotFinished() {
         return mission.missionStatus.ne(MissionStatus.MISSION_FINISHED);
     }
+
+    private BooleanExpression isWriterMatchingMember(Long memberId) {
+        return mission.writer.memberId.eq(memberId);
+    }
+
 }

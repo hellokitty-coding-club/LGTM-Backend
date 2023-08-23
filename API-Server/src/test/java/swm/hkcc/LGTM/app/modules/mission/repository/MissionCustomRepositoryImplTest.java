@@ -126,7 +126,7 @@ class MissionCustomRepositoryImplTest {
         Long memberId = member.getMemberId();
 
         // When
-        List<Mission> onGoingMissions = missionRepository.getOnGoingMissions(memberId);
+        List<Mission> onGoingMissions = missionRepository.getJuniorOnGoingMissions(memberId);
 
         // Then
         assertThat(onGoingMissions).isNotNull();
