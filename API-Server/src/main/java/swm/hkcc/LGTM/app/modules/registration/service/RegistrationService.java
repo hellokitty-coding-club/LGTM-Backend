@@ -60,6 +60,7 @@ public class RegistrationService {
 
         List<TechTag> techTagList = techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId());
 
+        // todo : isPayed & isPullRequestCreated registration에 추가해서 한번에 조회
         List<MemberRegisterSimpleInfo> memberInfoList = missionRegistrationRepository.getRegisteredMembersByMission(missionId);
         memberInfoList.forEach(memberInfo -> {
             if (memberInfo.getProcessStatus().isPayed()) {
