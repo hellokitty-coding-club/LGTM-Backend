@@ -41,6 +41,9 @@ public class RegistrationService {
     private final MissionHistoryRepository missionHistoryRepository;
     private final TechTagPerMissionRepository techTagPerMissionRepository;
     private final RedisLockRepository redisLockRepository;
+    private static final int MAX_LOCK_RETRIES = 10;
+    private static final int LOCK_RETRY_DELAY_MS = 100;
+
 
     public long registerJunior(Member junior, Long missionId) throws InterruptedException {
         validateMemberPosition(junior, ExpectedPosition.JUNIOR);
@@ -120,9 +123,9 @@ public class RegistrationService {
     }
 
     private void acquireLock(Long missionId) throws InterruptedException {
-        int retries = 10;  // 최대 10번 재시도
+        int retries = MAX_LOCK_RETRIES;  // 최대 10번 재시도
         while (retries-- > 0 && !redisLockRepository.lock(missionId)) {
-            Thread.sleep(100);
+            Thread.sleep(LOCK_RETRY_DELAY_MS);
         }
         if (retries <= 0) {
             throw new TooManyLockError();
