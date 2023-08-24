@@ -7,6 +7,7 @@ import swm.hkcc.LGTM.app.global.dto.ApiDataResponse;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
 import swm.hkcc.LGTM.app.modules.registration.service.RegistrationService;
+import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
 
 @RestController
 @RequestMapping("/v1/mission/{missionId}")
