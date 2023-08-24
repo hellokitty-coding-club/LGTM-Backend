@@ -47,10 +47,12 @@ public class RegistrationService {
 
     public long registerJunior(Member junior, Long missionId) throws InterruptedException {
         validateMemberPosition(junior, ExpectedPosition.JUNIOR);
-        Mission mission = getValidMission(missionId, junior.getMemberId());
+        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
 
+        // todo: rdb lock 고려해보기
         acquireLock(mission.getMissionId());
         try {
+            validateToRegisterMission(mission, junior.getMemberId());
             return processMissionRegistration(junior, mission);
         } finally {
             redisLockRepository.unlock(mission.getMissionId());
@@ -104,8 +106,8 @@ public class RegistrationService {
         }
     }
 
-    private Mission getValidMission(Long missionId, Long memberId) {
-        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+    // todo : validator 분리
+    private Mission validateToRegisterMission(Mission mission, Long memberId) {
         // 이미 등록된 미션인지
         if (missionRegistrationRepository.countByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), memberId) > 0) {
             throw new AlreadyRegisteredMission();
@@ -147,7 +149,6 @@ public class RegistrationService {
         missionHistoryRepository.save(missionHistory);
         return missionRegistration.getRegistrationId();
     }
-
 }
 
 enum ExpectedPosition {
