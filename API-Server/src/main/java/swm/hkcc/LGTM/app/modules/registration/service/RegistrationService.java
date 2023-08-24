@@ -6,8 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
-import swm.hkcc.LGTM.app.modules.member.exception.NotJuniorMember;
-import swm.hkcc.LGTM.app.modules.member.exception.NotSeniorMember;
 import swm.hkcc.LGTM.app.modules.member.service.MemberValidator;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
@@ -17,14 +15,13 @@ import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
-import swm.hkcc.LGTM.app.modules.registration.exception.*;
+import swm.hkcc.LGTM.app.modules.registration.exception.TooManyLockError;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionHistoryRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.RedisLockRepository;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static swm.hkcc.LGTM.app.modules.registration.mapper.RegistrationMapper.toRegistrationSeniorResponse;
@@ -59,20 +56,14 @@ public class RegistrationService {
         }
     }
 
-
-
     public RegistrationSeniorResponse getSeniorEnrollInfo(Member senior, Long missionId) {
-        // validations
-        // 시니어가 아닌 경우
-        validateMemberPosition(senior, ExpectedPosition.SENIOR);
-        // 자신이 참가한 미션이 아닌 경우
-        // 존재하지 않는 미션
-
-
-        // 미션 정보 조회
+        memberValidator.validateSenior(senior);
         Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+        registrationValidator.validateMissionForSenior(mission, senior.getMemberId());
+
         List<TechTag> techTagList = techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId());
 
+        // todo : isPayed & isPullRequestCreated registration에 추가해서 한번에 조회
         List<MemberRegisterSimpleInfo> memberInfoList = missionRegistrationRepository.getRegisteredMembersByMission(missionId);
         memberInfoList.forEach(memberInfo -> {
             if (memberInfo.getProcessStatus().isPayed()) {
@@ -82,35 +73,7 @@ public class RegistrationService {
                 memberInfo.setMissionFinishedDate(missionRegistrationRepository.getStatusDateTime(ProcessStatus.CODE_REVIEW, mission, senior).orElse(null));
             }
         });
-
         return toRegistrationSeniorResponse(mission, techTagList, memberInfoList);
-    }
-
-
-    private void validateMemberPosition(Member member, ExpectedPosition expectedRole) {
-        if (expectedRole == ExpectedPosition.JUNIOR && member.getJunior() == null) {
-            throw new NotJuniorMember();
-        } else if (expectedRole == ExpectedPosition.SENIOR && member.getSenior() == null) {
-            throw new NotSeniorMember();
-        }
-    }
-
-    // todo : validator 분리
-    private Mission validateToRegisterMission(Mission mission, Long memberId) {
-        // 이미 등록된 미션인지
-        if (missionRegistrationRepository.countByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), memberId) > 0) {
-            throw new AlreadyRegisteredMission();
-        }
-        // 미션 마감일이 지난 경우
-        if (mission.getRegistrationDueDate().isBefore(LocalDate.now())) {
-            throw new MissRegisterDeadline();
-        }
-        // 미션 등록인원이 넘치는 경우
-        int countRegisters = missionRegistrationRepository.countByMission_MissionId(mission.getMissionId());
-        if (mission.getMaxPeopleNumber() <= countRegisters) {
-            throw new FullRegisterMembers();
-        }
-        return mission;
     }
 
     private void acquireLock(Long missionId) throws InterruptedException {

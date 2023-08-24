@@ -2,10 +2,12 @@ package swm.hkcc.LGTM.app.modules.registration.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import swm.hkcc.LGTM.app.modules.member.domain.Junior;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.registration.exception.AlreadyRegisteredMission;
 import swm.hkcc.LGTM.app.modules.registration.exception.FullRegisterMembers;
 import swm.hkcc.LGTM.app.modules.registration.exception.MissRegisterDeadline;
+import swm.hkcc.LGTM.app.modules.registration.exception.NotMyMission;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 
 import java.time.LocalDate;
@@ -24,6 +26,11 @@ public class RegistrationValidator {
         validateMissionMaxPeopleNumber(mission);
     }
 
+    public void validateMissionForSenior(Mission mission, Long memberId) {
+        // 자신의 미션이 아닌 경우
+        validateNotMyMission(mission, memberId);
+    }
+
     private void validateNotRegisteredMission(Mission mission, Long memberId) {
         if (missionRegistrationRepository.countByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), memberId) > 0) {
             throw new AlreadyRegisteredMission();
@@ -40,6 +47,12 @@ public class RegistrationValidator {
         int countRegisters = missionRegistrationRepository.countByMission_MissionId(mission.getMissionId());
         if (mission.getMaxPeopleNumber() <= countRegisters) {
             throw new FullRegisterMembers();
+        }
+    }
+
+    private void validateNotMyMission(Mission mission, Long memberId) {
+        if (!mission.getWriter().getMemberId().equals(memberId)) {
+            throw new NotMyMission();
         }
     }
 }
