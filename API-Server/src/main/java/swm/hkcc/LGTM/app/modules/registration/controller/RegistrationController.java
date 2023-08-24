@@ -27,7 +27,7 @@ public class RegistrationController {
     public ApiDataResponse<Boolean> enrollMission(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long missionId
-    ) {
+    ) throws InterruptedException {
         Member junior = customUserDetails.getMember();
         registrationService.registerJunior(junior, missionId);
         return ApiDataResponse.of(true);
