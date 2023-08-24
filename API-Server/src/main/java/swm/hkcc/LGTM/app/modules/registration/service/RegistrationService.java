@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.exception.NotJuniorMember;
 import swm.hkcc.LGTM.app.modules.member.exception.NotSeniorMember;
+import swm.hkcc.LGTM.app.modules.member.service.MemberValidator;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
@@ -16,10 +17,7 @@ import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
-import swm.hkcc.LGTM.app.modules.registration.exception.AlreadyRegisteredMission;
-import swm.hkcc.LGTM.app.modules.registration.exception.FullRegisterMembers;
-import swm.hkcc.LGTM.app.modules.registration.exception.MissRegisterDeadline;
-import swm.hkcc.LGTM.app.modules.registration.exception.TooManyLockError;
+import swm.hkcc.LGTM.app.modules.registration.exception.*;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionHistoryRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.RedisLockRepository;
@@ -41,18 +39,20 @@ public class RegistrationService {
     private final MissionHistoryRepository missionHistoryRepository;
     private final TechTagPerMissionRepository techTagPerMissionRepository;
     private final RedisLockRepository redisLockRepository;
+    private final RegistrationValidator registrationValidator;
+    private final MemberValidator memberValidator;
     private static final int MAX_LOCK_RETRIES = 10;
     private static final int LOCK_RETRY_DELAY_MS = 100;
 
 
     public long registerJunior(Member junior, Long missionId) throws InterruptedException {
-        validateMemberPosition(junior, ExpectedPosition.JUNIOR);
+        memberValidator.validateJunior(junior);
         Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
 
         // todo: rdb lock 고려해보기
         acquireLock(mission.getMissionId());
         try {
-            validateToRegisterMission(mission, junior.getMemberId());
+            registrationValidator.validateToRegisterMission(mission, junior.getMemberId());
             return processMissionRegistration(junior, mission);
         } finally {
             redisLockRepository.unlock(mission.getMissionId());
@@ -92,11 +92,6 @@ public class RegistrationService {
         }
     }
 
-    private void validateSenior(Member senior) {
-        if (senior.getSenior() == null) {
-            throw new NotSeniorMember();
-        }
-    }
 
     private void validateMemberPosition(Member member, ExpectedPosition expectedRole) {
         if (expectedRole == ExpectedPosition.JUNIOR && member.getJunior() == null) {
@@ -149,8 +144,5 @@ public class RegistrationService {
         missionHistoryRepository.save(missionHistory);
         return missionRegistration.getRegistrationId();
     }
-}
 
-enum ExpectedPosition {
-    JUNIOR, SENIOR
 }
