@@ -1,7 +1,5 @@
 package swm.hkcc.LGTM.app.modules.registration.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.querydsl.core.Tuple;
 import lombok.Data;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
