@@ -37,6 +37,7 @@ import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
 import swm.hkcc.LGTM.app.modules.registration.exception.NotMyMission;
 import swm.hkcc.LGTM.app.modules.registration.service.RegistrationService;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
+import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,6 +54,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableHead;
+import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableRow;
 
 @Slf4j
 @SpringBootTest
@@ -150,7 +153,41 @@ class SeniorDashboardControllerTest {
                 resource(ResourceSnippetParameters.builder()
                         .summary("[미션 진행] 시니어 미션 참가자 조회")
                         .tag("미션 진행")
-                        .description("")
+                        .description(CustomMDGenerator.builder()
+                                .h1("[Descriptions]")
+                                .h3("시니어가 가 자신의 미션 참가자 정보를 조회한다.")
+                                .h1("[Request Headers]")
+                                .table(
+                                        tableHead("Request values", "Data Type", "Description"),
+                                        //Authorization
+                                        tableRow("Authorization", "String", "액세스 토큰")
+                                )
+                                .h1("[Path Variables]")
+                                .table(
+                                        tableHead("Request values", "Data Type", "Description"),
+                                        tableRow("missionId", "Long", "미션 아이디")
+                                )
+                                .line()
+                                .h1("[Errors]")
+                                .table(
+                                        tableHead("HTTP Status", "Response Code", "Message"),
+                                        tableRow(
+                                                ResponseCode.NOT_SENIOR_MEMBER.getHttpStatus().toString(),
+                                                ResponseCode.NOT_SENIOR_MEMBER.getCode().toString(),
+                                                ResponseCode.NOT_SENIOR_MEMBER.getMessage()
+                                        ),
+                                        tableRow(
+                                                ResponseCode.NOT_EXIST_MISSION.getHttpStatus().toString(),
+                                                ResponseCode.NOT_EXIST_MISSION.getCode().toString(),
+                                                ResponseCode.NOT_EXIST_MISSION.getMessage()
+                                        ),
+                                        tableRow(
+                                                ResponseCode.NOT_MY_MISSION.getHttpStatus().toString(),
+                                                ResponseCode.NOT_MY_MISSION.getCode().toString(),
+                                                ResponseCode.NOT_MY_MISSION.getMessage()
+                                        )
+                                )
+                                .build())
                         .requestHeaders(headerWithName("Authorization").description("access token"))
                         .pathParameters(parameterWithName("missionId").type(SimpleType.NUMBER).description("미션 아이디"))
                         .responseFields(
