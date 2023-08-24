@@ -7,4 +7,6 @@ import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 public interface MissionRegistrationRepository extends JpaRepository<MissionRegistration, Long> {
     @Cacheable(value = "mission_participant_count", key = "#missionId")
     int countByMission_MissionId(Long missionId);
+
+    int countByMission_MissionIdAndJunior_MemberId(Long missionId, Long juniorId);
 }
