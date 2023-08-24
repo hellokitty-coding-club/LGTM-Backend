@@ -13,7 +13,7 @@ import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
-import swm.hkcc.LGTM.app.modules.registration.domain.PersonalStatus;
+import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 
 import java.time.LocalDate;
@@ -109,13 +109,13 @@ class MissionCustomRepositoryImplTest {
     void getOnGoingMissions() {
         // Given
         MissionRegistration registration1 = MissionRegistration.builder()
-                .status(PersonalStatus.WAITING_FOR_PAYMENT)
+                .status(ProcessStatus.WAITING_FOR_PAYMENT)
                 .mission(mission1)
                 .junior(member)
                 .build();
 
         MissionRegistration registration3 = MissionRegistration.builder()
-                .status(PersonalStatus.MISSION_PROCEEDING)
+                .status(ProcessStatus.MISSION_PROCEEDING)
                 .mission(mission3)
                 .junior(member)
                 .build();

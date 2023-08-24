@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
-import swm.hkcc.LGTM.app.modules.registration.domain.PersonalStatus;
+import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 
 import java.util.List;
 
@@ -83,7 +83,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     }
 
     private BooleanExpression isNotCompleted() {
-        return missionRegistration.status.ne(PersonalStatus.MISSION_FINISHED);
+        return missionRegistration.status.ne(ProcessStatus.MISSION_FINISHED);
     }
 
     private BooleanExpression isMissionNotFinished() {
