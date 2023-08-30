@@ -26,4 +26,9 @@ public enum ProcessStatus {
     public boolean isPullRequestCreated() {
         return this.sequence >= CODE_REVIEW.sequence;
     }
+
+    public boolean isCompleted() {
+        return this.sequence >= MISSION_FINISHED.sequence;
+    }
+
 }
