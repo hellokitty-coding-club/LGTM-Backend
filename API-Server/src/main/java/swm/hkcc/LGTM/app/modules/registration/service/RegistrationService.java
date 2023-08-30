@@ -46,6 +46,7 @@ public class RegistrationService {
         memberValidator.validateJunior(junior);
         Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
 
+        // todo : 동시성 테스트하기
         // todo: rdb lock 고려해보기
         acquireLock(mission.getMissionId());
         try {
