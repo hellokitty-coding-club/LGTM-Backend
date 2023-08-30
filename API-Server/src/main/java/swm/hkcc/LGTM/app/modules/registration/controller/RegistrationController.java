@@ -22,7 +22,7 @@ public class RegistrationController {
      * @param missionId
      */
     @PostMapping
-    public ApiDataResponse<Boolean> enrollMission(
+    public ApiDataResponse<Boolean> registerMission(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long missionId
     ) throws InterruptedException {
