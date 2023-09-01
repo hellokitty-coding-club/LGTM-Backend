@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
+import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
+import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.member.service.MemberValidator;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
@@ -13,29 +15,37 @@ import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionHistory;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
+import swm.hkcc.LGTM.app.modules.registration.domain.mapper.RegistrationMapper;
 import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
+import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
+import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse.AdditionalInfo;
+import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse.RegistrationSeniorDetailResponse;
+import swm.hkcc.LGTM.app.modules.registration.exception.NotRegisteredMission;
 import swm.hkcc.LGTM.app.modules.registration.exception.TooManyLockError;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionHistoryRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.RedisLockRepository;
+import swm.hkcc.LGTM.app.modules.registration.service.additionalInfoProvider.AdditionalInfoProviderFactory;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
 
 import java.util.List;
 
-import static swm.hkcc.LGTM.app.modules.registration.mapper.RegistrationMapper.toRegistrationSeniorResponse;
+import static swm.hkcc.LGTM.app.modules.registration.domain.mapper.RegistrationMapper.toRegistrationSeniorResponse;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
 public class RegistrationService {
+    private final MemberRepository memberRepository;
     private final MissionRepository missionRepository;
     private final MissionRegistrationRepository missionRegistrationRepository;
     private final MissionHistoryRepository missionHistoryRepository;
     private final TechTagPerMissionRepository techTagPerMissionRepository;
     private final RedisLockRepository redisLockRepository;
+    private final AdditionalInfoProviderFactory additionalInfoProviderFactory;
     private final RegistrationValidator registrationValidator;
     private final MemberValidator memberValidator;
     private static final int MAX_LOCK_RETRIES = 10;
@@ -77,6 +87,33 @@ public class RegistrationService {
         return toRegistrationSeniorResponse(mission, techTagList, memberInfoList);
     }
 
+
+    // hey copilot
+    // please list up all service&repositories for getSeniorEnrollDetail method
+    // : MissionRegistrationRepository, MissionHistoryRepository, AdditionalInfoProviderFactory, RegistrationValidator, MemberValidator
+    // list up all service&repositories for AdditionalInfoProviderFactory
+    // :
+
+    public RegistrationSeniorDetailResponse getSeniorEnrollDetail(Member senior, Long missionId, Long juniorId) {
+        memberValidator.validateSenior(senior);
+        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+        registrationValidator.validateMissionForSenior(mission, senior.getMemberId());
+        Member junior = memberRepository.findById(juniorId).orElseThrow(NotExistMember::new);
+        memberValidator.validateJunior(junior);
+
+        // 미션에 참가중인 주니어인지
+        List<MissionHistoryInfo> missionHistory = missionRegistrationRepository.getMissionHistoryByMissionAndJunior(mission, junior);
+
+        if (missionHistory.isEmpty())
+            throw new NotRegisteredMission();
+
+        ProcessStatus status = getLatestProcessStatus(missionHistory);
+
+        AdditionalInfo additionalInfo = additionalInfoProviderFactory.getProvider(status).provide(junior, missionId);
+
+        return RegistrationMapper.toRegistrationSeniorDetailResponse(mission, junior, status, missionHistory, additionalInfo);
+    }
+
     private void acquireLock(Long missionId) throws InterruptedException {
         int retries = MAX_LOCK_RETRIES;  // 최대 10번 재시도
         while (retries-- > 0 && !redisLockRepository.lock(missionId)) {
@@ -101,6 +138,10 @@ public class RegistrationService {
                 .build();
         missionHistoryRepository.save(missionHistory);
         return missionRegistration.getRegistrationId();
+    }
+
+    private ProcessStatus getLatestProcessStatus(List<MissionHistoryInfo> missionHistoryInfos) {
+        return missionHistoryInfos.get(missionHistoryInfos.size() - 1).getStatus();
     }
 
 }
