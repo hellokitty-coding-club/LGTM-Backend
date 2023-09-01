@@ -23,9 +23,9 @@ import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailRespon
 import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse.RegistrationSeniorDetailPayResponse;
 import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse.RegistrationSeniorDetailPullRequestResponse;
 import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse.RegistrationSeniorDetailResponse;
-import swm.hkcc.LGTM.app.modules.registration.repository.AdditionalInfoProviderFactory;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionHistoryRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
+import swm.hkcc.LGTM.app.modules.registration.service.additionalInfoProvider.AdditionalInfoProviderFactory;
 import swm.hkcc.LGTM.app.modules.review.domain.Review;
 import swm.hkcc.LGTM.app.modules.review.repository.ReviewRepository;
 

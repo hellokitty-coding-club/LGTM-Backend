@@ -35,7 +35,7 @@ public class RegistrationMapper {
         response.setGithubId(junior.getGithubId());
         response.setStatus(status);
         response.setMissionHistory(missionHistory);
-        response.setButtonTitle(status.getButtonMessage());
+        response.setButtonTitle(status.getSeniorBottomTitle());
 
         return response;
     }
