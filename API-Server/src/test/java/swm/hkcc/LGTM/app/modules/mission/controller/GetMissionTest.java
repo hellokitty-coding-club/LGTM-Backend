@@ -33,7 +33,6 @@ import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionScrapRepository;
-import swm.hkcc.LGTM.app.modules.mission.service.CreateMissionServiceImpl;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
@@ -45,8 +44,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
-import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
-import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.epages.restdocs.apispec.ResourceDocumentation.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -144,8 +142,9 @@ public class GetMissionTest {
                 .andExpect(jsonPath("$.data.techTagList[1].name").value("Kotlin"))
                 .andExpect(jsonPath("$.data.techTagList[2].techTagId").value(13))
                 .andExpect(jsonPath("$.data.techTagList[2].name").value("iOS"))
+                .andExpect(jsonPath("$.data.remainingRegisterDays").value(7))
                 .andExpect(jsonPath("$.data.missionRepositoryUrl").value("https://www.github.com/kxxhyorim"))
-                .andExpect(jsonPath("$.data.registrationDueDate").value("2100-01-01"))
+                .andExpect(jsonPath("$.data.registrationDueDate").value(LocalDate.now().plusDays(7).toString()))
                 .andExpect(jsonPath("$.data.maxPeopleNumber").value(10))
                 .andExpect(jsonPath("$.data.currentPeopleNumber").value(5))
                 .andExpect(jsonPath("$.data.price").value(10000))
@@ -176,6 +175,10 @@ public class GetMissionTest {
                                                         tableHead("Header", "Data Type", "Description"),
                                                         tableRow("Authorization", "String", "Bearer token for authentication")
                                                 )
+                                                .table(
+                                                        tableHead("Qeury Params", "Data Type", "Description"),
+                                                        tableRow("missionId", "Long", "조회할 미션 아이디")
+                                                )
                                                 .line()
                                                 .h1("[Errors]")
                                                 .table(
@@ -195,6 +198,9 @@ public class GetMissionTest {
                                 .requestHeaders(
                                         headerWithName("Authorization").description("access token")
                                 )
+                                .queryParameters(
+                                        parameterWithName("missionId").description("미션 ID")
+                                )
                                 .responseFields(
                                         fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
                                         fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
@@ -206,6 +212,7 @@ public class GetMissionTest {
                                         fieldWithPath("data.techTagList").type(JsonFieldType.ARRAY).description("기술 태그 리스트"),
                                         fieldWithPath("data.techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 ID"),
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
+                                        fieldWithPath("data.remainingRegisterDays").type(JsonFieldType.NUMBER).description("남은 등록 기간"),
                                         fieldWithPath("data.missionRepositoryUrl").type(JsonFieldType.STRING).description("미션 저장소 URL"),
                                         fieldWithPath("data.registrationDueDate").type(JsonFieldType.STRING).description("모집 마감일"),
                                         fieldWithPath("data.maxPeopleNumber").type(JsonFieldType.NUMBER).description("최대 참가 인원"),
@@ -257,7 +264,7 @@ public class GetMissionTest {
                 .description("content")
                 .recommendTo("ReomnnandTo")
                 .notRecommendTo("notReomnnandTo")
-                .registrationDueDate(LocalDate.of(2100, 1, 1))
+                .registrationDueDate(LocalDate.now().plusDays(7))
                 .price(10000)
                 .maxPeopleNumber(10)
                 .build();
