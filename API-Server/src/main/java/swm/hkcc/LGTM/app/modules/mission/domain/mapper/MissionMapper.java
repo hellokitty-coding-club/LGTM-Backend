@@ -44,6 +44,7 @@ public class MissionMapper {
                 .missionStatus(mission.getMissionStatus().name())
                 .missionTitle(mission.getTitle())
                 .techTagList(techTagList)
+                .remainingRegisterDays((int) ChronoUnit.DAYS.between(LocalDate.now(), mission.getRegistrationDueDate()))
                 .missionRepositoryUrl(mission.getMissionRepositoryUrl())
                 .registrationDueDate(mission.getRegistrationDueDate())
                 .maxPeopleNumber(mission.getMaxPeopleNumber())
