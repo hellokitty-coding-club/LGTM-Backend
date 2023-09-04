@@ -1,6 +1,7 @@
 package swm.hkcc.LGTM.app.modules.mission.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,11 +84,23 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     }
 
     private BooleanExpression isNotCompleted() {
-        return missionRegistration.status.ne(ProcessStatus.MISSION_FINISHED);
+        return missionRegistration.status.ne(ProcessStatus.MISSION_FINISHED)
+                .and(missionRegistration.status.ne(ProcessStatus.FEEDBACK_REVIEWED));
+
+//        BooleanExpression expression = Expressions.asBoolean(true).isTrue();
+//
+//        for (ProcessStatus status : ProcessStatus.values()) {
+//            if (status.isCompleted()) {
+//                expression = expression.and(missionRegistration.status.ne(status));
+//            }
+//        }
+//
+//        return expression;
     }
 
     private BooleanExpression isMissionNotFinished() {
-        return mission.missionStatus.ne(MissionStatus.MISSION_FINISHED);
+        return mission.missionStatus.ne(MissionStatus.MISSION_FINISHED)
+                .and(missionRegistration.status.ne(ProcessStatus.FEEDBACK_REVIEWED));
     }
 
     private BooleanExpression isWriterMatchingMember(Long memberId) {
