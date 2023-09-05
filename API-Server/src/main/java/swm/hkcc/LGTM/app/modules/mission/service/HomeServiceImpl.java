@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
@@ -45,7 +46,7 @@ public class HomeServiceImpl implements HomeService{
 
     private void processMissionContentType(Long memberId, MissionContentType missionContentType, List<ServerDrivenContent> serverDrivenContentList) {
         if (missionContentType.getViewType() == ViewType.ITEM) {
-            String memberType = memberService.getMemberType(memberId);
+            MemberType memberType = memberService.getMemberType(memberId);
             Function<Long, MissionContentData> missionListFunction = missionItemHolder.getMissionListFunction(missionContentType, memberType);
             MissionContentData missionContentData = missionListFunction.apply(memberId);
 
