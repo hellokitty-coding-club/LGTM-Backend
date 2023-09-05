@@ -99,8 +99,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     }
 
     private BooleanExpression isMissionNotFinished() {
-        return mission.missionStatus.ne(MissionStatus.MISSION_FINISHED)
-                .and(missionRegistration.status.ne(ProcessStatus.FEEDBACK_REVIEWED));
+        return mission.missionStatus.ne(MissionStatus.MISSION_FINISHED);
     }
 
     private BooleanExpression isWriterMatchingMember(Long memberId) {
