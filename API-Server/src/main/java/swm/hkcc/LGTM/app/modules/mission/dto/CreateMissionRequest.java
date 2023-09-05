@@ -41,7 +41,7 @@ public class CreateMissionRequest {
     private LocalDate registrationDueDate;
 
     @NotNull
-    @Positive
+    @PositiveOrZero
     private Integer price;
 
     @NotNull
