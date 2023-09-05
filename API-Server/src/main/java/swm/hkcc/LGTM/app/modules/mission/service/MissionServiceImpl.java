@@ -3,6 +3,7 @@ package swm.hkcc.LGTM.app.modules.mission.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.member.domain.Senior;
 import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
@@ -104,7 +105,7 @@ public class MissionServiceImpl implements MissionService {
 
         List<TechTag> techTagList = techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId());
         int currentPeopleNumber = missionRegistrationRepository.countByMission_MissionId(mission.getMissionId());
-        String memberType = memberService.getMemberType(memberId);
+        MemberType memberType = memberService.getMemberType(memberId);
 
         return missionAndMemberToDetailView(mission, isScraped, missionWriter, techTagList, currentPeopleNumber, memberType);
     }

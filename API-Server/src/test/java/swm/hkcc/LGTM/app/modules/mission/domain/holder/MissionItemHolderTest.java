@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
@@ -41,7 +42,7 @@ class MissionItemHolderTest {
         MissionContentType totalMissionContentType = MissionContentType.TOTAL_MISSION_LIST_V1;
         MissionContentType onGoingMissionContentType = MissionContentType.ON_GOING_MISSION_LIST_V1;
         MissionContentType recommendedMissionContentType = MissionContentType.RECOMMENDED_MISSION_LIST_V1;
-        String memberType = "JUNIOR";
+        MemberType memberType = MemberType.JUNIOR;
         // Simulate the expected behavior of the missionService mock
         MissionContentData<MissionDto> onGoingMissionData = Mockito.mock(MissionContentData.class);
         MissionContentData<MissionDetailsDto> totalMissionData = Mockito.mock(MissionContentData.class);

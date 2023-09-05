@@ -1,5 +1,6 @@
 package swm.hkcc.LGTM.app.modules.mission.domain.mapper;
 
+import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.domain.Senior;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
@@ -37,7 +38,7 @@ public class MissionMapper {
                 .build();
     }
 
-    public static MissionDetailViewResponse missionAndMemberToDetailView(Mission mission, boolean isScraped, Senior missionWriter, List<TechTag> techTagList, int currentPeopleNumber, String memberType) {
+    public static MissionDetailViewResponse missionAndMemberToDetailView(Mission mission, boolean isScraped, Senior missionWriter, List<TechTag> techTagList, int currentPeopleNumber, MemberType memberType) {
         Member member = missionWriter.getMember();
         return MissionDetailViewResponse.builder()
                 .missionId(mission.getMissionId())
@@ -53,7 +54,7 @@ public class MissionMapper {
                 .recommendTo(mission.getRecommendTo())
                 .notRecommendTo(mission.getNotRecommendTo())
                 .isScraped(isScraped)
-                .memberType(memberType)
+                .memberType(memberType.toString())
                 .memberProfile(MemberProfile.builder()
                         .memberId(member.getMemberId())
                         .nickName(member.getNickName())

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import swm.hkcc.LGTM.app.global.constant.ResponseCode;
+import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.member.domain.Authority;
 import swm.hkcc.LGTM.app.modules.member.domain.Bank;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
@@ -115,7 +116,7 @@ public class GetMissionTest {
         given(missionScrapRepository.existsByScrapper_MemberIdAndMission_MissionId(anyLong(), anyLong())).willReturn(true);
         given(techTagPerMissionRepository.findTechTagsByMissionId(anyLong())).willReturn(mockTechTags);
         given(missionRegistrationRepository.countByMission_MissionId(anyLong())).willReturn(5);
-        given(memberService.getMemberType(anyLong())).willReturn("JUNIOR");
+        given(memberService.getMemberType(anyLong())).willReturn(MemberType.JUNIOR);
         given(memberRepository.findOneByGithubId(anyString())).willReturn(Optional.ofNullable(mockMember));
 
         // when

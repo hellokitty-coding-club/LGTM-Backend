@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
                     .accessToken(createAccessToken(updatedMember))
                     .refreshToken(refreshToken)
                     .profileImageUrl(githubUserInfo.getAvatar_url())
-                    .memberType(memberService.getMemberType(updatedMember.getMemberId()))
+                    .memberType(memberService.getMemberType(updatedMember.getMemberId()).toString())
                     .build();
         }
 
@@ -177,7 +177,7 @@ public class AuthServiceImpl implements AuthService {
                 .githubId(member.getGithubId())
                 .accessToken(createAccessToken(member))
                 .refreshToken(member.getRefreshToken())
-                .memberType(memberService.getMemberType(member.getMemberId()))
+                .memberType(memberService.getMemberType(member.getMemberId()).toString())
                 .build();
     }
 
