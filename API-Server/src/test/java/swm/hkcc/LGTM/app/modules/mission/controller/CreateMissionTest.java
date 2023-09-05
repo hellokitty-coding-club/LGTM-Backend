@@ -25,7 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import swm.hkcc.LGTM.app.global.constant.ResponseCode;
+import swm.hkcc.LGTM.app.modules.auth.constants.TokenType;
 import swm.hkcc.LGTM.app.modules.auth.exception.InvalidTechTag;
+import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
 import swm.hkcc.LGTM.app.modules.member.domain.Authority;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
@@ -63,6 +65,9 @@ import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableRow;
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 class CreateMissionTest {
     private MockMvc mockMvc;
+
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @MockBean
     private CreateMissionServiceImpl createMissionService;
@@ -110,6 +115,7 @@ class CreateMissionTest {
                 .memberId(1L)
                 .githubId("test-token-senior")
                 .build();
+        String memberAccessToken = getMockToken(member);
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
@@ -118,11 +124,7 @@ class CreateMissionTest {
 
         // then
         ResultActions actions = mockMvc.perform(post("/v1/mission")
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 new ObjectMapper()
@@ -223,6 +225,7 @@ class CreateMissionTest {
                 .githubId("test-token-senior")
                 .build();
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+        String memberAccessToken = getMockToken(member);
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
 
@@ -231,11 +234,7 @@ class CreateMissionTest {
         // then
         ResponseCode expectedResponseCode = ResponseCode.NOT_EXIST_MEMBER;
         ResultActions actions = mockMvc.perform(post("/v1/mission")
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 new ObjectMapper()
@@ -276,6 +275,7 @@ class CreateMissionTest {
                 .githubId("test-token-senior")
                 .build();
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+        String memberAccessToken = getMockToken(member);
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
 
@@ -284,11 +284,7 @@ class CreateMissionTest {
         // then
         ResponseCode expectedResponseCode = ResponseCode.NOT_SENIOR_MEMBER;
         ResultActions actions = mockMvc.perform(post("/v1/mission")
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 new ObjectMapper()
@@ -329,6 +325,7 @@ class CreateMissionTest {
                 .githubId("test-token-senior")
                 .build();
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+        String memberAccessToken = getMockToken(member);
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
 
@@ -337,11 +334,7 @@ class CreateMissionTest {
         // then
         ResponseCode expectedResponseCode = ResponseCode.INVALID_TECH_TAG;
         ResultActions actions = mockMvc.perform(post("/v1/mission")
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 new ObjectMapper()
@@ -382,6 +375,7 @@ class CreateMissionTest {
                 .githubId("test-token-senior")
                 .build();
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+        String memberAccessToken = getMockToken(member);
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
                 .thenReturn(java.util.Optional.ofNullable(member));
 
@@ -390,11 +384,7 @@ class CreateMissionTest {
         // then
         ResponseCode expectedResponseCode = ResponseCode.INVALID_GITHUB_URL;
         ResultActions actions = mockMvc.perform(post("/v1/mission")
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 new ObjectMapper()
@@ -420,6 +410,10 @@ class CreateMissionTest {
 
                                 ).build())
                 ));
+    }
+
+    private String getMockToken(Member member) {
+        return tokenProvider.createToken(member.getGithubId(), TokenType.ACCESS_TOKEN);
     }
 
 }
