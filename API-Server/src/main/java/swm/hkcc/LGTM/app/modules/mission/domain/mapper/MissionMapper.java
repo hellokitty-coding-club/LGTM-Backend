@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import static swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus.MISSION_FINISHED;
+
 public class MissionMapper {
     public static MissionDto missionToMissionDto(Mission ongoingMission, List<TechTag> techTags) {
         return MissionDto.builder()
@@ -37,13 +39,15 @@ public class MissionMapper {
                 .build();
     }
 
-    public static MissionDetailViewResponse missionAndMemberToDetailView(Mission mission, boolean isScraped, Senior missionWriter, List<TechTag> techTagList, int currentPeopleNumber, String memberType) {
+    public static MissionDetailViewResponse missionAndMemberToDetailView(Mission mission, boolean isScraped, Senior missionWriter, List<TechTag> techTagList, int currentPeopleNumber, String memberType, boolean isParticipated) {
         Member member = missionWriter.getMember();
+        boolean isClosed = mission.getMissionStatus().equals(MISSION_FINISHED);
         return MissionDetailViewResponse.builder()
                 .missionId(mission.getMissionId())
                 .missionStatus(mission.getMissionStatus().name())
                 .missionTitle(mission.getTitle())
                 .techTagList(techTagList)
+                .remainingRegisterDays((int) ChronoUnit.DAYS.between(LocalDate.now(), mission.getRegistrationDueDate()))
                 .missionRepositoryUrl(mission.getMissionRepositoryUrl())
                 .registrationDueDate(mission.getRegistrationDueDate())
                 .maxPeopleNumber(mission.getMaxPeopleNumber())
@@ -60,7 +64,10 @@ public class MissionMapper {
                         .profileImageUrl(member.getProfileImageUrl())
                         .githubId(member.getGithubId())
                         .company(missionWriter.getCompanyInfo())
+                        .position(missionWriter.getPosition())
                         .build())
+                .isParticipated(isParticipated)
+                .isClosed(isClosed)
                 .build();
     }
 

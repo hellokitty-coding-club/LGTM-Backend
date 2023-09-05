@@ -31,9 +31,11 @@ public class TokenProvider {
 
     private Key secretKey;
 
-    // todo : 만료 시간 변경
-    private final long ACCESS_EXPIRED_IN = 1000L * 3600;
-    private final long REFRESH_EXPIRED_IN = 1000L * 3600 * 3;
+    // private final long ACCESS_EXPIRED_IN = 1000L * 3600;
+    // private final long REFRESH_EXPIRED_IN = 1000L * 3600 * 3;
+    // todo : 클라이언트 요청에 따라 MVP 배포 전까지 토큰 만료 시간 매우 길게 임시 설정
+    private final long ACCESS_EXPIRED_IN = 1000L * 3600 * 24 * 365;
+    private final long REFRESH_EXPIRED_IN = 1000L * 3600 * 24 * 365;
 
     private final CustomUserDetailsService userDetailsService;
 

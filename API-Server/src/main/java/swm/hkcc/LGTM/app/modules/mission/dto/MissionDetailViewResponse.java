@@ -27,6 +27,9 @@ public class MissionDetailViewResponse {
     private List<TechTag> techTagList;
 
     @NotBlank
+    private int remainingRegisterDays;
+
+    @NotBlank
     private String missionRepositoryUrl;
 
     @NotBlank
@@ -58,5 +61,11 @@ public class MissionDetailViewResponse {
 
     @NotBlank
     private MemberProfile memberProfile;
+
+    @NotBlank
+    private boolean isParticipated;
+
+    @NotBlank
+    private boolean isClosed;
 }
 

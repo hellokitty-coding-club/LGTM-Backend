@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentSequence;
@@ -26,6 +27,7 @@ import java.util.function.Function;
 public class HomeServiceImpl implements HomeService{
     private final HomeServerDrivenUISequenceFactory sequenceFactory;
     private final MissionItemHolder missionItemHolder;
+    private final MemberService memberService;
 
     private static final String RESPONSE_SCREEN_NAME = "Home";
 
@@ -43,7 +45,8 @@ public class HomeServiceImpl implements HomeService{
 
     private void processMissionContentType(Long memberId, MissionContentType missionContentType, List<ServerDrivenContent> serverDrivenContentList) {
         if (missionContentType.getViewType() == ViewType.ITEM) {
-            Function<Long, MissionContentData> missionListFunction = missionItemHolder.getMissionListFunction(missionContentType);
+            String memberType = memberService.getMemberType(memberId);
+            Function<Long, MissionContentData> missionListFunction = missionItemHolder.getMissionListFunction(missionContentType, memberType);
             MissionContentData missionContentData = missionListFunction.apply(memberId);
 
             ServerDrivenContents missionContents = ServerDrivenContents.of(
