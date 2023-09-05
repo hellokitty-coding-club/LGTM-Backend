@@ -106,7 +106,6 @@ public class MissionServiceImpl implements MissionService {
         int currentPeopleNumber = missionRegistrationRepository.countByMission_MissionId(mission.getMissionId());
         String memberType = memberService.getMemberType(memberId);
         boolean isParticipated = checkMemberIsParticipated(memberId, missionId, memberType);
-        log.info("isParticipated: {}", isParticipated);
 
         return missionAndMemberToDetailView(mission, isScraped, missionWriter, techTagList, currentPeopleNumber, memberType, isParticipated);
     }
@@ -139,10 +138,9 @@ public class MissionServiceImpl implements MissionService {
     }
 
     private boolean checkMemberIsParticipated(Long memberId, Long missionId, String memberType) {
-        if (memberType.equals("junior")) {
+        if (memberType.equals("JUNIOR")) {
             return missionRegistrationRepository.existsByMissionIdAndMemberId(missionId, memberId);
         }
-        log.info("missionId: {}, memberId: {}", missionId, memberId);
         return missionRepository.existsByMissionIdAndWriter_MemberId(missionId, memberId);
     }
 
