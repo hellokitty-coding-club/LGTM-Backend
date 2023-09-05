@@ -106,8 +106,9 @@ public class MissionServiceImpl implements MissionService {
         List<TechTag> techTagList = techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId());
         int currentPeopleNumber = missionRegistrationRepository.countByMission_MissionId(mission.getMissionId());
         MemberType memberType = memberService.getMemberType(memberId);
+        boolean isParticipated = checkMemberIsParticipated(memberId, missionId, memberType);
 
-        return missionAndMemberToDetailView(mission, isScraped, missionWriter, techTagList, currentPeopleNumber, memberType);
+        return missionAndMemberToDetailView(mission, isScraped, missionWriter, techTagList, currentPeopleNumber, memberType, isParticipated);
     }
 
     // 미완성
@@ -135,6 +136,13 @@ public class MissionServiceImpl implements MissionService {
                 .collect(Collectors.toList());
 
         return MissionContentData.of(missionDetailsDtos);
+    }
+
+    private boolean checkMemberIsParticipated(Long memberId, Long missionId, MemberType memberType) {
+        if (memberType.equals(MemberType.JUNIOR)) {
+            return missionRegistrationRepository.existsByMissionIdAndMemberId(missionId, memberId);
+        }
+        return missionRepository.existsByMissionIdAndWriter_MemberId(missionId, memberId);
     }
 
 }
