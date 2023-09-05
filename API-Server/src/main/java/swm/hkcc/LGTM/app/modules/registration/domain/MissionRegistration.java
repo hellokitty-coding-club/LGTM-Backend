@@ -23,7 +23,7 @@ public class MissionRegistration extends BaseEntity implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PersonalStatus status;
+    private ProcessStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id")

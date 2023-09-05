@@ -24,6 +24,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import swm.hkcc.LGTM.app.global.constant.ResponseCode;
 import swm.hkcc.LGTM.app.modules.auth.constants.TokenType;
 import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
+import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.member.domain.Authority;
 import swm.hkcc.LGTM.app.modules.member.domain.Bank;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
@@ -121,7 +122,7 @@ public class GetMissionTest {
         given(missionRegistrationRepository.countByMission_MissionId(anyLong())).willReturn(5);
         given(missionRepository.existsByMissionIdAndWriter_MemberId(anyLong(), anyLong())).willReturn(true);
         given(missionRegistrationRepository.existsByMissionIdAndMemberId(anyLong(), anyLong())).willReturn(true);
-        given(memberService.getMemberType(anyLong())).willReturn("JUNIOR");
+        given(memberService.getMemberType(anyLong())).willReturn(MemberType.JUNIOR);
         given(memberRepository.findOneByGithubId(anyString())).willReturn(Optional.ofNullable(mockMember));
 
         // when

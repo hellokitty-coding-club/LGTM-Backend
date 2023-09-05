@@ -1,6 +1,7 @@
 package swm.hkcc.LGTM.app.modules.mission.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
-import swm.hkcc.LGTM.app.modules.registration.domain.PersonalStatus;
+import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 
 import java.util.List;
 
@@ -83,7 +84,18 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     }
 
     private BooleanExpression isNotCompleted() {
-        return missionRegistration.status.ne(PersonalStatus.MISSION_FINISHED);
+        return missionRegistration.status.ne(ProcessStatus.MISSION_FINISHED)
+                .and(missionRegistration.status.ne(ProcessStatus.FEEDBACK_REVIEWED));
+
+//        BooleanExpression expression = Expressions.asBoolean(true).isTrue();
+//
+//        for (ProcessStatus status : ProcessStatus.values()) {
+//            if (status.isCompleted()) {
+//                expression = expression.and(missionRegistration.status.ne(status));
+//            }
+//        }
+//
+//        return expression;
     }
 
     private BooleanExpression isMissionNotFinished() {

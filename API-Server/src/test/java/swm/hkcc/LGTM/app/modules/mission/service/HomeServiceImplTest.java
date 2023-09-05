@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
@@ -52,7 +53,7 @@ class HomeServiceImplTest {
         // given
         Long memberId = 1L;
         int version = 1;
-        String memberType = "JUNIOR";
+        MemberType memberType = MemberType.JUNIOR;
 
         List<MissionContentType> mockMissionContentTypeList = List.of(
                 MissionContentType.ON_GOING_MISSION_TITLE_V1,
