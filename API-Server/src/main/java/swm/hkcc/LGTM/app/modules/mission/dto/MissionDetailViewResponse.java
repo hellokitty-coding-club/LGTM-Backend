@@ -61,5 +61,11 @@ public class MissionDetailViewResponse {
 
     @NotBlank
     private MemberProfile memberProfile;
+
+    @NotBlank
+    private boolean isParticipated;
+
+    @NotBlank
+    private boolean isClosed;
 }
 

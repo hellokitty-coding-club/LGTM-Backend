@@ -113,6 +113,7 @@ public class GetMissionTest {
         given(missionScrapRepository.existsByScrapper_MemberIdAndMission_MissionId(anyLong(), anyLong())).willReturn(true);
         given(techTagPerMissionRepository.findTechTagsByMissionId(anyLong())).willReturn(mockTechTags);
         given(missionRegistrationRepository.countByMission_MissionId(anyLong())).willReturn(5);
+        given(missionRepository.existsByMissionIdAndWriter_MemberId(anyLong(), anyLong())).willReturn(true);
         given(memberService.getMemberType(anyLong())).willReturn("JUNIOR");
         given(memberRepository.findOneByGithubId(anyString())).willReturn(Optional.ofNullable(mockMember));
 
@@ -157,7 +158,10 @@ public class GetMissionTest {
                 .andExpect(jsonPath("$.data.memberProfile.profileImageUrl").value("https://avatars.githubusercontent.com/u/899645?v=4"))
                 .andExpect(jsonPath("$.data.memberProfile.githubId").value("test-token-senior"))
                 .andExpect(jsonPath("$.data.memberProfile.company").value("(주)TestCompany"))
-                .andExpect(jsonPath("$.data.scraped").value(true));
+                .andExpect(jsonPath("$.data.memberProfile.position").value("안드로이드 엔지니어"))
+                .andExpect(jsonPath("$.data.scraped").value(true))
+                .andExpect(jsonPath("$.data.participated").value(true))
+                .andExpect(jsonPath("$.data.closed").value(false));
 
         // document
         actions
@@ -228,7 +232,10 @@ public class GetMissionTest {
                                         fieldWithPath("data.memberProfile.profileImageUrl").type(JsonFieldType.STRING).description("회원 프로필 이미지 URL"),
                                         fieldWithPath("data.memberProfile.githubId").type(JsonFieldType.STRING).description("회원의 Github ID"),
                                         fieldWithPath("data.memberProfile.company").type(JsonFieldType.STRING).description("회원의 회사명"),
-                                        fieldWithPath("data.scraped").type(JsonFieldType.BOOLEAN).description("미션을 스크랩했는지 여부")
+                                        fieldWithPath("data.memberProfile.position").type(JsonFieldType.STRING).description("회원의 직책"),
+                                        fieldWithPath("data.scraped").type(JsonFieldType.BOOLEAN).description("미션을 스크랩했는지 여부"),
+                                        fieldWithPath("data.participated").type(JsonFieldType.BOOLEAN).description("미션에 참여하고있는지 여부"),
+                                        fieldWithPath("data.closed").type(JsonFieldType.BOOLEAN).description("미션이 마감되었는지 여부")
                                 )
                                 .build())));
 
@@ -288,7 +295,7 @@ public class GetMissionTest {
                 .seniorId(123L)
                 .companyInfo("(주)TestCompany")
                 .careerPeriod(24)
-                .position("Senior Developer")
+                .position("안드로이드 엔지니어")
                 .accountNumber("1234-5678-910")
                 .bank(Bank.K_BANK)
                 .member(createMockMember())
