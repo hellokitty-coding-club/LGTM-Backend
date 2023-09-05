@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import swm.hkcc.LGTM.app.global.constant.ResponseCode;
+import swm.hkcc.LGTM.app.modules.auth.constants.TokenType;
+import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
 import swm.hkcc.LGTM.app.modules.member.domain.Authority;
 import swm.hkcc.LGTM.app.modules.member.domain.Bank;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
@@ -68,6 +70,9 @@ import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableRow;
 public class GetMissionTest {
     private MockMvc mockMvc;
 
+    @Autowired
+    private TokenProvider tokenProvider;
+
     @MockBean
     private MissionRepository missionRepository;
 
@@ -106,6 +111,7 @@ public class GetMissionTest {
         Mission mockMission = createMockMission();
         Senior mockSenior = createMockSenior();
         Member mockMember = createMockMember();
+        String memberAccessToken = getMockToken(mockMember);
         List<TechTag> mockTechTags = createMockTechTags();
 
         given(missionRepository.findById(anyLong())).willReturn(Optional.of(mockMission));
@@ -122,10 +128,7 @@ public class GetMissionTest {
 
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/detail")
-                        .header(
-                                "Authorization",
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + memberAccessToken)
                         .queryParam("missionId", "27")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -314,5 +317,9 @@ public class GetMissionTest {
 
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         return member;
+    }
+
+    private String getMockToken(Member member) {
+        return tokenProvider.createToken(member.getGithubId(), TokenType.ACCESS_TOKEN);
     }
 }
