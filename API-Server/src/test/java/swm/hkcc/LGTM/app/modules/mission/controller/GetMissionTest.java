@@ -115,7 +115,7 @@ public class GetMissionTest {
         given(missionScrapRepository.existsByScrapper_MemberIdAndMission_MissionId(anyLong(), anyLong())).willReturn(true);
         given(techTagPerMissionRepository.findTechTagsByMissionId(anyLong())).willReturn(mockTechTags);
         given(missionRegistrationRepository.countByMission_MissionId(anyLong())).willReturn(5);
-        given(missionRegistrationRepository.existsByMissionIdAndMemberId(anyLong(), anyLong())).willReturn(true);
+        given(missionRepository.existsByMissionIdAndWriter_MemberId(anyLong(), anyLong())).willReturn(true);
         given(memberService.getMemberType(anyLong())).willReturn("JUNIOR");
         given(memberRepository.findOneByGithubId(anyString())).willReturn(Optional.ofNullable(mockMember));
 
