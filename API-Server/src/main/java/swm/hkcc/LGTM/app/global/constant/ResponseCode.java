@@ -46,7 +46,14 @@ public enum ResponseCode {
 
     // 102xx : Mission
     NOT_EXIST_MISSION(10200, HttpStatus.BAD_REQUEST, "존재하지 않는 미션입니다."),
-    INVALID_GITHUB_URL(10201, HttpStatus.BAD_REQUEST, "유효하지 않은 Github Repository URL입니다. public repository인 github 주소인지 확인해주세요.");
+    INVALID_GITHUB_URL(10201, HttpStatus.BAD_REQUEST, "유효하지 않은 Github Repository URL입니다. public repository인 github 주소인지 확인해주세요."),
+
+    // 103xx : Mission Registration
+    MISS_REGISTER_DEADLINE(10300, HttpStatus.BAD_REQUEST, "미션 등록 기간이 이미 마감되었습니다."),
+    FULL_REGISTER_MEMBERS(10301, HttpStatus.BAD_REQUEST, "미션 등록 인원이 모두 찼습니다."),
+    ALREADY_REGISTERED_MISSION(10302, HttpStatus.BAD_REQUEST, "이미 참가한 미션입니다."),
+    TOO_MANY_LOCK_ERROR(10303, HttpStatus.INTERNAL_SERVER_ERROR, "대기시간이 만료되어 미션 참가에 실패했습니다."),
+    NOT_MY_MISSION(10304, HttpStatus.BAD_REQUEST, "접근 권한이 없는 미션입니다.")
     ;
 
     private final Integer code;
