@@ -1,10 +1,7 @@
-package swm.hkcc.LGTM.app.modules.registration.service.additionalInfoProvider;
+package swm.hkcc.LGTM.app.modules.registration.domain.additionalInfoProvider;
 
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
-import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
-import swm.hkcc.LGTM.app.modules.review.repository.ReviewRepository;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

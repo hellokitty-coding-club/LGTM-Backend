@@ -1,4 +1,4 @@
-package swm.hkcc.LGTM.app.modules.registration.service.additionalInfoProvider;
+package swm.hkcc.LGTM.app.modules.registration.domain.additionalInfoProvider;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

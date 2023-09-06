@@ -26,7 +26,7 @@ import swm.hkcc.LGTM.app.modules.registration.exception.TooManyLockError;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionHistoryRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.RedisLockRepository;
-import swm.hkcc.LGTM.app.modules.registration.service.additionalInfoProvider.AdditionalInfoProviderFactory;
+import swm.hkcc.LGTM.app.modules.registration.domain.additionalInfoProvider.AdditionalInfoProviderFactory;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
 
