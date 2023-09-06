@@ -87,13 +87,6 @@ public class RegistrationService {
         return toRegistrationSeniorResponse(mission, techTagList, memberInfoList);
     }
 
-
-    // hey copilot
-    // please list up all service&repositories for getSeniorEnrollDetail method
-    // : MissionRegistrationRepository, MissionHistoryRepository, AdditionalInfoProviderFactory, RegistrationValidator, MemberValidator
-    // list up all service&repositories for AdditionalInfoProviderFactory
-    // :
-
     public RegistrationSeniorDetailResponse getSeniorEnrollDetail(Member senior, Long missionId, Long juniorId) {
         memberValidator.validateSenior(senior);
         Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
