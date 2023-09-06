@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
@@ -41,19 +42,19 @@ class MissionItemHolderTest {
         MissionContentType totalMissionContentType = MissionContentType.TOTAL_MISSION_LIST_V1;
         MissionContentType onGoingMissionContentType = MissionContentType.ON_GOING_MISSION_LIST_V1;
         MissionContentType recommendedMissionContentType = MissionContentType.RECOMMENDED_MISSION_LIST_V1;
-
+        MemberType memberType = MemberType.JUNIOR;
         // Simulate the expected behavior of the missionService mock
         MissionContentData<MissionDto> onGoingMissionData = Mockito.mock(MissionContentData.class);
         MissionContentData<MissionDetailsDto> totalMissionData = Mockito.mock(MissionContentData.class);
         MissionContentData<MissionDetailsDto> recommendedMissionData = Mockito.mock(MissionContentData.class);
         when(missionService.getTotalMissions(anyLong())).thenReturn(totalMissionData);
-        when(missionService.getOngoingMissions(anyLong())).thenReturn(onGoingMissionData);
+        when(missionService.getJuniorOngoingMissions(anyLong())).thenReturn(onGoingMissionData);
         when(missionService.getRecommendMissions(anyLong())).thenReturn(recommendedMissionData);
 
         // when
-        Function<Long, MissionContentData> totalMissionListFunction = missionItemHolder.getMissionListFunction(totalMissionContentType);
-        Function<Long, MissionContentData> onGoingMissionListFunction = missionItemHolder.getMissionListFunction(onGoingMissionContentType);
-        Function<Long, MissionContentData> recommendedMissionListFunction = missionItemHolder.getMissionListFunction(recommendedMissionContentType);
+        Function<Long, MissionContentData> totalMissionListFunction = missionItemHolder.getMissionListFunction(totalMissionContentType, memberType);
+        Function<Long, MissionContentData> onGoingMissionListFunction = missionItemHolder.getMissionListFunction(onGoingMissionContentType, memberType);
+        Function<Long, MissionContentData> recommendedMissionListFunction = missionItemHolder.getMissionListFunction(recommendedMissionContentType, memberType);
 
         // then
         assertThat(totalMissionListFunction).isNotNull();
@@ -67,7 +68,7 @@ class MissionItemHolderTest {
 
         // Verify that the missionService methods are called with the correct arguments
         verify(missionService).getTotalMissions(1L);
-        verify(missionService).getOngoingMissions(2L);
+        verify(missionService).getJuniorOngoingMissions(2L);
         verify(missionService).getRecommendMissions(3L);
     }
 

@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import swm.hkcc.LGTM.app.global.constant.ResponseCode;
+import swm.hkcc.LGTM.app.modules.auth.constants.TokenType;
+import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
 import swm.hkcc.LGTM.app.modules.member.domain.Authority;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
@@ -57,6 +59,9 @@ import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableRow;
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 class UpdateDeviceTokenControllerTest {
     private MockMvc mockMvc;
+
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @MockBean
     private MemberService memberService;
@@ -96,8 +101,10 @@ class UpdateDeviceTokenControllerTest {
         // given
         Member member = (Member.builder()
                 .memberId(1L)
+                .githubId("testGithubId")
                 .build());
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+        String mockToken = getMockToken(member);
 
         Mockito.when(memberService.updateDeviceToken(Mockito.anyLong(), Mockito.any())).thenReturn(true);
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
@@ -107,10 +114,7 @@ class UpdateDeviceTokenControllerTest {
 
         // then
         ResultActions actions = mockMvc.perform(patch("/v1/member/device-token")
-                        .header(
-                                "Authorization",
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tanVuaW9yIiwiaWF0IjoxNjkwNTAyNzYzLCJleHAiOjE3ODUxMTA3NjN9.7mRkcMUMazWl5qK3wnS5f3fCRcu287FJRWYFa-d3EFk"
-                        )
+                        .header("Authorization", "Bearer " + mockToken)
                         .queryParam("deviceToken", "testDeviceToken")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -175,8 +179,12 @@ class UpdateDeviceTokenControllerTest {
         // given
         Member member = (Member.builder()
                 .memberId(1L)
+                .githubId("testGithubId")
                 .build());
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
+
+        String memberAccessToken = getMockToken(member);
+
         Mockito.when(memberService.updateDeviceToken(Mockito.anyLong(), Mockito.any()))
                 .thenThrow(new NotExistMember());
         Mockito.when(memberRepository.findOneByGithubId(Mockito.anyString()))
@@ -187,10 +195,7 @@ class UpdateDeviceTokenControllerTest {
         // then
         ResponseCode expectedResponseCode = ResponseCode.NOT_EXIST_MEMBER;
         ResultActions actions = mockMvc.perform(patch("/v1/member/device-token")
-                        .header(
-                                "Authorization",
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tanVuaW9yIiwiaWF0IjoxNjkwNTAyNzYzLCJleHAiOjE3ODUxMTA3NjN9.7mRkcMUMazWl5qK3wnS5f3fCRcu287FJRWYFa-d3EFk"
-                        )
+                        .header("Authorization", "Bearer " + memberAccessToken)
                         .queryParam("deviceToken", "testDeviceToken")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -213,5 +218,9 @@ class UpdateDeviceTokenControllerTest {
 
                                 ).build())
                 ));
+    }
+
+    private String getMockToken(Member member) {
+        return tokenProvider.createToken(member.getGithubId(), TokenType.ACCESS_TOKEN);
     }
 }
