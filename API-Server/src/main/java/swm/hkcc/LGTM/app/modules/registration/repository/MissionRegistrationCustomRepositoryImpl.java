@@ -1,6 +1,7 @@
 package swm.hkcc.LGTM.app.modules.registration.repository;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,15 +30,22 @@ public class MissionRegistrationCustomRepositoryImpl implements MissionRegistrat
 
     @Override
     public List<MemberRegisterSimpleInfo> getRegisteredMembersByMission(Long missionId) {
-        List<Tuple> tuples = jpaQueryFactory.select(member.memberId, member.nickName, member.githubId, member.profileImageUrl, missionRegistration.githubPullRequestUrl, missionRegistration.status)
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        MemberRegisterSimpleInfo.class,
+                        member.memberId,
+                        member.nickName,
+                        member.githubId,
+                        member.profileImageUrl,
+                        missionRegistration.status,
+                        missionRegistration.githubPullRequestUrl)
+                )
                 .from(mission)
                 .innerJoin(missionRegistration).on(mission.missionId.eq(missionRegistration.mission.missionId))
                 .leftJoin(member).on(missionRegistration.junior.memberId.eq(member.memberId))
                 .where(mission.missionId.eq(missionId))
                 .orderBy(missionRegistration.createdAt.asc())
                 .fetch();
-
-        return tuples.stream().map(MemberRegisterSimpleInfo::createMemberRegisterInfo).collect(Collectors.toList());
     }
 
     @Override
@@ -51,11 +59,16 @@ public class MissionRegistrationCustomRepositoryImpl implements MissionRegistrat
 
     @Override
     public List<MissionHistoryInfo> getMissionHistoryByMissionAndJunior(Mission mission, Member junior) {
-        List<Tuple> tuples = jpaQueryFactory.select(missionHistory.createdAt, missionHistory.status)
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        MissionHistoryInfo.class,
+                        missionHistory.createdAt,
+                        missionHistory.status)
+                )
                 .from(missionHistory)
-                .where(missionHistory.registration.mission.eq(mission), missionHistory.registration.junior.eq(junior))
+                .where(missionHistory.registration.mission.eq(mission),
+                        missionHistory.registration.junior.eq(junior))
                 .orderBy(missionHistory.createdAt.asc())
                 .fetch();
-        return tuples.stream().map(MissionHistoryInfo::createMissionHistoryInfo).collect(Collectors.toList());
     }
 }

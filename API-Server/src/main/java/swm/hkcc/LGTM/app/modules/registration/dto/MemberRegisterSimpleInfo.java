@@ -1,6 +1,7 @@
 package swm.hkcc.LGTM.app.modules.registration.dto;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 
@@ -22,15 +23,14 @@ public class MemberRegisterSimpleInfo implements Serializable {
     private String missionFinishedDate = "";
     private String githubPrUrl = "";
 
-    public static MemberRegisterSimpleInfo createMemberRegisterInfo(Tuple tuple) {
-        MemberRegisterSimpleInfo memberRegisterSimpleInfo = new MemberRegisterSimpleInfo();
-        memberRegisterSimpleInfo.memberId = tuple.get(member.memberId);
-        memberRegisterSimpleInfo.nickname = tuple.get(member.nickName);
-        memberRegisterSimpleInfo.githubId = tuple.get(member.githubId);
-        memberRegisterSimpleInfo.profileImageUrl = tuple.get(member.profileImageUrl);
-        memberRegisterSimpleInfo.processStatus = tuple.get(missionRegistration.status);
-        memberRegisterSimpleInfo.githubPrUrl = Optional.ofNullable(tuple.get(missionRegistration.githubPullRequestUrl)).orElse("");
-        return memberRegisterSimpleInfo;
+    @QueryProjection
+    public MemberRegisterSimpleInfo(Long memberId, String nickname, String githubId, String profileImageUrl, ProcessStatus processStatus, String githubPrUrl) {
+        this.memberId = memberId;
+        this.nickname = nickname;
+        this.githubId = githubId;
+        this.profileImageUrl = profileImageUrl;
+        this.processStatus = processStatus;
+        this.githubPrUrl = Optional.ofNullable(githubPrUrl).orElse("");
     }
 
     public void setPaymentDate(LocalDateTime paymentDate) {
