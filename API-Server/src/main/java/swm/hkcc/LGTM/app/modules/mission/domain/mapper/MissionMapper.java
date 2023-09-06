@@ -17,10 +17,10 @@ import java.util.List;
 import static swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus.MISSION_FINISHED;
 
 public class MissionMapper {
-    public static MissionDto missionToMissionDto(Mission ongoingMission, List<TechTag> techTags) {
+    public static MissionDto missionToMissionDto(Mission mission, List<TechTag> techTags) {
         return MissionDto.builder()
-                .missionId(ongoingMission.getMissionId())
-                .missionTitle(ongoingMission.getTitle())
+                .missionId(mission.getMissionId())
+                .missionTitle(mission.getTitle())
                 .techTagList(techTags)
                 .build();
     }
