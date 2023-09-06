@@ -85,8 +85,8 @@ class SeniorEnrollDetailServiceTest {
         given(missionRegistrationRepository.getMissionHistoryByMissionAndJunior(any(), any()))
                 .willReturn(
                         List.of(
-                                MissionHistoryInfo.builder().status(ProcessStatus.WAITING_FOR_PAYMENT).dateTime(LocalDateTime.now().toString()).build(),
-                                MissionHistoryInfo.builder().status(ProcessStatus.PAYMENT_CONFIRMATION).dateTime(LocalDateTime.now().plusHours(1).toString()).build()
+                                new MissionHistoryInfo(ProcessStatus.WAITING_FOR_PAYMENT, LocalDateTime.now()),
+                                new MissionHistoryInfo(ProcessStatus.PAYMENT_CONFIRMATION, LocalDateTime.now().plusHours(1))
                         ));
         Member senior = getMockSenior();
         Member junior = getMockJunior();
@@ -110,11 +110,10 @@ class SeniorEnrollDetailServiceTest {
         given(missionRegistrationRepository.getMissionHistoryByMissionAndJunior(any(), any()))
                 .willReturn(
                         List.of(
-
-                                MissionHistoryInfo.builder().status(ProcessStatus.WAITING_FOR_PAYMENT).dateTime(LocalDateTime.now().toString()).build(),
-                                MissionHistoryInfo.builder().status(ProcessStatus.PAYMENT_CONFIRMATION).dateTime(LocalDateTime.now().plusHours(1).toString()).build(),
-                                MissionHistoryInfo.builder().status(ProcessStatus.MISSION_PROCEEDING).dateTime(LocalDateTime.now().plusHours(2).toString()).build(),
-                                MissionHistoryInfo.builder().status(ProcessStatus.CODE_REVIEW).dateTime(LocalDateTime.now().plusHours(3).toString()).build()
+                                new MissionHistoryInfo(ProcessStatus.WAITING_FOR_PAYMENT, LocalDateTime.now()),
+                                new MissionHistoryInfo(ProcessStatus.PAYMENT_CONFIRMATION, LocalDateTime.now().plusHours(1)),
+                                new MissionHistoryInfo(ProcessStatus.MISSION_PROCEEDING, LocalDateTime.now().plusHours(2)),
+                                new MissionHistoryInfo(ProcessStatus.CODE_REVIEW, LocalDateTime.now().plusHours(3))
                         ));
         Member senior = getMockSenior();
         Member junior = getMockJunior();
@@ -140,13 +139,12 @@ class SeniorEnrollDetailServiceTest {
         given(missionRegistrationRepository.getMissionHistoryByMissionAndJunior(any(), any()))
                 .willReturn(
                         List.of(
-
-                                MissionHistoryInfo.builder().status(ProcessStatus.WAITING_FOR_PAYMENT).dateTime(LocalDateTime.now().toString()).build(),
-                                MissionHistoryInfo.builder().status(ProcessStatus.PAYMENT_CONFIRMATION).dateTime(LocalDateTime.now().plusHours(1).toString()).build(),
-                                MissionHistoryInfo.builder().status(ProcessStatus.MISSION_PROCEEDING).dateTime(LocalDateTime.now().plusHours(2).toString()).build(),
-                                MissionHistoryInfo.builder().status(ProcessStatus.CODE_REVIEW).dateTime(LocalDateTime.now().plusHours(3).toString()).build(),
-                                MissionHistoryInfo.builder().status(ProcessStatus.MISSION_FINISHED).dateTime(LocalDateTime.now().plusHours(4).toString()).build(),
-                                MissionHistoryInfo.builder().status(ProcessStatus.FEEDBACK_REVIEWED).dateTime(LocalDateTime.now().plusHours(5).toString()).build()
+                                new MissionHistoryInfo(ProcessStatus.WAITING_FOR_PAYMENT, LocalDateTime.now()),
+                                new MissionHistoryInfo(ProcessStatus.PAYMENT_CONFIRMATION, LocalDateTime.now().plusHours(1)),
+                                new MissionHistoryInfo(ProcessStatus.MISSION_PROCEEDING, LocalDateTime.now().plusHours(2)),
+                                new MissionHistoryInfo(ProcessStatus.CODE_REVIEW, LocalDateTime.now().plusHours(3)),
+                                new MissionHistoryInfo(ProcessStatus.MISSION_FINISHED, LocalDateTime.now().plusHours(4)),
+                                new MissionHistoryInfo(ProcessStatus.FEEDBACK_REVIEWED, LocalDateTime.now().plusHours(5))
                         ));
         Member senior = getMockSenior();
         Member junior = getMockJunior();
@@ -171,7 +169,7 @@ class SeniorEnrollDetailServiceTest {
         given(missionRegistrationRepository.getMissionHistoryByMissionAndJunior(any(), any()))
                 .willReturn(
                         List.of(
-                                MissionHistoryInfo.builder().status(ProcessStatus.WAITING_FOR_PAYMENT).dateTime(LocalDateTime.now().toString()).build()
+                                new MissionHistoryInfo(ProcessStatus.WAITING_FOR_PAYMENT, LocalDateTime.now())
                         ));
         Member senior = getMockSenior();
         Member junior = getMockJunior();

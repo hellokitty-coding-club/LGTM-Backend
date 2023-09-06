@@ -108,10 +108,7 @@ class SeniorDashboardDetailControllerTest {
         response.setGithubId(junior.getGithubId());
         response.setStatus(ProcessStatus.WAITING_FOR_PAYMENT);
         response.setMissionHistory(List.of(
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.WAITING_FOR_PAYMENT)
-                        .dateTime(LocalDateTime.now().toString())
-                        .build()
+                new MissionHistoryInfo(ProcessStatus.WAITING_FOR_PAYMENT, LocalDateTime.now())
         ));
         response.setButtonTitle(ProcessStatus.WAITING_FOR_PAYMENT.getSeniorBottomTitle());
         given(registrationService.getSeniorEnrollDetail(any(), any(), any())).willReturn(response);
@@ -236,14 +233,8 @@ class SeniorDashboardDetailControllerTest {
         response.setGithubId(junior.getGithubId());
         response.setStatus(currentStatus);
         response.setMissionHistory(List.of(
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.WAITING_FOR_PAYMENT)
-                        .dateTime(LocalDateTime.now().toString())
-                        .build(),
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.PAYMENT_CONFIRMATION)
-                        .dateTime(LocalDateTime.now().plusDays(1).toString())
-                        .build()
+                new MissionHistoryInfo(ProcessStatus.WAITING_FOR_PAYMENT, LocalDateTime.now()),
+                new MissionHistoryInfo(ProcessStatus.PAYMENT_CONFIRMATION, LocalDateTime.now().plusDays(1))
         ));
         response.setRealName("홍길동");
         response.setButtonTitle(currentStatus.getSeniorBottomTitle());
@@ -308,22 +299,10 @@ class SeniorDashboardDetailControllerTest {
         response.setGithubId(junior.getGithubId());
         response.setStatus(currentStatus);
         response.setMissionHistory(List.of(
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.WAITING_FOR_PAYMENT)
-                        .dateTime(LocalDateTime.now().toString())
-                        .build(),
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.PAYMENT_CONFIRMATION)
-                        .dateTime(LocalDateTime.now().plusDays(1).toString())
-                        .build(),
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.MISSION_PROCEEDING)
-                        .dateTime(LocalDateTime.now().plusDays(2).toString())
-                        .build(),
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.CODE_REVIEW)
-                        .dateTime(LocalDateTime.now().plusDays(3).toString())
-                        .build()
+                new MissionHistoryInfo(ProcessStatus.WAITING_FOR_PAYMENT, LocalDateTime.now()),
+                new MissionHistoryInfo(ProcessStatus.PAYMENT_CONFIRMATION, LocalDateTime.now().plusDays(1)),
+                new MissionHistoryInfo(ProcessStatus.MISSION_PROCEEDING, LocalDateTime.now().plusDays(2)),
+                new MissionHistoryInfo(ProcessStatus.CODE_REVIEW, LocalDateTime.now().plusDays(3))
         ));
         response.setGithubPullRequestUrl("https://github.com/abc/abc/abc");
         response.setButtonTitle(currentStatus.getSeniorBottomTitle());
@@ -386,30 +365,12 @@ class SeniorDashboardDetailControllerTest {
         response.setGithubId(junior.getGithubId());
         response.setStatus(currentStatus);
         response.setMissionHistory(List.of(
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.WAITING_FOR_PAYMENT)
-                        .dateTime(LocalDateTime.now().toString())
-                        .build(),
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.PAYMENT_CONFIRMATION)
-                        .dateTime(LocalDateTime.now().plusDays(1).toString())
-                        .build(),
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.MISSION_PROCEEDING)
-                        .dateTime(LocalDateTime.now().plusDays(2).toString())
-                        .build(),
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.CODE_REVIEW)
-                        .dateTime(LocalDateTime.now().plusDays(3).toString())
-                        .build(),
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.MISSION_FINISHED)
-                        .dateTime(LocalDateTime.now().plusDays(4).toString())
-                        .build(),
-                MissionHistoryInfo.builder()
-                        .status(ProcessStatus.FEEDBACK_REVIEWED)
-                        .dateTime(LocalDateTime.now().plusDays(5).toString())
-                        .build()
+                new MissionHistoryInfo(ProcessStatus.WAITING_FOR_PAYMENT, LocalDateTime.now()),
+                new MissionHistoryInfo(ProcessStatus.PAYMENT_CONFIRMATION, LocalDateTime.now().plusDays(1)),
+                new MissionHistoryInfo(ProcessStatus.MISSION_PROCEEDING, LocalDateTime.now().plusDays(2)),
+                new MissionHistoryInfo(ProcessStatus.CODE_REVIEW, LocalDateTime.now().plusDays(3)),
+                new MissionHistoryInfo(ProcessStatus.MISSION_FINISHED, LocalDateTime.now().plusDays(4)),
+                new MissionHistoryInfo(ProcessStatus.FEEDBACK_REVIEWED, LocalDateTime.now().plusDays(5))
         ));
         response.setReviewId(1L);
         response.setButtonTitle(currentStatus.getSeniorBottomTitle());
