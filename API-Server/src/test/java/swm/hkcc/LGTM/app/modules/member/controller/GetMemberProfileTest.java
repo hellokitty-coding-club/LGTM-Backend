@@ -1,6 +1,5 @@
 package swm.hkcc.LGTM.app.modules.member.controller;
 
-import com.epages.restdocs.apispec.ResourceDocumentation;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import swm.hkcc.LGTM.app.global.constant.ResponseCode;
-import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.auth.constants.TokenType;
 import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
 import swm.hkcc.LGTM.app.modules.member.domain.*;
@@ -60,10 +58,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -166,6 +162,7 @@ class GetMemberProfileTest {
                 .andExpect(jsonPath("$.data.githubId").value("test-token-senior"))
                 .andExpect(jsonPath("$.data.nickName").value("test-token-senior"))
                 .andExpect(jsonPath("$.data.profileImageUrl").value("https://avatars.githubusercontent.com/u/899645?v=4"))
+                .andExpect(jsonPath("$.data.introduction").value("Test Senior Developer"))
                 .andExpect(jsonPath("$.data.techTagList", hasSize(1)))
                 .andExpect(jsonPath("$.data.techTagList[0].techTagId").value(1))
                 .andExpect(jsonPath("$.data.techTagList[0].name").value("Java"))
@@ -223,6 +220,7 @@ class GetMemberProfileTest {
                                         fieldWithPath("data.githubId").type(JsonFieldType.STRING).description("회원의 Github ID"),
                                         fieldWithPath("data.nickName").type(JsonFieldType.STRING).description("회원 닉네임"),
                                         fieldWithPath("data.profileImageUrl").type(JsonFieldType.STRING).description("회원 프로필 이미지 URL"),
+                                        fieldWithPath("data.introduction").type(JsonFieldType.STRING).description("자기 소개"),
                                         fieldWithPath("data.techTagList").type(JsonFieldType.ARRAY).description("기술 태그 리스트"),
                                         fieldWithPath("data.techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 ID"),
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
@@ -244,7 +242,7 @@ class GetMemberProfileTest {
 
     @Test
     @DisplayName("주니어 회원 프로필 조회")
-    void getJuniorProfileTest() throws Exception{
+    void getJuniorProfileTest() throws Exception {
         // given
         Junior mockJunior = createMockJunior();
         Member mockMember = createMockJuniorMember(mockJunior);
@@ -278,6 +276,7 @@ class GetMemberProfileTest {
                 .andExpect(jsonPath("$.data.githubId").value("test-token-junior"))
                 .andExpect(jsonPath("$.data.nickName").value("test-token-junior"))
                 .andExpect(jsonPath("$.data.profileImageUrl").value("https://avatars.githubusercontent.com/u/899645?v=4"))
+                .andExpect(jsonPath("$.data.introduction").value("Test Junior Developer"))
                 .andExpect(jsonPath("$.data.techTagList", hasSize(1)))
                 .andExpect(jsonPath("$.data.techTagList[0].techTagId").value(1))
                 .andExpect(jsonPath("$.data.techTagList[0].name").value("Java"))
@@ -333,6 +332,7 @@ class GetMemberProfileTest {
                                         fieldWithPath("data.githubId").type(JsonFieldType.STRING).description("회원의 Github ID"),
                                         fieldWithPath("data.nickName").type(JsonFieldType.STRING).description("회원 닉네임"),
                                         fieldWithPath("data.profileImageUrl").type(JsonFieldType.STRING).description("회원 프로필 이미지 URL"),
+                                        fieldWithPath("data.introduction").type(JsonFieldType.STRING).description("자기 소개"),
                                         fieldWithPath("data.techTagList").type(JsonFieldType.ARRAY).description("기술 태그 리스트"),
                                         fieldWithPath("data.techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 ID"),
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),

@@ -16,6 +16,7 @@ public class MemberMapper {
                 .githubId(member.getGithubId())
                 .nickName(member.getNickName())
                 .profileImageUrl(member.getProfileImageUrl())
+                .introduction(member.getIntroduction())
                 .techTagList(techTagList)
                 .isAgreeWithEventInfo(member.isAgreeWithEventInfo())
                 .memberDetailInfo(memberDetailInfo)

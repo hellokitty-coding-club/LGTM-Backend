@@ -14,6 +14,7 @@ public class MemberDetailProfile {
     private String githubId;
     private String nickName;
     private String profileImageUrl;
+    private String introduction;
     private List<TechTag> techTagList;
     private boolean isAgreeWithEventInfo;
     private MemberDetailInfo memberDetailInfo;
