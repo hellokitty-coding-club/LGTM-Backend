@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import swm.hkcc.LGTM.app.global.constant.ResponseCode;
+import swm.hkcc.LGTM.app.modules.auth.constants.TokenType;
+import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
 import swm.hkcc.LGTM.app.modules.member.domain.Authority;
 import swm.hkcc.LGTM.app.modules.member.domain.Junior;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
@@ -71,6 +73,9 @@ import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableRow;
 class SeniorDashboardDetailControllerTest {
     private MockMvc mockMvc;
 
+    @Autowired
+    private TokenProvider tokenProvider;
+
     @MockBean
     private RegistrationService registrationService;
 
@@ -115,11 +120,7 @@ class SeniorDashboardDetailControllerTest {
         // when
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior/{juniorId}", mission.getMissionId(), junior.getMemberId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + getMockToken(member))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -242,11 +243,7 @@ class SeniorDashboardDetailControllerTest {
         // when
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior/{juniorId}", mission.getMissionId(), junior.getMemberId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + getMockToken(member))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -310,11 +307,7 @@ class SeniorDashboardDetailControllerTest {
         // when
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior/{juniorId}", mission.getMissionId(), junior.getMemberId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + getMockToken(member))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -378,11 +371,7 @@ class SeniorDashboardDetailControllerTest {
         // when
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior/{juniorId}", mission.getMissionId(), junior.getMemberId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + getMockToken(member))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -436,11 +425,7 @@ class SeniorDashboardDetailControllerTest {
         // when
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior/{juniorId}", mission.getMissionId(), junior.getMemberId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + getMockToken(member))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
@@ -473,11 +458,7 @@ class SeniorDashboardDetailControllerTest {
         // when
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior/{juniorId}", mission.getMissionId(), junior.getMemberId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + getMockToken(member))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
@@ -510,11 +491,7 @@ class SeniorDashboardDetailControllerTest {
         // when
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior/{juniorId}", mission.getMissionId(), junior.getMemberId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + getMockToken(member))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
@@ -548,11 +525,7 @@ class SeniorDashboardDetailControllerTest {
         // when
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior/{juniorId}", mission.getMissionId(), junior.getMemberId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + getMockToken(member))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
@@ -586,11 +559,7 @@ class SeniorDashboardDetailControllerTest {
         // when
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior/{juniorId}", mission.getMissionId(), junior.getMemberId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + getMockToken(member))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
@@ -624,11 +593,7 @@ class SeniorDashboardDetailControllerTest {
         // when
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior/{juniorId}", mission.getMissionId(), junior.getMemberId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + getMockToken(member))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.success").value(false))
@@ -680,5 +645,9 @@ class SeniorDashboardDetailControllerTest {
                     .build();
         }
         return mockMission;
+    }
+
+    private String getMockToken(Member member) {
+        return tokenProvider.createToken(member.getGithubId(), TokenType.ACCESS_TOKEN);
     }
 }

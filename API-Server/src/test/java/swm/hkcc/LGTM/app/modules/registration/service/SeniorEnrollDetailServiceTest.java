@@ -48,8 +48,6 @@ class SeniorEnrollDetailServiceTest {
     @Autowired
     AdditionalInfoProviderFactory additionalInfoProviderFactory;
 
-    // MissionRegistrationRepository, MissionHistoryRepository, AdditionalInfoProviderFactory, RegistrationValidator, MemberValidator
-    // wire these
     @MockBean
     MissionRegistrationRepository missionRegistrationRepository;
     @MockBean
@@ -69,13 +67,6 @@ class SeniorEnrollDetailServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-    }
-
-    @Test
-    void 시니어_미션_상세_조회_테스트() {
-        // given
-        // when
-        // then
     }
 
     // PAYMENT_CONFIRMATION
