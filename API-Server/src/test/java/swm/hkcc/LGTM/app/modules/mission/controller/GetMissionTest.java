@@ -221,6 +221,7 @@ public class GetMissionTest {
                                         fieldWithPath("data.techTagList").type(JsonFieldType.ARRAY).description("기술 태그 리스트"),
                                         fieldWithPath("data.techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 ID"),
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
+                                        fieldWithPath("data.techTagList[].iconImageUrl").type(JsonFieldType.STRING).description("기술 태그 이미지 URL"),
                                         fieldWithPath("data.remainingRegisterDays").type(JsonFieldType.NUMBER).description("남은 등록 기간"),
                                         fieldWithPath("data.missionRepositoryUrl").type(JsonFieldType.STRING).description("미션 저장소 URL"),
                                         fieldWithPath("data.registrationDueDate").type(JsonFieldType.STRING).description("모집 마감일"),
@@ -251,14 +252,17 @@ public class GetMissionTest {
                 TechTag.builder()
                         .techTagId(7L)
                         .name("Android")
+                        .iconImageUrl("https://www.github.com/kxxhyorim")
                         .build(),
                 TechTag.builder()
                         .techTagId(12L)
                         .name("Kotlin")
+                        .iconImageUrl("https://www.github.com/kxxhyorim")
                         .build(),
                 TechTag.builder()
                         .techTagId(13L)
                         .name("iOS")
+                        .iconImageUrl("https://www.github.com/kxxhyorim")
                         .build()
         );
     }

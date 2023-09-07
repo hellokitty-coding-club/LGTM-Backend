@@ -22,7 +22,7 @@ class MissionMapperTest {
 
     @BeforeEach
     void setUp() {
-        techTagSampleList = Arrays.asList(new TechTag(1L, "Java"), new TechTag(2L,"Spring"));
+        techTagSampleList = Arrays.asList(new TechTag(1L, "Java", "img"), new TechTag(2L,"Spring", "img"));
 
         missionSample = Mission.builder()
                 .missionId(1L)

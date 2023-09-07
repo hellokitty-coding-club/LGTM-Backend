@@ -226,6 +226,7 @@ class GetMemberProfileTest {
                                         fieldWithPath("data.techTagList").type(JsonFieldType.ARRAY).description("기술 태그 리스트"),
                                         fieldWithPath("data.techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 ID"),
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
+                                        fieldWithPath("data.techTagList[].iconImageUrl").description("기술 태그 이미지 URL"),
                                         fieldWithPath("data.memberDetailInfo.companyInfo").type(JsonFieldType.STRING).description("회원의 회사 정보"),
                                         fieldWithPath("data.memberDetailInfo.careerPeriod").type(JsonFieldType.NUMBER).description("회원의 경력 기간"),
                                         fieldWithPath("data.memberDetailInfo.position").type(JsonFieldType.STRING).description("회원의 직책"),
@@ -235,6 +236,7 @@ class GetMemberProfileTest {
                                         fieldWithPath("data.memberMissionHistory[].techTagList").type(JsonFieldType.ARRAY).description("미션에 사용된 기술 태그 리스트"),
                                         fieldWithPath("data.memberMissionHistory[].techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 ID"),
                                         fieldWithPath("data.memberMissionHistory[].techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
+                                        fieldWithPath("data.memberMissionHistory[].techTagList[].iconImageUrl").description("기술 태그 이미지 URL"),
                                         fieldWithPath("data.agreeWithEventInfo").type(JsonFieldType.BOOLEAN).description("이벤트 정보 동의 여부")
                                 )
                                 .build())));
@@ -340,6 +342,7 @@ class GetMemberProfileTest {
                                         fieldWithPath("data.techTagList").type(JsonFieldType.ARRAY).description("기술 태그 리스트"),
                                         fieldWithPath("data.techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 ID"),
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
+                                        fieldWithPath("data.techTagList[].iconImageUrl").description("기술 태그 이미지 URL"),
                                         fieldWithPath("data.memberDetailInfo.educationalHistory").type(JsonFieldType.STRING).description("회원의 학력 정보"),
                                         fieldWithPath("data.memberMissionHistory").type(JsonFieldType.ARRAY).description("회원의 미션 히스토리"),
                                         fieldWithPath("data.memberMissionHistory[].missionId").type(JsonFieldType.NUMBER).description("미션 ID"),
@@ -347,6 +350,7 @@ class GetMemberProfileTest {
                                         fieldWithPath("data.memberMissionHistory[].techTagList").type(JsonFieldType.ARRAY).description("미션에 사용된 기술 태그 리스트"),
                                         fieldWithPath("data.memberMissionHistory[].techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 ID"),
                                         fieldWithPath("data.memberMissionHistory[].techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
+                                        fieldWithPath("data.memberMissionHistory[].techTagList[].iconImageUrl").description("기술 태그 이미지 URL"),
                                         fieldWithPath("data.agreeWithEventInfo").type(JsonFieldType.BOOLEAN).description("이벤트 정보 동의 여부")
                                 )
                                 .build())));
@@ -359,6 +363,7 @@ class GetMemberProfileTest {
                 TechTag.builder()
                         .techTagId(7L)
                         .name("Android")
+                        .iconImageUrl("https://www.github.com/kxxhyorim")
                         .build()
         );
     }

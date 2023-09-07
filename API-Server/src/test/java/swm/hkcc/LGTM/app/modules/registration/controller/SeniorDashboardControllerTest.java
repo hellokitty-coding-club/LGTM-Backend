@@ -106,9 +106,9 @@ class SeniorDashboardControllerTest {
 
         // Setup mockResponse with the sample data
         List<TechTag> techTags = Arrays.asList(
-                new TechTag(7L, "Android"),
-                new TechTag(12L, "Kotlin"),
-                new TechTag(13L, "iOS")
+                new TechTag(7L, "Android", "https://img.url"),
+                new TechTag(12L, "Kotlin", "https://img.url"),
+                new TechTag(13L, "iOS", "https://img.url")
         );
 
         MemberRegisterSimpleInfo memberInfo = new MemberRegisterSimpleInfo();
@@ -195,6 +195,7 @@ class SeniorDashboardControllerTest {
                                 fieldWithPath("data.techTagList").type(JsonFieldType.ARRAY).description("미션 기술 태그 리스트"),
                                 fieldWithPath("data.techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 아이디"),
                                 fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
+                                fieldWithPath("data.techTagList[].iconImageUrl").type(JsonFieldType.STRING).description("기술 태그 이미지 URL"),
                                 fieldWithPath("data.memberInfoList").type(JsonFieldType.ARRAY).description("미션 참가자 리스트"),
                                 fieldWithPath("data.memberInfoList[].memberId").type(JsonFieldType.NUMBER).description("회원 아이디"),
                                 fieldWithPath("data.memberInfoList[].nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
