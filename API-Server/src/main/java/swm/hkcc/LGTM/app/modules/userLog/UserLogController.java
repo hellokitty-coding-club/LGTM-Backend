@@ -1,6 +1,5 @@
 package swm.hkcc.LGTM.app.modules.userLog;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,39 +9,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import swm.hkcc.LGTM.app.global.dto.ApiDataResponse;
 import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
-import swm.hkcc.LGTM.app.modules.userLog.dto.TimeIntervalLogMessage;
-import swm.hkcc.LGTM.app.modules.userLog.dto.TimestampLogMessage;
-import swm.hkcc.LGTM.app.modules.userLog.dto.UserLogRequest;
-import swm.hkcc.LGTM.app.modules.userLog.producer.IntervalLogProducer;
-import swm.hkcc.LGTM.app.modules.userLog.producer.StampLogProducer;
-
-import java.time.LocalDateTime;
+import swm.hkcc.LGTM.app.modules.userLog.dto.LogMessage;
+import swm.hkcc.LGTM.app.modules.userLog.producer.LogProducer;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("v1/log")
 public class UserLogController {
-    private final StampLogProducer stampLogProducer;
-    private final IntervalLogProducer intervalLogProducer;
+    private final LogProducer logProducer;
 
     @PostMapping
     public ApiDataResponse<?> timestampLog(
-            @RequestBody @Valid UserLogRequest userLogRequest,
+            @RequestBody LogMessage logMessage,
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
-        Long memberId = customUserDetails.getMemberId();
 
-        String topic = "";
-        if (userLogRequest.getStayIntervalMs() == null) {
-            topic = stampLogProducer.sendMessage(
-                    TimestampLogMessage.from(userLogRequest, memberId, LocalDateTime.now())
-            );
-        } else {
-            topic = intervalLogProducer.sendMessage(
-                    TimeIntervalLogMessage.from(userLogRequest, memberId, LocalDateTime.now())
-            );
-        }
+        Long memberId = customUserDetails.getMemberId();
+        String topic = logProducer.sendMessage(logMessage);
 
         return ApiDataResponse.of(topic);
     }
