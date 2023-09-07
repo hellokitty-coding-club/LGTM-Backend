@@ -14,4 +14,17 @@ public class LogMessage {
     private Integer logVersion;
 
     private Map<String, Object> logData;
+
+    public UserDataLog toUserDataLog(String topic, int partition, long receivedTimeStamp) {
+        return UserDataLog.builder()
+                .logId(eventLogName + "_" + receivedTimeStamp + "_" + topic + "_" + partition)
+                .eventLogName(eventLogName)
+                .screenName(screenName)
+                .logVersion(logVersion)
+                .logData(logData)
+                .topic(topic)
+                .partition(partition)
+                .receivedTimeStamp(receivedTimeStamp)
+                .build();
+    }
 }
