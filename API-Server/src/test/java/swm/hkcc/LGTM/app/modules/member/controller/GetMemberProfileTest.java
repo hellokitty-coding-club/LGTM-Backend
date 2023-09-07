@@ -159,6 +159,7 @@ class GetMemberProfileTest {
                 .andExpect(jsonPath("$.message").value("Ok"))
                 .andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.data.memberId").value(48))
+                .andExpect(jsonPath("$.data.memberType").value("SENIOR"))
                 .andExpect(jsonPath("$.data.githubId").value("test-token-senior"))
                 .andExpect(jsonPath("$.data.nickName").value("test-token-senior"))
                 .andExpect(jsonPath("$.data.profileImageUrl").value("https://avatars.githubusercontent.com/u/899645?v=4"))
@@ -217,6 +218,7 @@ class GetMemberProfileTest {
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                                         fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
                                         fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
+                                        fieldWithPath("data.memberType").type(JsonFieldType.STRING).description("회원 타입 - SENIOR, JUNIOR"),
                                         fieldWithPath("data.githubId").type(JsonFieldType.STRING).description("회원의 Github ID"),
                                         fieldWithPath("data.nickName").type(JsonFieldType.STRING).description("회원 닉네임"),
                                         fieldWithPath("data.profileImageUrl").type(JsonFieldType.STRING).description("회원 프로필 이미지 URL"),
@@ -273,6 +275,7 @@ class GetMemberProfileTest {
                 .andExpect(jsonPath("$.message").value("Ok"))
                 .andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.data.memberId").value(48))
+                .andExpect(jsonPath("$.data.memberType").value("JUNIOR"))
                 .andExpect(jsonPath("$.data.githubId").value("test-token-junior"))
                 .andExpect(jsonPath("$.data.nickName").value("test-token-junior"))
                 .andExpect(jsonPath("$.data.profileImageUrl").value("https://avatars.githubusercontent.com/u/899645?v=4"))
@@ -329,6 +332,7 @@ class GetMemberProfileTest {
                                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                                         fieldWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터"),
                                         fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("회원 ID"),
+                                        fieldWithPath("data.memberType").type(JsonFieldType.STRING).description("회원 타입 - SENIOR, JUNIOR"),
                                         fieldWithPath("data.githubId").type(JsonFieldType.STRING).description("회원의 Github ID"),
                                         fieldWithPath("data.nickName").type(JsonFieldType.STRING).description("회원 닉네임"),
                                         fieldWithPath("data.profileImageUrl").type(JsonFieldType.STRING).description("회원 프로필 이미지 URL"),

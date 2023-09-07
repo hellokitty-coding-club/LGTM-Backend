@@ -38,9 +38,9 @@ public class MemberController {
         MemberType memberType = memberService.getMemberType(memberId);
 
         if (memberType == MemberType.JUNIOR) {
-            return ApiDataResponse.of(memberService.getJuniorProfile(memberId));
+            return ApiDataResponse.of(memberService.getJuniorProfile(memberId, memberType));
         }
 
-        return ApiDataResponse.of(memberService.getSeniorProfile(memberId));
+        return ApiDataResponse.of(memberService.getSeniorProfile(memberId, memberType));
     }
 }

@@ -59,7 +59,7 @@ public class MemberService {
         return MemberType.getType(member);
     }
 
-    public MemberDetailProfile getJuniorProfile(Long memberId) {
+    public MemberDetailProfile getJuniorProfile(Long memberId, MemberType memberType) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(NotExistMember::new);
         List<TechTag> techTagList = getTechTagList(memberId);
@@ -79,10 +79,10 @@ public class MemberService {
                 ))
                 .toList();
 
-        return toMemberDetailProfile(member, juniorDetailInfo, techTagList, missionDtos);
+        return toMemberDetailProfile(member, memberType, juniorDetailInfo, techTagList, missionDtos);
     }
 
-    public MemberDetailProfile getSeniorProfile(Long memberId) {
+    public MemberDetailProfile getSeniorProfile(Long memberId, MemberType memberType) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(NotExistMember::new);
         List<TechTag> techTagList = getTechTagList(memberId);
@@ -103,7 +103,7 @@ public class MemberService {
                 ))
                 .toList();
 
-        return toMemberDetailProfile(member, seniorDetailInfo, techTagList, missionDtos);
+        return toMemberDetailProfile(member, memberType, seniorDetailInfo, techTagList, missionDtos);
     }
 
     private List<TechTag> getTechTagList(Long memberId) {
