@@ -34,6 +34,6 @@ sentry:
   traces-sample-rate: 1.0
 
 aws:
-  accessKey: ${AWS_ACCESS_KEY}
-  secretKey: ${AWS_SECRET_KEY}
+  accessKey: ${AWS_ACCESS_KEY_ID}
+  secretKey: ${AWS_SECRET_ACCESS_KEY}
   region: ap-northeast-2
