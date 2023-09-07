@@ -47,4 +47,4 @@ spring:
       chat-message: chat-message-dev
     group-id:
       user-log: user-log-c-dev-001
-      chat-message: chat-message-c-dev-001
+      chat-message: chat-message-c-dev-002
