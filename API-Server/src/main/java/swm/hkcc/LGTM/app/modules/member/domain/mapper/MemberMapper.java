@@ -1,5 +1,6 @@
 package swm.hkcc.LGTM.app.modules.member.domain.mapper;
 
+import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.dto.MemberDetailInfo;
 import swm.hkcc.LGTM.app.modules.member.dto.MemberDetailProfile;
@@ -10,9 +11,10 @@ import java.util.List;
 
 public class MemberMapper {
 
-    public static MemberDetailProfile toMemberDetailProfile(Member member, MemberDetailInfo memberDetailInfo, List<TechTag> techTagList, List<MissionDto> missionDtos) {
+    public static MemberDetailProfile toMemberDetailProfile(Member member, MemberType memberType, MemberDetailInfo memberDetailInfo, List<TechTag> techTagList, List<MissionDto> missionDtos) {
         return MemberDetailProfile.builder()
                 .memberId(member.getMemberId())
+                .memberType(memberType)
                 .githubId(member.getGithubId())
                 .nickName(member.getNickName())
                 .profileImageUrl(member.getProfileImageUrl())
