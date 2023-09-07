@@ -17,7 +17,7 @@ public interface MissionRegistrationRepository extends JpaRepository<MissionRegi
     int countByMission_MissionIdAndJunior_MemberId(Long missionId, Long juniorId);
 
     @Query("SELECT CASE WHEN COUNT(m) > 0 THEN true ELSE false END FROM MissionRegistration m WHERE m.mission.missionId = :missionId AND m.junior.memberId = :memberId")
-    boolean existsByMissionIdAndMemberId(Long missionId, Long memberId);
+    boolean existsByMissionIdAndMemberId(@Param("missionId") Long missionId,@Param("memberId") Long memberId);
 
     @Query("SELECT mr FROM MissionRegistration mr JOIN FETCH mr.mission WHERE mr.junior.memberId = :memberId")
     List<MissionRegistration> findAllByJuniorMemberIdWithMission(@Param("memberId") Long memberId);
