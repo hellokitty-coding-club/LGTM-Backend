@@ -16,7 +16,7 @@ spring:
 #            baseUri: "https://github.com/login/oauth/authorize"
 
 jwt:
-  header: Authorization
+  header: Authorization가
   secret: ${JWT_SECRET}
   token-validity-in-seconds: 8640000
 
@@ -32,3 +32,8 @@ sentry:
   # Set traces-sample-rate to 1.0 to capture 100% of transactions for performance monitoring.
   # We recommend adjusting this value in production.
   traces-sample-rate: 1.0
+
+aws:
+  accessKey: ${AWS_ACCESS_KEY}
+  secretKey: ${AWS_SECRET_KEY}
+  region: ap-northeast-2
