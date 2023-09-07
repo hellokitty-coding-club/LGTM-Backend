@@ -10,8 +10,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import swm.hkcc.consumer.app.dto.CommonMessage;
-import swm.hkcc.consumer.app.dto.TimestampLogMessage;
+import swm.hkcc.consumer.app.dto.LogMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +22,8 @@ public class KafkaConfig {
     private String bootstrapServers;
 
     @Bean
-    public ConsumerFactory<String, CommonMessage> consumerFactory() {
-        ErrorHandlingDeserializer<CommonMessage> errorHandlingDeserializer = new ErrorHandlingDeserializer<>(new JsonDeserializer<>(CommonMessage.class, false));
+    public ConsumerFactory<String, LogMessage> consumerFactory() {
+        ErrorHandlingDeserializer<LogMessage> errorHandlingDeserializer = new ErrorHandlingDeserializer<>(new JsonDeserializer<>(LogMessage.class, false));
 
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -35,8 +34,8 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, CommonMessage> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, CommonMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, LogMessage> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, LogMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
