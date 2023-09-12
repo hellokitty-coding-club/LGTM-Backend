@@ -7,7 +7,6 @@ import swm.hkcc.LGTM.app.global.dto.ApiDataResponse;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
 import swm.hkcc.LGTM.app.modules.registration.service.RegistrationService;
-import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
 
 @RestController
 @RequestMapping("/v1/mission/{missionId}")
@@ -31,6 +30,23 @@ public class RegistrationController {
         return ApiDataResponse.of(true);
     }
 
+    /**
+     * 주니어의 미션 조회 페이지를 반환한다.
+     *
+     * @param customUserDetails
+     * @param missionId
+     */
+    @GetMapping("/junior")
+    public ApiDataResponse<RegistrationJuniorResponse> getJuniorEnrollPage(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long missionId
+    ) {
+        // 주니어가 아닌 경우
+        // 자신의 미션이 아닐 경우 예외 반환
+        Member junior = customUserDetails.getMember();
+
+        return ApiDataResponse.of(registrationService.getJuniorEnrollInfo(junior, missionId));
+    }
 
     @GetMapping("/senior")
     public ApiDataResponse<RegistrationSeniorResponse> getSeniorEnrollPage(
