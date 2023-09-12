@@ -10,7 +10,7 @@ import swm.hkcc.LGTM.app.modules.tag.domain.TechTagPerMission;
 import java.util.List;
 
 public interface TechTagPerMissionRepository extends JpaRepository<TechTagPerMission, Long> {
-    @Cacheable(value = "tech_tag_per_mission", key = "#missionId")
+    @Cacheable(value = "tech_tag_per_mission", key = "#p0")
     @Query("select tpm.techTag from TechTagPerMission tpm where tpm.mission.missionId = :missionId")
     List<TechTag> findTechTagsByMissionId(@Param("missionId") Long missionId);
 }
