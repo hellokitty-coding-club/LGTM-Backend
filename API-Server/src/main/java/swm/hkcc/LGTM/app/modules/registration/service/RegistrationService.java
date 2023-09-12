@@ -14,16 +14,21 @@ import swm.hkcc.LGTM.app.modules.registration.domain.MissionHistory;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
+import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
+import swm.hkcc.LGTM.app.modules.registration.dto.registrationJuniorResponse.JuniorAdditionalInfo;
+import swm.hkcc.LGTM.app.modules.registration.dto.registrationJuniorResponse.RegistrationJuniorResponse;
 import swm.hkcc.LGTM.app.modules.registration.exception.TooManyLockError;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionHistoryRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.RedisLockRepository;
+import swm.hkcc.LGTM.app.modules.registration.domain.additionalInfoProvider.JuniorInfoProviderFactory;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
 
 import java.util.List;
 
+import static swm.hkcc.LGTM.app.modules.registration.mapper.RegistrationMapper.toRegistrationJuniorResponse;
 import static swm.hkcc.LGTM.app.modules.registration.mapper.RegistrationMapper.toRegistrationSeniorResponse;
 
 @Slf4j
@@ -36,6 +41,7 @@ public class RegistrationService {
     private final MissionHistoryRepository missionHistoryRepository;
     private final TechTagPerMissionRepository techTagPerMissionRepository;
     private final RedisLockRepository redisLockRepository;
+    private final JuniorInfoProviderFactory juniorInfoProviderFactory;
     private final RegistrationValidator registrationValidator;
     private final MemberValidator memberValidator;
     private static final int MAX_LOCK_RETRIES = 10;
@@ -77,6 +83,22 @@ public class RegistrationService {
         return toRegistrationSeniorResponse(mission, techTagList, memberInfoList);
     }
 
+
+    public RegistrationJuniorResponse getJuniorEnrollInfo(Member junior, Long missionId) {
+        memberValidator.validateJunior(junior);
+        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+        registrationValidator.validateMissionForJunior(mission, junior.getMemberId());
+
+        List<TechTag> techTagList = techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId());
+
+        List<MissionHistoryInfo> missionHistory = missionRegistrationRepository.getMissionHistoryByMissionAndJunior(mission, junior);
+        ProcessStatus status = getLatestProcessStatus(missionHistory);
+
+        JuniorAdditionalInfo additionalInfo = juniorInfoProviderFactory.getProvider(status).provide(junior, mission);
+
+        return toRegistrationJuniorResponse(mission, techTagList, missionHistory, status, additionalInfo);
+    }
+
     private void acquireLock(Long missionId) throws InterruptedException {
         int retries = MAX_LOCK_RETRIES;  // 최대 10번 재시도
         while (retries-- > 0 && !redisLockRepository.lock(missionId)) {
@@ -101,6 +123,10 @@ public class RegistrationService {
                 .build();
         missionHistoryRepository.save(missionHistory);
         return missionRegistration.getRegistrationId();
+    }
+
+    private ProcessStatus getLatestProcessStatus(List<MissionHistoryInfo> missionHistoryInfos) {
+        return missionHistoryInfos.get(missionHistoryInfos.size() - 1).getStatus();
     }
 
 }
