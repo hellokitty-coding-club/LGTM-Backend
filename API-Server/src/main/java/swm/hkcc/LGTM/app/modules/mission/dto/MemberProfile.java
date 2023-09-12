@@ -23,4 +23,7 @@ public class MemberProfile {
 
     @NotBlank
     private String company;
+
+    @NotBlank
+    private String position;
 }

@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import swm.hkcc.LGTM.app.global.constant.ResponseCode;
+import swm.hkcc.LGTM.app.modules.auth.constants.TokenType;
+import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
 import swm.hkcc.LGTM.app.modules.member.domain.Authority;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.exception.NotSeniorMember;
@@ -64,6 +66,9 @@ import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableRow;
 class SeniorDashboardControllerTest {
     private MockMvc mockMvc;
 
+    @Autowired
+    private TokenProvider tokenProvider;
+
     @MockBean
     private RegistrationService registrationService;
 
@@ -96,13 +101,14 @@ class SeniorDashboardControllerTest {
 
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        String memberAccessToken = getMockToken(member);
 
 
         // Setup mockResponse with the sample data
         List<TechTag> techTags = Arrays.asList(
-                new TechTag(7L, "Android"),
-                new TechTag(12L, "Kotlin"),
-                new TechTag(13L, "iOS")
+                new TechTag(7L, "Android", "https://img.url"),
+                new TechTag(12L, "Kotlin", "https://img.url"),
+                new TechTag(13L, "iOS", "https://img.url")
         );
 
         MemberRegisterSimpleInfo memberInfo = new MemberRegisterSimpleInfo();
@@ -125,11 +131,7 @@ class SeniorDashboardControllerTest {
         // when
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior", mission.getMissionId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -193,6 +195,7 @@ class SeniorDashboardControllerTest {
                                 fieldWithPath("data.techTagList").type(JsonFieldType.ARRAY).description("미션 기술 태그 리스트"),
                                 fieldWithPath("data.techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 아이디"),
                                 fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
+                                fieldWithPath("data.techTagList[].iconImageUrl").type(JsonFieldType.STRING).description("기술 태그 이미지 URL"),
                                 fieldWithPath("data.memberInfoList").type(JsonFieldType.ARRAY).description("미션 참가자 리스트"),
                                 fieldWithPath("data.memberInfoList[].memberId").type(JsonFieldType.NUMBER).description("회원 아이디"),
                                 fieldWithPath("data.memberInfoList[].nickname").type(JsonFieldType.STRING).description("회원 닉네임"),
@@ -216,23 +219,22 @@ class SeniorDashboardControllerTest {
 
         Member member = Member.builder()
                 .memberId(1L)
+                .githubId("test-token")
                 .build();
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
 
 
         given(registrationService.getSeniorEnrollInfo(member, mission.getMissionId())).willThrow(new NotSeniorMember());
+
+        String memberAccessToken = getMockToken(member);
         // when
 
         // then
         ResponseCode expectedResponseCode = ResponseCode.NOT_SENIOR_MEMBER;
 
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior", mission.getMissionId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
@@ -256,10 +258,12 @@ class SeniorDashboardControllerTest {
 
         Member member = Member.builder()
                 .memberId(1L)
+                .githubId("test-token")
                 .build();
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
 
+        String memberAccessToken = getMockToken(member);
 
         given(registrationService.getSeniorEnrollInfo(member, mission.getMissionId())).willThrow(new NotExistMission());
         // when
@@ -268,11 +272,7 @@ class SeniorDashboardControllerTest {
         ResponseCode expectedResponseCode = ResponseCode.NOT_EXIST_MISSION;
 
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior", mission.getMissionId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
@@ -296,10 +296,12 @@ class SeniorDashboardControllerTest {
 
         Member member = Member.builder()
                 .memberId(1L)
+                .githubId("test-token")
                 .build();
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
 
+        String memberAccessToken = getMockToken(member);
 
         given(registrationService.getSeniorEnrollInfo(member, mission.getMissionId())).willThrow(new NotMyMission());
         // when
@@ -308,11 +310,7 @@ class SeniorDashboardControllerTest {
         ResponseCode expectedResponseCode = ResponseCode.NOT_MY_MISSION;
 
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior", mission.getMissionId())
-                        .header(
-                                "Authorization",
-                                // todo : mock member로부터 토큰 생성해서 넣기
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.success").value(false))
@@ -326,4 +324,7 @@ class SeniorDashboardControllerTest {
                 preprocessResponse(prettyPrint())));       // response JSON 정렬하여 출력
     }
 
+    private String getMockToken(Member member) {
+        return tokenProvider.createToken(member.getGithubId(), TokenType.ACCESS_TOKEN);
+    }
 }

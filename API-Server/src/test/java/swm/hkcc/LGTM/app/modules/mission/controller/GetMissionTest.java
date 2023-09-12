@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import swm.hkcc.LGTM.app.global.constant.ResponseCode;
+import swm.hkcc.LGTM.app.modules.auth.constants.TokenType;
+import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
+import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.member.domain.Authority;
 import swm.hkcc.LGTM.app.modules.member.domain.Bank;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
@@ -33,7 +36,6 @@ import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionScrapRepository;
-import swm.hkcc.LGTM.app.modules.mission.service.CreateMissionServiceImpl;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
@@ -45,8 +47,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
-import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
-import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.epages.restdocs.apispec.ResourceDocumentation.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -69,6 +70,9 @@ import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableRow;
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 public class GetMissionTest {
     private MockMvc mockMvc;
+
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @MockBean
     private MissionRepository missionRepository;
@@ -108,6 +112,7 @@ public class GetMissionTest {
         Mission mockMission = createMockMission();
         Senior mockSenior = createMockSenior();
         Member mockMember = createMockMember();
+        String memberAccessToken = getMockToken(mockMember);
         List<TechTag> mockTechTags = createMockTechTags();
 
         given(missionRepository.findById(anyLong())).willReturn(Optional.of(mockMission));
@@ -115,17 +120,16 @@ public class GetMissionTest {
         given(missionScrapRepository.existsByScrapper_MemberIdAndMission_MissionId(anyLong(), anyLong())).willReturn(true);
         given(techTagPerMissionRepository.findTechTagsByMissionId(anyLong())).willReturn(mockTechTags);
         given(missionRegistrationRepository.countByMission_MissionId(anyLong())).willReturn(5);
-        given(memberService.getMemberType(anyLong())).willReturn("JUNIOR");
+        given(missionRepository.existsByMissionIdAndWriter_MemberId(anyLong(), anyLong())).willReturn(true);
+        given(missionRegistrationRepository.existsByMissionIdAndMemberId(anyLong(), anyLong())).willReturn(true);
+        given(memberService.getMemberType(anyLong())).willReturn(MemberType.JUNIOR);
         given(memberRepository.findOneByGithubId(anyString())).willReturn(Optional.ofNullable(mockMember));
 
         // when
 
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/detail")
-                        .header(
-                                "Authorization",
-                                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJnaXRodWJJZCI6InRlc3QtdG9rZW4tc2VuaW9yIiwiaWF0IjoxNjkwNTAyNzI0LCJleHAiOjE3ODUxMTA3MjR9.gKBXkTs-71pdu6wGE3_aP5oSXaAeO8tkN-tYi_mB0es"
-                        )
+                        .header("Authorization", "Bearer " + memberAccessToken)
                         .queryParam("missionId", "27")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -144,8 +148,9 @@ public class GetMissionTest {
                 .andExpect(jsonPath("$.data.techTagList[1].name").value("Kotlin"))
                 .andExpect(jsonPath("$.data.techTagList[2].techTagId").value(13))
                 .andExpect(jsonPath("$.data.techTagList[2].name").value("iOS"))
+                .andExpect(jsonPath("$.data.remainingRegisterDays").value(7))
                 .andExpect(jsonPath("$.data.missionRepositoryUrl").value("https://www.github.com/kxxhyorim"))
-                .andExpect(jsonPath("$.data.registrationDueDate").value("2100-01-01"))
+                .andExpect(jsonPath("$.data.registrationDueDate").value(LocalDate.now().plusDays(7).toString()))
                 .andExpect(jsonPath("$.data.maxPeopleNumber").value(10))
                 .andExpect(jsonPath("$.data.currentPeopleNumber").value(5))
                 .andExpect(jsonPath("$.data.price").value(10000))
@@ -158,7 +163,10 @@ public class GetMissionTest {
                 .andExpect(jsonPath("$.data.memberProfile.profileImageUrl").value("https://avatars.githubusercontent.com/u/899645?v=4"))
                 .andExpect(jsonPath("$.data.memberProfile.githubId").value("test-token-senior"))
                 .andExpect(jsonPath("$.data.memberProfile.company").value("(주)TestCompany"))
-                .andExpect(jsonPath("$.data.scraped").value(true));
+                .andExpect(jsonPath("$.data.memberProfile.position").value("안드로이드 엔지니어"))
+                .andExpect(jsonPath("$.data.scraped").value(true))
+                .andExpect(jsonPath("$.data.participated").value(true))
+                .andExpect(jsonPath("$.data.closed").value(false));
 
         // document
         actions
@@ -175,6 +183,10 @@ public class GetMissionTest {
                                                 .table(
                                                         tableHead("Header", "Data Type", "Description"),
                                                         tableRow("Authorization", "String", "Bearer token for authentication")
+                                                )
+                                                .table(
+                                                        tableHead("Qeury Params", "Data Type", "Description"),
+                                                        tableRow("missionId", "Long", "조회할 미션 아이디")
                                                 )
                                                 .line()
                                                 .h1("[Errors]")
@@ -195,6 +207,9 @@ public class GetMissionTest {
                                 .requestHeaders(
                                         headerWithName("Authorization").description("access token")
                                 )
+                                .queryParameters(
+                                        parameterWithName("missionId").description("미션 ID")
+                                )
                                 .responseFields(
                                         fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
                                         fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답 코드"),
@@ -206,6 +221,8 @@ public class GetMissionTest {
                                         fieldWithPath("data.techTagList").type(JsonFieldType.ARRAY).description("기술 태그 리스트"),
                                         fieldWithPath("data.techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 ID"),
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
+                                        fieldWithPath("data.techTagList[].iconImageUrl").type(JsonFieldType.STRING).description("기술 태그 이미지 URL"),
+                                        fieldWithPath("data.remainingRegisterDays").type(JsonFieldType.NUMBER).description("남은 등록 기간"),
                                         fieldWithPath("data.missionRepositoryUrl").type(JsonFieldType.STRING).description("미션 저장소 URL"),
                                         fieldWithPath("data.registrationDueDate").type(JsonFieldType.STRING).description("모집 마감일"),
                                         fieldWithPath("data.maxPeopleNumber").type(JsonFieldType.NUMBER).description("최대 참가 인원"),
@@ -221,7 +238,10 @@ public class GetMissionTest {
                                         fieldWithPath("data.memberProfile.profileImageUrl").type(JsonFieldType.STRING).description("회원 프로필 이미지 URL"),
                                         fieldWithPath("data.memberProfile.githubId").type(JsonFieldType.STRING).description("회원의 Github ID"),
                                         fieldWithPath("data.memberProfile.company").type(JsonFieldType.STRING).description("회원의 회사명"),
-                                        fieldWithPath("data.scraped").type(JsonFieldType.BOOLEAN).description("미션을 스크랩했는지 여부")
+                                        fieldWithPath("data.memberProfile.position").type(JsonFieldType.STRING).description("회원의 직책"),
+                                        fieldWithPath("data.scraped").type(JsonFieldType.BOOLEAN).description("미션을 스크랩했는지 여부"),
+                                        fieldWithPath("data.participated").type(JsonFieldType.BOOLEAN).description("미션에 참여하고있는지 여부"),
+                                        fieldWithPath("data.closed").type(JsonFieldType.BOOLEAN).description("미션이 마감되었는지 여부")
                                 )
                                 .build())));
 
@@ -232,14 +252,17 @@ public class GetMissionTest {
                 TechTag.builder()
                         .techTagId(7L)
                         .name("Android")
+                        .iconImageUrl("https://www.github.com/kxxhyorim")
                         .build(),
                 TechTag.builder()
                         .techTagId(12L)
                         .name("Kotlin")
+                        .iconImageUrl("https://www.github.com/kxxhyorim")
                         .build(),
                 TechTag.builder()
                         .techTagId(13L)
                         .name("iOS")
+                        .iconImageUrl("https://www.github.com/kxxhyorim")
                         .build()
         );
     }
@@ -257,7 +280,7 @@ public class GetMissionTest {
                 .description("content")
                 .recommendTo("ReomnnandTo")
                 .notRecommendTo("notReomnnandTo")
-                .registrationDueDate(LocalDate.of(2100, 1, 1))
+                .registrationDueDate(LocalDate.now().plusDays(7))
                 .price(10000)
                 .maxPeopleNumber(10)
                 .build();
@@ -281,7 +304,7 @@ public class GetMissionTest {
                 .seniorId(123L)
                 .companyInfo("(주)TestCompany")
                 .careerPeriod(24)
-                .position("Senior Developer")
+                .position("안드로이드 엔지니어")
                 .accountNumber("1234-5678-910")
                 .bank(Bank.K_BANK)
                 .member(createMockMember())
@@ -299,5 +322,9 @@ public class GetMissionTest {
 
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         return member;
+    }
+
+    private String getMockToken(Member member) {
+        return tokenProvider.createToken(member.getGithubId(), TokenType.ACCESS_TOKEN);
     }
 }
