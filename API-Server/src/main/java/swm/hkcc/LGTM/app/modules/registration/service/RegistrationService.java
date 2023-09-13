@@ -98,6 +98,25 @@ public class RegistrationService {
         return MissionHistoryInfo.from(history);
     }
 
+    public MissionHistoryInfo completeReview(Member senior, Long missionId, Long juniorId) {
+        memberValidator.validateSenior(senior);
+        Mission mission = getValidatedMissionForSenior(missionId, senior.getMemberId());
+        memberValidator.validateJunior(juniorId);
+
+        MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), juniorId)
+                .orElseThrow(NotRegisteredMission::new);
+        registration.completeReview();
+        MissionHistory history = MissionHistory.builder()
+                .registration(registration)
+                .status(ProcessStatus.MISSION_FINISHED)
+                .build();
+
+        missionRegistrationRepository.save(registration);
+        missionHistoryRepository.save(history);
+
+        return MissionHistoryInfo.from(history);
+    }
+
     private Mission getValidatedMissionForJunior(long missionId, long juniorId) {
         Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
         registrationValidator.validateMissionForJunior(mission, juniorId);
