@@ -14,6 +14,7 @@ import swm.hkcc.LGTM.app.modules.registration.domain.MissionHistory;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
+import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
 import swm.hkcc.LGTM.app.modules.registration.exception.TooManyLockError;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionHistoryRepository;
@@ -21,6 +22,7 @@ import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepo
 import swm.hkcc.LGTM.app.modules.registration.repository.RedisLockRepository;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
+import swm.hkcc.LGTM.app.modules.registration.exception.NotRegisteredMission;
 
 import java.util.List;
 
@@ -77,6 +79,37 @@ public class RegistrationService {
         return toRegistrationSeniorResponse(mission, techTagList, memberInfoList);
     }
 
+    public MissionHistoryInfo confirmPayment(Member senior, Long missionId, Long juniorId) {
+        memberValidator.validateSenior(senior);
+        Mission mission = getValidatedMissionForSenior(missionId, senior.getMemberId());
+        memberValidator.validateJunior(juniorId);
+
+        MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), juniorId)
+                .orElseThrow(NotRegisteredMission::new);
+        registration.confirmPayment();
+        MissionHistory history = MissionHistory.builder()
+                .registration(registration)
+                .status(ProcessStatus.PAYMENT_CONFIRMATION)
+                .build();
+
+        missionRegistrationRepository.save(registration);
+        missionHistoryRepository.save(history);
+
+        return MissionHistoryInfo.from(history);
+    }
+
+    private Mission getValidatedMissionForJunior(long missionId, long juniorId) {
+        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+        registrationValidator.validateMissionForJunior(mission, juniorId);
+        return mission;
+    }
+
+    private Mission getValidatedMissionForSenior(long missionId, long seniorId) {
+        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+        registrationValidator.validateMissionForSenior(mission, seniorId);
+        return mission;
+    }
+
     private void acquireLock(Long missionId) throws InterruptedException {
         int retries = MAX_LOCK_RETRIES;  // 최대 10번 재시도
         while (retries-- > 0 && !redisLockRepository.lock(missionId)) {
@@ -101,6 +134,10 @@ public class RegistrationService {
                 .build();
         missionHistoryRepository.save(missionHistory);
         return missionRegistration.getRegistrationId();
+    }
+
+    private ProcessStatus getLatestProcessStatus(List<MissionHistoryInfo> missionHistoryInfos) {
+        return missionHistoryInfos.get(missionHistoryInfos.size() - 1).getStatus();
     }
 
 }
