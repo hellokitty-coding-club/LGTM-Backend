@@ -4,6 +4,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import swm.hkcc.LGTM.app.modules.member.domain.Junior;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 
@@ -21,4 +22,6 @@ public interface MissionRegistrationRepository extends JpaRepository<MissionRegi
 
     @Query("SELECT mr FROM MissionRegistration mr JOIN FETCH mr.mission WHERE mr.junior.memberId = :memberId")
     List<MissionRegistration> findAllByJuniorMemberIdWithMission(@Param("memberId") Long memberId);
+
+    Optional<MissionRegistration> findByMission_MissionIdAndJunior_MemberId(Long missionId, Long juniorId);
 }

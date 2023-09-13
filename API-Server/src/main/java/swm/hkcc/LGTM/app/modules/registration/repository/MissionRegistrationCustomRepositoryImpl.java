@@ -10,6 +10,7 @@ import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionHistory;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
+import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,5 +47,24 @@ public class MissionRegistrationCustomRepositoryImpl implements MissionRegistrat
                 .leftJoin(missionHistory).on(missionRegistration.eq(missionHistory.registration))
                 .where(missionRegistration.mission.eq(mission), missionRegistration.junior.eq(junior), missionRegistration.status.eq(status))
                 .fetchOne());
+    }
+
+    @Override
+    public List<MissionHistoryInfo> getMissionHistoryByMissionAndJunior(Mission mission, Member junior) {
+        List<Tuple> tuples = jpaQueryFactory.select(missionHistory.createdAt, missionHistory.status)
+                .from(missionHistory)
+                .where(missionHistory.registration.mission.eq(mission), missionHistory.registration.junior.eq(junior))
+                .orderBy(missionHistory.createdAt.asc())
+                .fetch();
+        return tuples.stream().map(MissionHistoryInfo::createMissionHistoryInfo).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Member> getSeniorByMissionAndJunior(Mission findMission) {
+        return Optional.ofNullable(jpaQueryFactory.select(member)
+                .from(mission)
+                .leftJoin(member).on(mission.writer.eq(member))
+                .where(mission.eq(mission))
+                .fetchFirst());
     }
 }
