@@ -17,7 +17,7 @@ public class LogMessage {
 
     public UserDataLog toUserDataLog(String topic, int partition, long receivedTimeStamp) {
         return UserDataLog.builder()
-//                .logId(eventLogName + "_" + receivedTimeStamp + "_" + topic + "_" + partition)
+                .logId(eventLogName + "_" + receivedTimeStamp + "_" + topic + "_" + partition)
                 .eventLogName(eventLogName)
                 .screenName(screenName)
                 .logVersion(logVersion)

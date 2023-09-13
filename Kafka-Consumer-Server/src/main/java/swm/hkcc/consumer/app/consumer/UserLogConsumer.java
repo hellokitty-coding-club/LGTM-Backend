@@ -25,6 +25,6 @@ public class UserLogConsumer {
             @Header(KafkaHeaders.RECEIVED_TIMESTAMP) long ts
     ) {
         log.info(String.format("Json message recieved -> %s", message.toString()));
-        userDataLogRepository.saveLog(message.toUserDataLog(topic, partition, ts));
+        userDataLogRepository.save(message.toUserDataLog(topic, partition, ts));
     }
 }
