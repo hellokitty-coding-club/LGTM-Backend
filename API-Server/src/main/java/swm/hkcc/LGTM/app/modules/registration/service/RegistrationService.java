@@ -117,6 +117,24 @@ public class RegistrationService {
         return MissionHistoryInfo.from(history);
     }
 
+    public MissionHistoryInfo registerPayment(Member junior, Long missionId) {
+        memberValidator.validateJunior(junior);
+        Mission mission = getValidatedMissionForJunior(missionId, junior.getMemberId());
+
+        MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), junior.getMemberId())
+                .orElseThrow(NotRegisteredMission::new);
+        registration.registerPayment();
+        MissionHistory history = MissionHistory.builder()
+                .registration(registration)
+                .status(ProcessStatus.PAYMENT_CONFIRMATION)
+                .build();
+
+        missionRegistrationRepository.save(registration);
+        missionHistoryRepository.save(history);
+
+        return MissionHistoryInfo.from(history);
+    }
+
     private Mission getValidatedMissionForJunior(long missionId, long juniorId) {
         Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
         registrationValidator.validateMissionForJunior(mission, juniorId);
