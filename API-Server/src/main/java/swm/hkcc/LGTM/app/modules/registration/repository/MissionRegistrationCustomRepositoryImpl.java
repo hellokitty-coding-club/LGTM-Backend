@@ -1,6 +1,5 @@
 package swm.hkcc.LGTM.app.modules.registration.repository;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static swm.hkcc.LGTM.app.modules.member.domain.QMember.member;
 import static swm.hkcc.LGTM.app.modules.mission.domain.QMission.mission;
@@ -62,13 +60,22 @@ public class MissionRegistrationCustomRepositoryImpl implements MissionRegistrat
         return jpaQueryFactory
                 .select(Projections.constructor(
                         MissionHistoryInfo.class,
-                        missionHistory.createdAt,
-                        missionHistory.status)
+                        missionHistory.status,
+                        missionHistory.createdAt)
                 )
                 .from(missionHistory)
                 .where(missionHistory.registration.mission.eq(mission),
                         missionHistory.registration.junior.eq(junior))
                 .orderBy(missionHistory.createdAt.asc())
                 .fetch();
+    }
+
+    @Override
+    public Optional<Member> getSeniorByMissionAndJunior(Mission findMission) {
+        return Optional.ofNullable(jpaQueryFactory.select(member)
+                .from(mission)
+                .leftJoin(member).on(mission.writer.eq(member))
+                .where(mission.eq(mission))
+                .fetchFirst());
     }
 }

@@ -1,18 +1,16 @@
 package swm.hkcc.LGTM.app.modules.registration.dto;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static swm.hkcc.LGTM.app.modules.member.domain.QMember.member;
-import static swm.hkcc.LGTM.app.modules.registration.domain.QMissionRegistration.missionRegistration;
-
 @Data
+@NoArgsConstructor
 public class MemberRegisterSimpleInfo implements Serializable {
     private Long memberId;
     private String nickname;

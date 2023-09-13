@@ -16,4 +16,6 @@ public interface MissionRegistrationCustomRepository {
     public Optional<LocalDateTime> getStatusDateTime(ProcessStatus status, Mission mission, Member junior);
 
     public List<MissionHistoryInfo> getMissionHistoryByMissionAndJunior(Mission mission, Member junior);
+
+    public Optional<Member> getSeniorByMissionAndJunior(Mission mission);
 }
