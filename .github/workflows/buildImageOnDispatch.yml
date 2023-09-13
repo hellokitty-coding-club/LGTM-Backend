@@ -5,7 +5,7 @@ on: workflow_dispatch
 env:
       ECR_ROOT: ${{ secrets.AWS_ECR_ROOT }}
       ECR_REPOSITORY: lgtm-api-server
-      IMAGE_NAME: lgtm-api-server:0.0.${{ github.run_number }} 
+      IMAGE_NAME: lgtm-api-server:0.0.${{ github.run_number }}
       
 jobs:
   build:
@@ -28,6 +28,11 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
+        
+    - name: Start Redis
+      uses: supercharge/redis-github-action@1.6.0
+      with:
+        redis-version: '7'
 
     - name: Build and test Spring Boot project
       run: |

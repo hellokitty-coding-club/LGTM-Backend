@@ -4,13 +4,15 @@ import jakarta.persistence.*;
 import lombok.*;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.JuniorSignUpRequest;
 
+import java.io.Serializable;
+
 @Entity
 @Getter
 @ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Junior {
+public class Junior implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

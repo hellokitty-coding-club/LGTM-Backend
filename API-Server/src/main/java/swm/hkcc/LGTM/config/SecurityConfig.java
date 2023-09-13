@@ -1,5 +1,7 @@
 package swm.hkcc.LGTM.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +14,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import swm.hkcc.LGTM.app.global.constant.ResponseCode;
+import swm.hkcc.LGTM.app.global.dto.ApiResponse;
 import swm.hkcc.LGTM.app.modules.auth.utils.jwt.JwtFilter;
 import swm.hkcc.LGTM.app.modules.auth.utils.jwt.TokenProvider;
 
+import java.io.IOException;
 import java.util.List;
 
 @Configuration
@@ -23,49 +28,26 @@ import java.util.List;
 public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic().disable()
                 .csrf().disable()
-                .cors(c -> {
-                            CorsConfigurationSource source = request -> {
-                                CorsConfiguration config = new CorsConfiguration();
-                                config.setAllowedOrigins(
-                                        List.of("*")
-                                );
-                                config.setAllowedMethods(
-                                        List.of("*")
-                                );
-                                return config;
-                            };
-                            c.configurationSource(source);
-                        }
-                )
+                .cors(c -> c.configurationSource(corsConfiguration()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeHttpRequests()
-                .requestMatchers("/v1/signup/**", "/v1/intro").permitAll()
-                .requestMatchers("/login/**").permitAll() // for temporary test
-                .requestMatchers("/docs/**", "/v3/api-docs/swagger-config").permitAll()
-                .requestMatchers("/admin/**").permitAll() // todo : .hasRole("ADMIN")
-                .requestMatchers("/**").hasRole("USER")
-                .anyRequest().denyAll()
+                .and()
+                .authorizeHttpRequests()
+                    .requestMatchers("/v1/signup/**", "/v1/intro", "/login/**", "/docs/**", "/v3/api-docs/swagger-config", "/admin/**")
+                        .permitAll()
+                    .requestMatchers("/**").hasRole("USER")
+                        .anyRequest().denyAll()
                 .and()
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    response.setStatus(403);
-                    response.setCharacterEncoding("utf-8");
-                    response.setContentType("text/html; charset=UTF-8");
-                    response.getWriter().write("Invalid role");
-                })
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(401);
-                    response.setCharacterEncoding("utf-8");
-                    response.setContentType("text/html; charset=UTF-8");
-                    response.getWriter().write("Invalid authentication");
-                });
+                .accessDeniedHandler((request, response, authException) -> sendErrorResponse(response, ResponseCode.INVALID_ROLE))
+                .authenticationEntryPoint((request, response, accessDeniedException) -> sendErrorResponse(response, ResponseCode.INVALID_AUTHENTICATION));
 
         return http.build();
     }
@@ -74,5 +56,21 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-}
 
+    private CorsConfigurationSource corsConfiguration() {
+        return request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedOrigins(List.of("*"));
+            config.setAllowedMethods(List.of("*"));
+            return config;
+        };
+    }
+
+    private void sendErrorResponse(HttpServletResponse response, ResponseCode responseCode) throws IOException {
+        ApiResponse apiResponse = ApiResponse.of(false, responseCode);
+        response.setStatus(responseCode.getHttpStatus().value());
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/json; charset=UTF-8");
+        response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+    }
+}

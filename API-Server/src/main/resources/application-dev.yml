@@ -48,3 +48,7 @@ spring:
     group-id:
       user-log: user-log-c-dev-001
       chat-message: chat-message-c-dev-001
+  data:
+    redis:
+      cluster:
+        nodes: ${DEV_REDIS_NODES}

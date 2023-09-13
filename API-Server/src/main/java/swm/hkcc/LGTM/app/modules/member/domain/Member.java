@@ -5,16 +5,17 @@ import lombok.*;
 import swm.hkcc.LGTM.app.global.entity.BaseEntity;
 import swm.hkcc.LGTM.app.modules.auth.dto.signUp.CommonUserData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@ToString
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
