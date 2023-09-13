@@ -53,7 +53,20 @@ public enum ResponseCode {
     FULL_REGISTER_MEMBERS(10301, HttpStatus.BAD_REQUEST, "미션 등록 인원이 모두 찼습니다."),
     ALREADY_REGISTERED_MISSION(10302, HttpStatus.BAD_REQUEST, "이미 참가한 미션입니다."),
     TOO_MANY_LOCK_ERROR(10303, HttpStatus.INTERNAL_SERVER_ERROR, "대기시간이 만료되어 미션 참가에 실패했습니다."),
-    NOT_MY_MISSION(10304, HttpStatus.BAD_REQUEST, "접근 권한이 없는 미션입니다.")
+    NOT_MY_MISSION(10304, HttpStatus.BAD_REQUEST, "접근 권한이 없는 미션입니다."),
+    NOT_REGISTERED_MISSION(10305, HttpStatus.BAD_REQUEST, "주니어가 참가하지 않은 미션입니다."),
+    NOT_REGISTERED_MISSION_INTERNAL(10306, HttpStatus.INTERNAL_SERVER_ERROR, "DB 조회 과정에서 문제가 발생했습니다: 주니어가 참가하지 않은 미션입니다."),
+    INVALID_PROCESS_STATUS(10307, HttpStatus.BAD_REQUEST, "현재 진행상태에서 수행할 수 없는 작업입니다."),
+
+
+    // 104xx : 검색
+
+    // 105xx :
+
+    // 106xx :
+
+    // 107xx : Review(feedback)
+    NOT_EXIST_REVIEW_INTERNAL(10700, HttpStatus.INTERNAL_SERVER_ERROR, "DB 조회 과정에서 문제가 발생했습니다: 존재하지 않는 리뷰입니다.")
     ;
 
     private final Integer code;
