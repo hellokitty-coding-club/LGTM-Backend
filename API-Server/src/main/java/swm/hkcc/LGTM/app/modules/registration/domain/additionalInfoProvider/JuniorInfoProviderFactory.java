@@ -24,7 +24,7 @@ public class JuniorInfoProviderFactory {
     }
 
     public JuniorInfoProvider getProvider(ProcessStatus status) {
-        return providerMap.getOrDefault(status, new JuniorDefaultInfoProvider());
+        return providerMap.getOrDefault(status, defaultInfoProvider);
     }
 
 }
