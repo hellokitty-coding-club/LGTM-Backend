@@ -9,6 +9,7 @@ import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
 import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
 import swm.hkcc.LGTM.app.modules.registration.dto.registrationJuniorResponse.RegistrationJuniorResponse;
 import swm.hkcc.LGTM.app.modules.registration.service.RegistrationService;
+import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse.RegistrationSeniorDetailResponse;
 
 @RestController
 @RequestMapping("/v1/mission/{missionId}")
@@ -56,4 +57,15 @@ public class RegistrationController {
         Member senior = customUserDetails.getMember();
         return ApiDataResponse.of(registrationService.getSeniorEnrollInfo(senior, missionId));
     }
+
+    @GetMapping("/senior/{juniorId}")
+    public ApiDataResponse<RegistrationSeniorDetailResponse> getSeniorEnrollDetail(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long missionId,
+            @PathVariable Long juniorId
+    ) {
+        Member senior = customUserDetails.getMember();
+        return ApiDataResponse.of(registrationService.getSeniorEnrollDetail(senior, missionId, juniorId));
+    }
+
 }
