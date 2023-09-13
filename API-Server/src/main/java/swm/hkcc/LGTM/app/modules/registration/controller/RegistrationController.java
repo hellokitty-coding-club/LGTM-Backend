@@ -41,8 +41,6 @@ public class RegistrationController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long missionId
     ) {
-        // 주니어가 아닌 경우
-        // 자신의 미션이 아닐 경우 예외 반환
         Member junior = customUserDetails.getMember();
 
         return ApiDataResponse.of(registrationService.getJuniorEnrollInfo(junior, missionId));
