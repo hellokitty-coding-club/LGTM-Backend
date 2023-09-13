@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MissionRegistrationRepository extends JpaRepository<MissionRegistration, Long>, MissionRegistrationCustomRepository {
