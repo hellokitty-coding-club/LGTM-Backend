@@ -16,13 +16,13 @@ import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
+import swm.hkcc.LGTM.app.modules.registration.exception.NotRegisteredMission;
 import swm.hkcc.LGTM.app.modules.registration.exception.TooManyLockError;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionHistoryRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.RedisLockRepository;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
-import swm.hkcc.LGTM.app.modules.registration.exception.NotRegisteredMission;
 
 import java.util.List;
 
@@ -127,6 +127,24 @@ public class RegistrationService {
         MissionHistory history = MissionHistory.builder()
                 .registration(registration)
                 .status(ProcessStatus.PAYMENT_CONFIRMATION)
+                .build();
+
+        missionRegistrationRepository.save(registration);
+        missionHistoryRepository.save(history);
+
+        return MissionHistoryInfo.from(history);
+    }
+
+    public MissionHistoryInfo registerPullRequest(Member junior, Long missionId, String githubPullRequestUrl) {
+        memberValidator.validateJunior(junior);
+        Mission mission = getValidatedMissionForJunior(missionId, junior.getMemberId());
+
+        MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), junior.getMemberId())
+                .orElseThrow(NotRegisteredMission::new);
+        registration.registerPullRequest(githubPullRequestUrl);
+        MissionHistory history = MissionHistory.builder()
+                .registration(registration)
+                .status(ProcessStatus.CODE_REVIEW)
                 .build();
 
         missionRegistrationRepository.save(registration);
