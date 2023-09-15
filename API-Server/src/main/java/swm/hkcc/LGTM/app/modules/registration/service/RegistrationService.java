@@ -89,7 +89,7 @@ public class RegistrationService {
         registration.confirmPayment();
         MissionHistory history = MissionHistory.builder()
                 .registration(registration)
-                .status(ProcessStatus.PAYMENT_CONFIRMATION)
+                .status(registration.getStatus())
                 .build();
 
         missionRegistrationRepository.save(registration);
@@ -108,7 +108,7 @@ public class RegistrationService {
         registration.completeReview();
         MissionHistory history = MissionHistory.builder()
                 .registration(registration)
-                .status(ProcessStatus.MISSION_FINISHED)
+                .status(registration.getStatus())
                 .build();
 
         missionRegistrationRepository.save(registration);
@@ -119,14 +119,14 @@ public class RegistrationService {
 
     public MissionHistoryInfo registerPayment(Member junior, Long missionId) {
         memberValidator.validateJunior(junior);
-        Mission mission = getValidatedMissionForJunior(missionId, junior.getMemberId());
+        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
 
         MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), junior.getMemberId())
                 .orElseThrow(NotRegisteredMission::new);
         registration.registerPayment();
         MissionHistory history = MissionHistory.builder()
                 .registration(registration)
-                .status(ProcessStatus.PAYMENT_CONFIRMATION)
+                .status(registration.getStatus())
                 .build();
 
         missionRegistrationRepository.save(registration);
@@ -137,26 +137,20 @@ public class RegistrationService {
 
     public MissionHistoryInfo registerPullRequest(Member junior, Long missionId, String githubPullRequestUrl) {
         memberValidator.validateJunior(junior);
-        Mission mission = getValidatedMissionForJunior(missionId, junior.getMemberId());
+        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
 
         MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), junior.getMemberId())
                 .orElseThrow(NotRegisteredMission::new);
         registration.registerPullRequest(githubPullRequestUrl);
         MissionHistory history = MissionHistory.builder()
                 .registration(registration)
-                .status(ProcessStatus.CODE_REVIEW)
+                .status(registration.getStatus())
                 .build();
 
         missionRegistrationRepository.save(registration);
         missionHistoryRepository.save(history);
 
         return MissionHistoryInfo.from(history);
-    }
-
-    private Mission getValidatedMissionForJunior(long missionId, long juniorId) {
-        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
-        registrationValidator.validateMissionForJunior(mission, juniorId);
-        return mission;
     }
 
     private Mission getValidatedMissionForSenior(long missionId, long seniorId) {
