@@ -175,7 +175,8 @@ class GetMemberProfileTest {
                 .andExpect(jsonPath("$.data.memberMissionHistory.[0].missionTitle").value("당근마켓 리드가 직접 알려주는 당근마켓 인프라 찍먹하기"))
                 .andExpect(jsonPath("$.data.memberMissionHistory.[0].techTagList.[0].techTagId").value(7))
                 .andExpect(jsonPath("$.data.memberMissionHistory.[0].techTagList.[0].name").value("Android"))
-                .andExpect(jsonPath("$.data.agreeWithEventInfo").value(true));
+                .andExpect(jsonPath("$.data.agreeWithEventInfo").value(true))
+                .andExpect(jsonPath("$.data.myProfile").value(true));
 
         // document
         actions
@@ -191,7 +192,8 @@ class GetMemberProfileTest {
                                                 .h1("[Request values]")
                                                 .table(
                                                         tableHead("Header", "Data Type", "Description"),
-                                                        tableRow("Authorization", "String", "Bearer token for authentication")
+                                                        tableRow("Authorization", "String", "Bearer token for authentication"),
+                                                        tableRow("Params", "Long", "Member Id - 만약 null로 보내면, 토큰의 memberId를 사용한다.")
                                                 )
                                                 .line()
                                                 .h1("[Errors]")
@@ -237,7 +239,8 @@ class GetMemberProfileTest {
                                         fieldWithPath("data.memberMissionHistory[].techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 ID"),
                                         fieldWithPath("data.memberMissionHistory[].techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
                                         fieldWithPath("data.memberMissionHistory[].techTagList[].iconImageUrl").description("기술 태그 이미지 URL"),
-                                        fieldWithPath("data.agreeWithEventInfo").type(JsonFieldType.BOOLEAN).description("이벤트 정보 동의 여부")
+                                        fieldWithPath("data.agreeWithEventInfo").type(JsonFieldType.BOOLEAN).description("이벤트 정보 동의 여부"),
+                                        fieldWithPath("data.myProfile").type(JsonFieldType.BOOLEAN).description("내 프로필 여부, memberId를 보내지 않았다면 true일 것이고, 다른 유저의 프로필을 조회하기 위해 memberId를 보냈다면 false일 것이다.")
                                 )
                                 .build())));
 
@@ -291,7 +294,8 @@ class GetMemberProfileTest {
                 .andExpect(jsonPath("$.data.memberMissionHistory.[0].missionTitle").value("당근마켓 리드가 직접 알려주는 당근마켓 인프라 찍먹하기"))
                 .andExpect(jsonPath("$.data.memberMissionHistory.[0].techTagList.[0].techTagId").value(7))
                 .andExpect(jsonPath("$.data.memberMissionHistory.[0].techTagList.[0].name").value("Android"))
-                .andExpect(jsonPath("$.data.agreeWithEventInfo").value(true));
+                .andExpect(jsonPath("$.data.agreeWithEventInfo").value(true))
+                .andExpect(jsonPath("$.data.myProfile").value(true));
 
         // document
         actions
@@ -351,7 +355,8 @@ class GetMemberProfileTest {
                                         fieldWithPath("data.memberMissionHistory[].techTagList[].techTagId").type(JsonFieldType.NUMBER).description("기술 태그 ID"),
                                         fieldWithPath("data.memberMissionHistory[].techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
                                         fieldWithPath("data.memberMissionHistory[].techTagList[].iconImageUrl").description("기술 태그 이미지 URL"),
-                                        fieldWithPath("data.agreeWithEventInfo").type(JsonFieldType.BOOLEAN).description("이벤트 정보 동의 여부")
+                                        fieldWithPath("data.agreeWithEventInfo").type(JsonFieldType.BOOLEAN).description("이벤트 정보 동의 여부"),
+                                        fieldWithPath("data.myProfile").type(JsonFieldType.BOOLEAN).description("내 프로필 여부, memberId를 보내지 않았다면 true일 것이고, 다른 유저의 프로필을 조회하기 위해 memberId를 보냈다면 false일 것이다.")
                                 )
                                 .build())));
 
