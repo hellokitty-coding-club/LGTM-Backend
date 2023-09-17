@@ -11,10 +11,11 @@ import java.util.List;
 
 public class MemberMapper {
 
-    public static MemberDetailProfile toMemberDetailProfile(Member member, MemberType memberType, MemberDetailInfo memberDetailInfo, List<TechTag> techTagList, List<MissionDto> missionDtos) {
+    public static MemberDetailProfile toMemberDetailProfile(Member member, MemberType memberType, boolean isMyProfile, MemberDetailInfo memberDetailInfo, List<TechTag> techTagList, List<MissionDto> missionDtos) {
         return MemberDetailProfile.builder()
                 .memberId(member.getMemberId())
                 .memberType(memberType)
+                .isMyProfile(isMyProfile)
                 .githubId(member.getGithubId())
                 .nickName(member.getNickName())
                 .profileImageUrl(member.getProfileImageUrl())

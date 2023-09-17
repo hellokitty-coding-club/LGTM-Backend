@@ -13,6 +13,7 @@ import java.util.List;
 public class MemberDetailProfile {
     private Long memberId;
     private MemberType memberType;
+    private boolean isMyProfile;
     private String githubId;
     private String nickName;
     private String profileImageUrl;
