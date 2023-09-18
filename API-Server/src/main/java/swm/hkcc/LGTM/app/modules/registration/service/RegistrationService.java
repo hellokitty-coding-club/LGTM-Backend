@@ -10,6 +10,7 @@ import swm.hkcc.LGTM.app.modules.member.service.MemberValidator;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
+import swm.hkcc.LGTM.app.modules.mission.utils.GithubUrlValidator;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionHistory;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
@@ -87,10 +88,7 @@ public class RegistrationService {
         MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), juniorId)
                 .orElseThrow(NotRegisteredMission::new);
         registration.confirmPayment();
-        MissionHistory history = MissionHistory.builder()
-                .registration(registration)
-                .status(registration.getStatus())
-                .build();
+        MissionHistory history = MissionHistory.from(registration);
 
         missionRegistrationRepository.save(registration);
         missionHistoryRepository.save(history);
@@ -106,10 +104,7 @@ public class RegistrationService {
         MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), juniorId)
                 .orElseThrow(NotRegisteredMission::new);
         registration.completeReview();
-        MissionHistory history = MissionHistory.builder()
-                .registration(registration)
-                .status(registration.getStatus())
-                .build();
+        MissionHistory history = MissionHistory.from(registration);
 
         missionRegistrationRepository.save(registration);
         missionHistoryRepository.save(history);
@@ -124,10 +119,7 @@ public class RegistrationService {
         MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), junior.getMemberId())
                 .orElseThrow(NotRegisteredMission::new);
         registration.registerPayment();
-        MissionHistory history = MissionHistory.builder()
-                .registration(registration)
-                .status(registration.getStatus())
-                .build();
+        MissionHistory history = MissionHistory.from(registration);
 
         missionRegistrationRepository.save(registration);
         missionHistoryRepository.save(history);
@@ -142,10 +134,7 @@ public class RegistrationService {
         MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), junior.getMemberId())
                 .orElseThrow(NotRegisteredMission::new);
         registration.registerPullRequest(githubPullRequestUrl);
-        MissionHistory history = MissionHistory.builder()
-                .registration(registration)
-                .status(registration.getStatus())
-                .build();
+        MissionHistory history = MissionHistory.from(registration);
 
         missionRegistrationRepository.save(registration);
         missionHistoryRepository.save(history);
@@ -188,5 +177,4 @@ public class RegistrationService {
     private ProcessStatus getLatestProcessStatus(List<MissionHistoryInfo> missionHistoryInfos) {
         return missionHistoryInfos.get(missionHistoryInfos.size() - 1).getStatus();
     }
-
 }
