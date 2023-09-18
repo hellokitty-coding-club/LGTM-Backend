@@ -56,6 +56,8 @@ public enum ResponseCode {
     NOT_MY_MISSION(10304, HttpStatus.BAD_REQUEST, "접근 권한이 없는 미션입니다."),
     NOT_REGISTERED_MISSION(10305, HttpStatus.BAD_REQUEST, "주니어가 참가하지 않은 미션입니다."),
     NOT_REGISTERED_MISSION_INTERNAL(10306, HttpStatus.INTERNAL_SERVER_ERROR, "DB 조회 과정에서 문제가 발생했습니다: 주니어가 참가하지 않은 미션입니다."),
+    INVALID_PROCESS_STATUS(10307, HttpStatus.BAD_REQUEST, "현재 진행상태에서 수행할 수 없는 작업입니다."),
+
 
     // 104xx : 검색
 

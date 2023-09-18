@@ -1,6 +1,7 @@
 package swm.hkcc.LGTM.app.modules.registration.domain;
 
 import lombok.Getter;
+import swm.hkcc.LGTM.app.modules.registration.exception.InvalidProcessStatus;
 
 @Getter
 public enum ProcessStatus {
@@ -33,5 +34,14 @@ public enum ProcessStatus {
 
     public boolean isCompleted() {
         return this.sequence >= MISSION_FINISHED.sequence;
+    }
+
+    public ProcessStatus getNextStatus() {
+        for (ProcessStatus processStatus : ProcessStatus.values()) {
+            if (processStatus.sequence == this.sequence + 1) {
+                return processStatus;
+            }
+        }
+        throw new InvalidProcessStatus(this);
     }
 }

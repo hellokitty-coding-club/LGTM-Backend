@@ -12,6 +12,7 @@ import swm.hkcc.LGTM.app.modules.member.service.MemberValidator;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
+import swm.hkcc.LGTM.app.modules.mission.utils.GithubUrlValidator;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionHistory;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
@@ -127,6 +128,75 @@ public class RegistrationService {
         return toRegistrationJuniorResponse(mission, techTagList, missionHistory, status, additionalInfo);
     }
 
+    public MissionHistoryInfo confirmPayment(Member senior, Long missionId, Long juniorId) {
+        memberValidator.validateSenior(senior);
+        Mission mission = getValidatedMissionForSenior(missionId, senior.getMemberId());
+        memberValidator.validateJunior(juniorId);
+
+        MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), juniorId)
+                .orElseThrow(NotRegisteredMission::new);
+        registration.confirmPayment();
+        MissionHistory history = MissionHistory.from(registration);
+
+        missionRegistrationRepository.save(registration);
+        missionHistoryRepository.save(history);
+
+        return MissionHistoryInfo.from(history);
+    }
+
+    public MissionHistoryInfo completeReview(Member senior, Long missionId, Long juniorId) {
+        memberValidator.validateSenior(senior);
+        Mission mission = getValidatedMissionForSenior(missionId, senior.getMemberId());
+        memberValidator.validateJunior(juniorId);
+
+        MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), juniorId)
+                .orElseThrow(NotRegisteredMission::new);
+        registration.completeReview();
+        MissionHistory history = MissionHistory.from(registration);
+
+        missionRegistrationRepository.save(registration);
+        missionHistoryRepository.save(history);
+
+        return MissionHistoryInfo.from(history);
+    }
+
+    public MissionHistoryInfo registerPayment(Member junior, Long missionId) {
+        memberValidator.validateJunior(junior);
+        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+
+        MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), junior.getMemberId())
+                .orElseThrow(NotRegisteredMission::new);
+        registration.registerPayment();
+        MissionHistory history = MissionHistory.from(registration);
+
+        missionRegistrationRepository.save(registration);
+        missionHistoryRepository.save(history);
+
+        return MissionHistoryInfo.from(history);
+    }
+
+    public MissionHistoryInfo registerPullRequest(Member junior, Long missionId, String githubPullRequestUrl) {
+        memberValidator.validateJunior(junior);
+        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+        GithubUrlValidator.validateGithubPrUrl(githubPullRequestUrl);
+
+        MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), junior.getMemberId())
+                .orElseThrow(NotRegisteredMission::new);
+        registration.registerPullRequest(githubPullRequestUrl);
+        MissionHistory history = MissionHistory.from(registration);
+
+        missionRegistrationRepository.save(registration);
+        missionHistoryRepository.save(history);
+
+        return MissionHistoryInfo.from(history);
+    }
+
+    private Mission getValidatedMissionForSenior(long missionId, long seniorId) {
+        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+        registrationValidator.validateMissionForSenior(mission, seniorId);
+        return mission;
+    }
+
     private void acquireLock(Long missionId) throws InterruptedException {
         int retries = MAX_LOCK_RETRIES;  // 최대 10번 재시도
         while (retries-- > 0 && !redisLockRepository.lock(missionId)) {
@@ -156,5 +226,4 @@ public class RegistrationService {
     private ProcessStatus getLatestProcessStatus(List<MissionHistoryInfo> missionHistoryInfos) {
         return missionHistoryInfos.get(missionHistoryInfos.size() - 1).getStatus();
     }
-
 }
