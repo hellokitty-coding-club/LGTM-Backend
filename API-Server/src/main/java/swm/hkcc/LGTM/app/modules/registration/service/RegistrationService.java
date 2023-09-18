@@ -130,6 +130,7 @@ public class RegistrationService {
     public MissionHistoryInfo registerPullRequest(Member junior, Long missionId, String githubPullRequestUrl) {
         memberValidator.validateJunior(junior);
         Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+        GithubUrlValidator.validateGithubPrUrl(githubPullRequestUrl);
 
         MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), junior.getMemberId())
                 .orElseThrow(NotRegisteredMission::new);
