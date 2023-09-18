@@ -111,15 +111,16 @@ class SeniorDashboardControllerTest {
                 new TechTag(13L, "iOS", "https://img.url")
         );
 
-        MemberRegisterSimpleInfo memberInfo = new MemberRegisterSimpleInfo();
-        memberInfo.setMemberId(114L);
-        memberInfo.setNickname("1호선 광인");
-        memberInfo.setGithubId("No.1_crazier");
-        memberInfo.setProfileImageUrl("https://loremflickr.com/cache/resized/65535_52449252296_9a9872253f_c_460_460_nofilter.jpg");
-        memberInfo.setProcessStatus(ProcessStatus.WAITING_FOR_PAYMENT);
+        MemberRegisterSimpleInfo memberInfo = new MemberRegisterSimpleInfo(
+                114L,
+                "1호선 광인",
+                "No.1_crazier",
+                "https://loremflickr.com/cache/resized/65535_52449252296_9a9872253f_c_460_460_nofilter.jpg",
+                ProcessStatus.WAITING_FOR_PAYMENT,
+                null
+        );
         memberInfo.setPaymentDate(null);
         memberInfo.setMissionFinishedDate(null);
-        memberInfo.setGithubPrUrl("");
 
         RegistrationSeniorResponse mockResponse = RegistrationSeniorResponse.builder()
                 .missionName("당근마켓 리드가 직접 알려주는 당근마켓 인프라 찍먹하기")

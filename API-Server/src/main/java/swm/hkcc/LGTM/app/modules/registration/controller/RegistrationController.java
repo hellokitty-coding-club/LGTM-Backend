@@ -9,8 +9,10 @@ import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
 import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.PullRequestRegisterRequest;
-import swm.hkcc.LGTM.app.modules.registration.service.RegistrationService;
 import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
+import swm.hkcc.LGTM.app.modules.registration.dto.registrationJuniorResponse.RegistrationJuniorResponse;
+import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse.RegistrationSeniorDetailResponse;
+import swm.hkcc.LGTM.app.modules.registration.service.RegistrationService;
 
 @RestController
 @RequestMapping("/v1/mission/{missionId}")
@@ -34,6 +36,21 @@ public class RegistrationController {
         return ApiDataResponse.of(true);
     }
 
+    /**
+     * 주니어의 미션 조회 페이지를 반환한다.
+     *
+     * @param customUserDetails
+     * @param missionId
+     */
+    @GetMapping("/junior")
+    public ApiDataResponse<RegistrationJuniorResponse> getJuniorEnrollPage(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long missionId
+    ) {
+        Member junior = customUserDetails.getMember();
+
+        return ApiDataResponse.of(registrationService.getJuniorEnrollInfo(junior, missionId));
+    }
 
     @GetMapping("/senior")
     public ApiDataResponse<RegistrationSeniorResponse> getSeniorEnrollPage(
@@ -53,6 +70,7 @@ public class RegistrationController {
         Member senior = customUserDetails.getMember();
         return ApiDataResponse.of(registrationService.confirmPayment(senior, missionId, juniorId));
     }
+
     @PostMapping("/review/{juniorId}")
     public ApiDataResponse<MissionHistoryInfo> reviewJunior(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -62,6 +80,7 @@ public class RegistrationController {
         Member senior = customUserDetails.getMember();
         return ApiDataResponse.of(registrationService.completeReview(senior, missionId, juniorId));
     }
+
     @PostMapping("/payment")
     public ApiDataResponse<MissionHistoryInfo> payment(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -70,6 +89,7 @@ public class RegistrationController {
         Member junior = customUserDetails.getMember();
         return ApiDataResponse.of(registrationService.registerPayment(junior, missionId));
     }
+
     @PostMapping("/pr")
     public ApiDataResponse<MissionHistoryInfo> pr(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
@@ -79,4 +99,15 @@ public class RegistrationController {
         Member junior = customUserDetails.getMember();
         return ApiDataResponse.of(registrationService.registerPullRequest(junior, missionId, prRequest.getGithubPrUrl()));
     }
+
+    @GetMapping("/senior/{juniorId}")
+    public ApiDataResponse<RegistrationSeniorDetailResponse> getSeniorEnrollDetail(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long missionId,
+            @PathVariable Long juniorId
+    ) {
+        Member senior = customUserDetails.getMember();
+        return ApiDataResponse.of(registrationService.getSeniorEnrollDetail(senior, missionId, juniorId));
+    }
+
 }

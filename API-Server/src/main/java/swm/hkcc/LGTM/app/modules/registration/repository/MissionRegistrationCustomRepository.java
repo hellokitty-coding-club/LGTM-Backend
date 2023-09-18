@@ -1,9 +1,7 @@
 package swm.hkcc.LGTM.app.modules.registration.repository;
 
-import com.querydsl.core.Tuple;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
-import swm.hkcc.LGTM.app.modules.registration.domain.MissionHistory;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;

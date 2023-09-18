@@ -1,13 +1,12 @@
 package swm.hkcc.LGTM.app.modules.registration.repository;
 
-import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
-import swm.hkcc.LGTM.app.modules.registration.domain.MissionHistory;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
@@ -15,7 +14,6 @@ import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static swm.hkcc.LGTM.app.modules.member.domain.QMember.member;
 import static swm.hkcc.LGTM.app.modules.mission.domain.QMission.mission;
@@ -27,17 +25,25 @@ import static swm.hkcc.LGTM.app.modules.registration.domain.QMissionRegistration
 @RequiredArgsConstructor
 public class MissionRegistrationCustomRepositoryImpl implements MissionRegistrationCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
+
     @Override
     public List<MemberRegisterSimpleInfo> getRegisteredMembersByMission(Long missionId) {
-        List<Tuple> tuples = jpaQueryFactory.select(member.memberId, member.nickName, member.githubId, member.profileImageUrl, missionRegistration.githubPullRequestUrl, missionRegistration.status)
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        MemberRegisterSimpleInfo.class,
+                        member.memberId,
+                        member.nickName,
+                        member.githubId,
+                        member.profileImageUrl,
+                        missionRegistration.status,
+                        missionRegistration.githubPullRequestUrl)
+                )
                 .from(mission)
                 .innerJoin(missionRegistration).on(mission.missionId.eq(missionRegistration.mission.missionId))
                 .leftJoin(member).on(missionRegistration.junior.memberId.eq(member.memberId))
                 .where(mission.missionId.eq(missionId))
                 .orderBy(missionRegistration.createdAt.asc())
                 .fetch();
-
-        return tuples.stream().map(MemberRegisterSimpleInfo::createMemberRegisterInfo).collect(Collectors.toList());
     }
 
     @Override
@@ -51,12 +57,17 @@ public class MissionRegistrationCustomRepositoryImpl implements MissionRegistrat
 
     @Override
     public List<MissionHistoryInfo> getMissionHistoryByMissionAndJunior(Mission mission, Member junior) {
-        List<Tuple> tuples = jpaQueryFactory.select(missionHistory.createdAt, missionHistory.status)
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        MissionHistoryInfo.class,
+                        missionHistory.status,
+                        missionHistory.createdAt)
+                )
                 .from(missionHistory)
-                .where(missionHistory.registration.mission.eq(mission), missionHistory.registration.junior.eq(junior))
+                .where(missionHistory.registration.mission.eq(mission),
+                        missionHistory.registration.junior.eq(junior))
                 .orderBy(missionHistory.createdAt.asc())
                 .fetch();
-        return tuples.stream().map(MissionHistoryInfo::createMissionHistoryInfo).collect(Collectors.toList());
     }
 
     @Override

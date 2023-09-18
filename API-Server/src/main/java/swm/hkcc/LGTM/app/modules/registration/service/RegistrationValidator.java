@@ -38,7 +38,6 @@ public class RegistrationValidator {
         }
     }
 
-
     private void validateNotRegisteredMission(Mission mission, Long memberId) {
         if (missionRegistrationRepository.countByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), memberId) > 0) {
             throw new AlreadyRegisteredMission();
