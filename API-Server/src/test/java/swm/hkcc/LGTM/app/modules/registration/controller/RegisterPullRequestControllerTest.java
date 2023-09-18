@@ -34,6 +34,7 @@ import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
 import swm.hkcc.LGTM.app.modules.member.exception.NotJuniorMember;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
+import swm.hkcc.LGTM.app.modules.mission.exception.InvalidGithubUrl;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
@@ -174,6 +175,11 @@ public class RegisterPullRequestControllerTest {
                                                         ResponseCode.NOT_REGISTERED_MISSION.getHttpStatus().toString(),
                                                         ResponseCode.NOT_REGISTERED_MISSION.getCode().toString(),
                                                         ResponseCode.NOT_REGISTERED_MISSION.getMessage()
+                                                ),
+                                                tableRow(
+                                                        ResponseCode.INVALID_GITHUB_URL.getHttpStatus().toString(),
+                                                        ResponseCode.INVALID_GITHUB_URL.getCode().toString(),
+                                                        ResponseCode.INVALID_GITHUB_URL.getMessage()
                                                 )
                                         ).build())
                                 .requestHeaders(headerWithName("Authorization").description("access token"))
@@ -240,6 +246,25 @@ public class RegisterPullRequestControllerTest {
         ResponseCode expectedResponseCode = ResponseCode.NOT_REGISTERED_MISSION;
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockJunior()));
         given(registrationService.registerPullRequest(any(), any(), any())).willThrow(new NotRegisteredMission());
+        // when
+        // then
+        ResultActions actions = mockMvc.perform(post("/v1/mission/{missionId}/pr", getMockMission().getMissionId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(PullRequestRegisterRequest.builder().githubPrUrl("http://github.com/owner/pr").build()))
+                        .header("Authorization", "Bearer " + getMockToken(getMockJunior())))
+                .andExpect(status().is(expectedResponseCode.getHttpStatus().value()))
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.responseCode").value(expectedResponseCode.getCode()))
+                .andExpect(jsonPath("$.message").value(expectedResponseCode.getMessage()));
+    }
+
+    @Test
+    @DisplayName("registerPullRequest_INVALID_GITHUB_URL")
+    void registerPullRequest_예외_INVALID_GITHUB_URL() throws Exception {
+        // given
+        ResponseCode expectedResponseCode = ResponseCode.INVALID_GITHUB_URL;
+        given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockJunior()));
+        given(registrationService.registerPullRequest(any(), any(), any())).willThrow(new InvalidGithubUrl());
         // when
         // then
         ResultActions actions = mockMvc.perform(post("/v1/mission/{missionId}/pr", getMockMission().getMissionId())
