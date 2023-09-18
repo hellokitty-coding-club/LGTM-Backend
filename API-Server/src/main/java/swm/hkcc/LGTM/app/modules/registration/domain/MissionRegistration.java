@@ -47,23 +47,23 @@ public class MissionRegistration extends BaseEntity implements Serializable {
     public void confirmPayment() {
         if (this.getStatus() != ProcessStatus.PAYMENT_CONFIRMATION)
             throw new InvalidProcessStatus(this.getStatus());
-        this.status = ProcessStatus.MISSION_PROCEEDING;
+        this.status = this.status.getNextStatus();
         this.isPayed = true;
     }
     public void completeReview() {
         if(this.getStatus() != ProcessStatus.CODE_REVIEW)
             throw new InvalidProcessStatus(this.getStatus());
-        this.status = ProcessStatus.MISSION_FINISHED;
+        this.status = this.status.getNextStatus();
     }
     public void registerPayment() {
         if(this.getStatus() != ProcessStatus.WAITING_FOR_PAYMENT)
             throw new InvalidProcessStatus(this.getStatus());
-        this.status = ProcessStatus.PAYMENT_CONFIRMATION;
+        this.status = this.status.getNextStatus();
     }
     public void registerPullRequest(String githubPullRequestUrl) {
         if(this.getStatus() != ProcessStatus.MISSION_PROCEEDING)
             throw new InvalidProcessStatus(this.getStatus());
-        this.status = ProcessStatus.CODE_REVIEW;
+        this.status = this.status.getNextStatus();
         this.isPullRequestCreated = true;
         this.githubPullRequestUrl = githubPullRequestUrl;
     }
