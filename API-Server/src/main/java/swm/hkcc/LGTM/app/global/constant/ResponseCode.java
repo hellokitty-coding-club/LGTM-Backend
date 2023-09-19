@@ -47,6 +47,7 @@ public enum ResponseCode {
     // 102xx : Mission
     NOT_EXIST_MISSION(10200, HttpStatus.BAD_REQUEST, "존재하지 않는 미션입니다."),
     INVALID_GITHUB_URL(10201, HttpStatus.BAD_REQUEST, "유효하지 않은 Github Repository URL입니다. public repository인 github 주소인지 확인해주세요."),
+    IMPOSSIBLE_TO_DELETE(10202, HttpStatus.BAD_REQUEST, "이미 참여한 사람이 있어 삭제할 수 없는 미션입니다."),
 
     // 103xx : Mission Registration
     MISS_REGISTER_DEADLINE(10300, HttpStatus.BAD_REQUEST, "미션 등록 기간이 이미 마감되었습니다."),
