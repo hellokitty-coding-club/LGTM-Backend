@@ -12,6 +12,7 @@ import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequest;
 import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionResponse;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailViewResponse;
 import swm.hkcc.LGTM.app.modules.mission.service.CreateMissionService;
+import swm.hkcc.LGTM.app.modules.mission.service.DeleteMissionService;
 import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
 
 @RestController
@@ -19,6 +20,7 @@ import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
 @RequiredArgsConstructor
 public class MissionController {
     private final CreateMissionService createMissionService;
+    private final DeleteMissionService deleteMissionService;
     private final MissionService missionService;
 
     @PostMapping
@@ -32,6 +34,21 @@ public class MissionController {
 
         return ApiDataResponse.of(CreateMissionResponse.builder()
                 .missionId(mission.getMissionId())
+                .writerId(member.getMemberId())
+                .build());
+    }
+
+    @DeleteMapping("/{missionId}")
+    public ApiDataResponse<CreateMissionResponse> createMissinon(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long missionId
+    ) {
+        Member member = customUserDetails.getMember();
+
+        deleteMissionService.deleteMission(member, missionId);
+
+        return ApiDataResponse.of(CreateMissionResponse.builder()
+                .missionId(missionId)
                 .writerId(member.getMemberId())
                 .build());
     }
