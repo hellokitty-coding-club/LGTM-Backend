@@ -39,7 +39,7 @@ public class MissionController {
     }
 
     @DeleteMapping("/{missionId}")
-    public ApiDataResponse<CreateMissionResponse> createMissinon(
+    public ApiDataResponse<CreateMissionResponse> deleteMissinon(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long missionId
     ) {
