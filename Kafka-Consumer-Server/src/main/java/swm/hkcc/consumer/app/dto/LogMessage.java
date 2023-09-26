@@ -3,6 +3,7 @@ package swm.hkcc.consumer.app.dto;
 import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
+import swm.hkcc.consumer.app.domain.UserLog;
 
 import java.util.Map;
 
@@ -24,6 +25,18 @@ public class LogMessage {
                 .logData(logData)
                 .topic(topic)
                 .partition(partition)
+                .receivedTimeStamp(receivedTimeStamp)
+                .build();
+    }
+
+    public UserLog toUserLog(String topic, int partition, long receivedTimeStamp) {
+        return UserLog.builder()
+                .eventLogName(eventLogName)
+                .screenName(screenName)
+                .logVersion(logVersion)
+                .logData(logData)
+                .topic(topic)
+                .partitionNumber(partition)
                 .receivedTimeStamp(receivedTimeStamp)
                 .build();
     }
