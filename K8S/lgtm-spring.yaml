@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lgtmspring-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lgtmspring
+  template:
+    metadata:
+      labels:
+        app: lgtmspring
+    spec:
+      containers:
+      - name: lgtmspring-container
+        image: 495079454658.dkr.ecr.ap-northeast-2.amazonaws.com/lgtm-api-server:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: lgtmspring-configmap
