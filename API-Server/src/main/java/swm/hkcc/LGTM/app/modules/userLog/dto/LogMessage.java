@@ -1,13 +1,15 @@
 package swm.hkcc.LGTM.app.modules.userLog.dto;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Map;
 
 @Data
-@Getter @ToString
+@Getter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LogMessage {
     private String eventLogName;
     private String screenName;

@@ -1,7 +1,8 @@
 package swm.hkcc.consumer.app.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import swm.hkcc.consumer.app.domain.UserLog;
 import swm.hkcc.consumer.app.dto.UserDataLog;
 
-public interface UserDataLogRepository extends MongoRepository<UserDataLog, String> {
+public interface UserDataLogRepository extends JpaRepository<UserLog, Long> {
 }

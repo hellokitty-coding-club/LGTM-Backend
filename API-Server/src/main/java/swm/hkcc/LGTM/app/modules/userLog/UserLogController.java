@@ -20,7 +20,7 @@ public class UserLogController {
     private final LogProducer logProducer;
 
     @PostMapping
-    public ApiDataResponse<?> timestampLog(
+    public ApiDataResponse<?> userlog(
             @RequestBody LogMessage logMessage,
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {

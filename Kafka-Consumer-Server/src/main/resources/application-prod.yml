@@ -3,6 +3,26 @@ spring:
     activate:
       on-profile: prod
 
+  datasource:
+    url: ${PROD_DB_HOST}
+    username: ${PROD_DB_USER}
+    password: ${PROD_DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: false
+    defer-datasource-initialization: false
+    sql:
+      init:
+        mode: never
+
   # Kafka
   kafka:
     bootstrap-servers: 10.0.75.183:9092,10.0.90.35:9092,10.0.71.136:9092
