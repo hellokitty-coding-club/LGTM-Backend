@@ -96,6 +96,12 @@ class UserLogControllerTest {
                 .screenName("test-screen")
                 .logVersion(1)
                 .logData(new ConcurrentHashMap<>())
+                .sessionID("test-session")
+                .userID(1)
+                .deviceOS("test-os")
+                .deviceModel("test-model")
+                .appVersion("test-version")
+                .region("test-region")
                 .build();
         System.out.println(new ObjectMapper().writeValueAsString(logMessage));
 
@@ -134,7 +140,13 @@ class UserLogControllerTest {
                                                 tableRow("eventLogName", "String", "이벤트 로그 이름"),
                                                 tableRow("logVersion", "Integer", "로그 버전, name & version이 동일한 경우, logData의 값 구성은 동일해야 한다"),
                                                 tableRow("screenName", "String", "화면 이름, 로그 전송 시점 사용자의 뷰 이름"),
-                                                tableRow("logData", "Map", "로그 데이터")
+                                                tableRow("logData", "Map", "로그 데이터"),
+                                                tableRow("sessionID", "String", "세션 ID, 클라이언트측에서 UUID 생성"),
+                                                tableRow("userID", "Integer", "사용자 ID"),
+                                                tableRow("deviceOS", "String", "디바이스 OS, ex) IOS 16"),
+                                                tableRow("deviceModel", "String", "디바이스 모델, ex) Iphone 16"),
+                                                tableRow("appVersion", "String", "앱 버전, ex) 1.0.0"),
+                                                tableRow("region", "String", "지역, ex) KR")
                                         )
                                         .line()
                                         .h1("[Response Body]")
@@ -152,7 +164,13 @@ class UserLogControllerTest {
                                         fieldWithPath("eventLogName").description("이벤트 로그 이름"),
                                         fieldWithPath("screenName").description("화면 이름"),
                                         fieldWithPath("logVersion").description("로그 버전"),
-                                        fieldWithPath("logData").description("로그 데이터")
+                                        fieldWithPath("logData").description("로그 데이터"),
+                                        fieldWithPath("sessionID").description("세션 ID"),
+                                        fieldWithPath("userID").description("사용자 ID"),
+                                        fieldWithPath("deviceOS").description("디바이스 OS"),
+                                        fieldWithPath("deviceModel").description("디바이스 모델"),
+                                        fieldWithPath("appVersion").description("앱 버전"),
+                                        fieldWithPath("region").description("지역")
                                 )
                                 .responseFields(
                                         fieldWithPath("success").description("성공 여부"),
