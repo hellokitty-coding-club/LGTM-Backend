@@ -14,6 +14,7 @@ public class LogMessage {
     private String eventLogName;
     private String screenName;
     private Integer logVersion;
+    private Integer userID;
 
     private Map<String, Object> logData;
 }

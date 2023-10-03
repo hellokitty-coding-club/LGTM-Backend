@@ -27,6 +27,8 @@ public class UserLog {
 
     private Integer logVersion;
 
+    private Integer userID;
+
     @Type(JsonType.class)
     @Column(columnDefinition = "json")
     private Map<String, Object> logData;

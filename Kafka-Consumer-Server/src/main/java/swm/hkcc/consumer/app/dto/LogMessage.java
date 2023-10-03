@@ -13,6 +13,7 @@ public class LogMessage {
     private String eventLogName;
     private String screenName;
     private Integer logVersion;
+    private Integer userID;
 
     private Map<String, Object> logData;
 
@@ -22,6 +23,7 @@ public class LogMessage {
                 .eventLogName(eventLogName)
                 .screenName(screenName)
                 .logVersion(logVersion)
+                .userID(userID)
                 .logData(logData)
                 .topic(topic)
                 .partition(partition)
@@ -34,6 +36,7 @@ public class LogMessage {
                 .eventLogName(eventLogName)
                 .screenName(screenName)
                 .logVersion(logVersion)
+                .userID(userID)
                 .logData(logData)
                 .topic(topic)
                 .partitionNumber(partition)

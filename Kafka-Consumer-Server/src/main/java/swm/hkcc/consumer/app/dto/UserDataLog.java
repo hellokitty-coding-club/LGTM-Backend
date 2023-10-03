@@ -21,6 +21,8 @@ public class UserDataLog {
 
     private Integer logVersion;
 
+    private Integer userID;
+
     private Map<String, Object> logData;
 
     private String topic;
