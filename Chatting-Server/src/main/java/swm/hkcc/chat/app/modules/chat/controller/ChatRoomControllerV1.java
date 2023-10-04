@@ -19,7 +19,7 @@ import swm.hkcc.chat.app.modules.chat.service.ChatService;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/chatroom/v1")
+@RequestMapping("/chatroom")
 public class ChatRoomControllerV1 {
 
     private final ChatService chatService;

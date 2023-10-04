@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import swm.hkcc.chat.app.modules.chat.model.ChatDto;
+import swm.hkcc.chat.app.modules.chat.service.ChatProducer;
 import swm.hkcc.chat.app.modules.chat.service.ChatService;
 
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.List;
 @Controller
 public class ChatController {
 
-    private final SimpMessageSendingOperations template;
+    private final ChatProducer chatProducer;
     private final ChatService chatService;
 
     @MessageMapping("/chat/enterUser")
@@ -36,15 +37,16 @@ public class ChatController {
         headerAccessor.getSessionAttributes().put("roomId", chat.getRoomId());
 
         chat.setMessage(chat.getSender() + " 님 입장!!");
-        template.convertAndSend("/sub/chatroom/detail/" + chat.getRoomId(), chat);
-
+        chatProducer.sendChatMessage(chat);
+//        template.convertAndSend("/sub/chatroom/detail/" + chat.getRoomId(), chat);
     }
 
     @MessageMapping("/chat/sendMessage")
     public void sendMessage(@Payload ChatDto chat) {
         log.info("CHAT {}", chat);
         chat.setMessage(chat.getMessage());
-        template.convertAndSend("/sub/chatroom/detail/" + chat.getRoomId(), chat);
+        chatProducer.sendChatMessage(chat);
+//        template.convertAndSend("/sub/chatroom/detail/" + chat.getRoomId(), chat);
 
     }
 
@@ -73,7 +75,8 @@ public class ChatController {
                     .message(username + " 님 퇴장!!")
                     .build();
 
-            template.convertAndSend("/sub/chatroom/detail/" + roomId, chat);
+            chatProducer.sendChatMessage(chat);
+            // template.convertAndSend("/sub/chatroom/detail/" + roomId, chat);
         }
     }
 
