@@ -52,6 +52,12 @@ dependencies {
 	implementation 'org.webjars:stomp-websocket:2.3.4'
 	// gson
 	implementation 'com.google.code.gson:gson:2.9.0'
+
+	// Apache Kafka
+	implementation 'org.springframework.kafka:spring-kafka:3.0.9'
+
+//	// mongodb atlas
+//	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 }
 
 tasks.named('test') {
