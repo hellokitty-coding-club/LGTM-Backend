@@ -21,6 +21,7 @@ import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
 @RequiredArgsConstructor
 public class MissionController {
     private final CreateMissionService createMissionService;
+    private final UpdateMissionService updateMissionService;
     private final DeleteMissionService deleteMissionService;
     private final MissionService missionService;
 
@@ -47,7 +48,7 @@ public class MissionController {
     ) {
         Member member = customUserDetails.getMember();
 
-        Mission mission = createMissionService.updateMission(member, missionId, requestBody);
+        Mission mission = updateMissionService.updateMission(member, missionId, requestBody);
 
         return ApiDataResponse.of(CreateMissionResponse.builder()
                 .missionId(mission.getMissionId())
