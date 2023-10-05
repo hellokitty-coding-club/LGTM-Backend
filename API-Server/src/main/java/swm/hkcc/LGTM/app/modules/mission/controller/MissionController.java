@@ -11,6 +11,7 @@ import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequest;
 import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionResponse;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailViewResponse;
+import swm.hkcc.LGTM.app.modules.mission.dto.UpdateMissionRequest;
 import swm.hkcc.LGTM.app.modules.mission.service.CreateMissionService;
 import swm.hkcc.LGTM.app.modules.mission.service.DeleteMissionService;
 import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
@@ -31,6 +32,22 @@ public class MissionController {
         Member member = customUserDetails.getMember();
 
         Mission mission = createMissionService.createMission(member, requestBody);
+
+        return ApiDataResponse.of(CreateMissionResponse.builder()
+                .missionId(mission.getMissionId())
+                .writerId(member.getMemberId())
+                .build());
+    }
+
+    @PatchMapping("/{missionId}")
+    public ApiDataResponse<CreateMissionResponse> updateMissinon(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long missionId,
+            @Valid @RequestBody UpdateMissionRequest requestBody
+    ) {
+        Member member = customUserDetails.getMember();
+
+        Mission mission = createMissionService.updateMission(member, missionId, requestBody);
 
         return ApiDataResponse.of(CreateMissionResponse.builder()
                 .missionId(mission.getMissionId())
