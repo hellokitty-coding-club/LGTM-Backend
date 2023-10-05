@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Builder
 @EqualsAndHashCode
-public class CreateMissionRequest {
+public class UpdateMissionRequest {
     @NotBlank
     @URL
     private String missionRepositoryUrl;
@@ -22,7 +22,6 @@ public class CreateMissionRequest {
     @Size(max = 100)
     private String title;
 
-    @NotNull
     protected List<String> tagList;
 
     @NotBlank
@@ -35,16 +34,13 @@ public class CreateMissionRequest {
     @Size(max = 1000)
     private String notRecommendTo;
 
-    @NotNull
     @FutureOrPresent
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate registrationDueDate;
 
-    @NotNull
     @PositiveOrZero
     private Integer price;
 
-    @NotNull
     @Positive
     private Integer maxPeopleNumber;
 
