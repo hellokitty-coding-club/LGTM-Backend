@@ -30,6 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -56,8 +57,8 @@ dependencies {
 	// Apache Kafka
 	implementation 'org.springframework.kafka:spring-kafka:3.0.9'
 
-//	// mongodb atlas
-//	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	// mongodb atlas
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 }
 
 tasks.named('test') {
