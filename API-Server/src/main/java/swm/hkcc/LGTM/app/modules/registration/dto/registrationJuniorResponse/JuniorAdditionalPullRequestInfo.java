@@ -1,6 +1,5 @@
 package swm.hkcc.LGTM.app.modules.registration.dto.registrationJuniorResponse;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -12,7 +11,7 @@ public class JuniorAdditionalPullRequestInfo extends JuniorAdditionalInfo {
 
     public RegistrationJuniorResponse createResponse() {
         RegistrationJuniorPullRequestResponse response = new RegistrationJuniorPullRequestResponse();
-        response.setPullReqeustUrl(this.githubPullRequestUrl);
+        response.setPullRequestUrl(this.githubPullRequestUrl);
         return response;
     }
 }
