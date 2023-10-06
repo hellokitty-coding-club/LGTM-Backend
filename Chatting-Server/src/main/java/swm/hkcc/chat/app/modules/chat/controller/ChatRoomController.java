@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import swm.hkcc.chat.app.modules.chat.model.ChatRoom;
+import swm.hkcc.chat.app.modules.chat.domain.ChatRoom;
+import swm.hkcc.chat.app.modules.chat.dto.CreateRoomRequest;
 import swm.hkcc.chat.app.modules.chat.service.ChatService;
 
 /**
@@ -20,7 +18,7 @@ import swm.hkcc.chat.app.modules.chat.service.ChatService;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/chatroom")
-public class ChatRoomControllerV1 {
+public class ChatRoomController {
 
     private final ChatService chatService;
 
@@ -33,8 +31,18 @@ public class ChatRoomControllerV1 {
     }
 
     @PostMapping
-    public String createRoom(@RequestParam String name, RedirectAttributes rttr) {
-        ChatRoom room = chatService.createChatRoom(name);
+    public String createRoom(
+            @RequestParam String name,
+            RedirectAttributes rttr
+    ) {
+        // 테스트 용
+        CreateRoomRequest request = CreateRoomRequest.builder()
+                .roomName(name)
+                .roomType("private")
+                .processStatus("waiting")
+                .missionId(1L)
+                .build();
+        ChatRoom room = chatService.createChatRoom(request);
         log.info("CREATE Chat Room {}", room);
         rttr.addFlashAttribute("roomName", room);
 
@@ -42,7 +50,7 @@ public class ChatRoomControllerV1 {
     }
 
     @GetMapping("/detail")
-    public String roomDetail(Model model, String roomId) {
+    public String roomDetail(Model model, Long roomId) {
         log.info("roomId {}", roomId);
         model.addAttribute("room", chatService.findRoomById(roomId));
 
