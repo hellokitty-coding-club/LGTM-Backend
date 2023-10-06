@@ -14,12 +14,6 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findOneByGithubId(String githubId);
 
-    Optional<Member> findByGithubOauthId(Integer githubOauthId);
+    Optional<Member> findByNickName(String nickName);
 
-    boolean existsByNickName(String nickName);
-
-    @Modifying
-    @Transactional
-    @Query("UPDATE Member m SET m.deviceToken = NULL WHERE m.deviceToken = :token")
-    void eraseDeviceToken(@Param("token") String token);
 }
