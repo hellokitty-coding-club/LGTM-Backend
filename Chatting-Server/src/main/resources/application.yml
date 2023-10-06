@@ -4,7 +4,9 @@ server:
 spring:
   profiles:
     default: dev
-
+  data:
+    mongodb:
+      uri: ${MONGO_DB_URI}
   devtools:
     livereload:
       enabled: true
