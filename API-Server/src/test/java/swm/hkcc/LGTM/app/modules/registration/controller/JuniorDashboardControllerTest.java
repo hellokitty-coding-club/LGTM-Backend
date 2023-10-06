@@ -305,7 +305,7 @@ public class JuniorDashboardControllerTest {
                                         fieldWithPath("data.missionHistory[].status").type(JsonFieldType.STRING).description("미션 진행 상태"),
                                         fieldWithPath("data.missionHistory[].dateTime").type(JsonFieldType.STRING).description("미션 진행 시간"),
                                         fieldWithPath("data.buttonTitle").type(JsonFieldType.STRING).description("버튼 타이틀"),
-                                        fieldWithPath("data.pullReqeustUrl").type(JsonFieldType.STRING).description("풀 리퀘스트 url")
+                                        fieldWithPath("data.pullRequestUrl").type(JsonFieldType.STRING).description("풀 리퀘스트 url")
                                 )
                                 .build())));
     }
