@@ -10,7 +10,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import swm.hkcc.chat.app.modules.chat.model.ChatDto;
+import swm.hkcc.chat.app.modules.chat.domain.ChatMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +22,8 @@ public class KafkaConsumerConfig {
     private String bootstrapServers;
 
     @Bean
-    public ConsumerFactory<String, ChatDto> consumerFactory() {
-        ErrorHandlingDeserializer<ChatDto> errorHandlingDeserializer = new ErrorHandlingDeserializer<>(new JsonDeserializer<>(ChatDto.class, false));
+    public ConsumerFactory<String, ChatMessage> consumerFactory() {
+        ErrorHandlingDeserializer<ChatMessage> errorHandlingDeserializer = new ErrorHandlingDeserializer<>(new JsonDeserializer<>(ChatMessage.class, false));
 
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -34,8 +34,8 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ChatDto> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ChatDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, ChatMessage> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, ChatMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
