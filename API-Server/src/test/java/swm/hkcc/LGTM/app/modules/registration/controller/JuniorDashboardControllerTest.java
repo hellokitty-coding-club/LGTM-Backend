@@ -263,7 +263,7 @@ public class JuniorDashboardControllerTest {
                 .processStatus(status)
                 .missionHistory(missionHistory)
                 .buttonTitle(status.getJuniorBottomTitle())
-                .pullReqeustUrl("http://github.com/xxx/xxx")
+                .pullRequestUrl("http://github.com/xxx/xxx")
                 .build();
         given(registrationService.getJuniorEnrollInfo(any(), any())).willReturn(mockResponse);
 
