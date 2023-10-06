@@ -44,7 +44,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     @Override
     @Cacheable(value = "total_missions")
     public List<Mission> getTotalMissions() {
-        return getMissions(isMissionNotFinished());
+        return getMissions(isMissionRecruiting());
     }
 
     private List<Mission> getMissions(BooleanExpression isParticipating, BooleanExpression isNotCompleted) {
@@ -69,11 +69,11 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
                 .fetch();
     }
 
-    private List<Mission> getMissions(BooleanExpression isMissionNotFinished) {
+    private List<Mission> getMissions(BooleanExpression isMissionRecruiting) {
         return jpaQueryFactory
                 .select(mission)
                 .from(mission)
-                .where(isMissionNotFinished)
+                .where(isMissionRecruiting)
                 .orderBy(mission.createdAt.desc())
                 .limit(3)
                 .fetch();
@@ -86,20 +86,14 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     private BooleanExpression isNotCompleted() {
         return missionRegistration.status.ne(ProcessStatus.MISSION_FINISHED)
                 .and(missionRegistration.status.ne(ProcessStatus.FEEDBACK_REVIEWED));
-
-//        BooleanExpression expression = Expressions.asBoolean(true).isTrue();
-//
-//        for (ProcessStatus status : ProcessStatus.values()) {
-//            if (status.isCompleted()) {
-//                expression = expression.and(missionRegistration.status.ne(status));
-//            }
-//        }
-//
-//        return expression;
     }
 
     private BooleanExpression isMissionNotFinished() {
         return mission.missionStatus.ne(MissionStatus.MISSION_FINISHED);
+    }
+
+    private BooleanExpression isMissionRecruiting() {
+        return mission.missionStatus.eq(MissionStatus.RECRUITING);
     }
 
     private BooleanExpression isWriterMatchingMember(Long memberId) {
