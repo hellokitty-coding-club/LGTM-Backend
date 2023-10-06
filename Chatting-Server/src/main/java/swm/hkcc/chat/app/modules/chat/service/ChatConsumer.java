@@ -18,7 +18,9 @@ public class ChatConsumer {
     private final SimpMessageSendingOperations template;
     private final ChatRepository chatRepository;
 
-    @KafkaListener(topics = "${spring.kafka.topic.chat-message}", groupId = "fsdf")
+    @KafkaListener(topics = "${spring.kafka.topic.chat-message}", groupId = "#{ " +
+            "'${spring.kafka.group-id.chat-message}' + T(java.util.UUID).randomUUID().toString() " +
+            "}")
     public void consume(
             @Payload ChatMessage chat,
             @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
@@ -28,7 +30,6 @@ public class ChatConsumer {
         String str_roomId = String.valueOf(chat.getRoomId());
         template.convertAndSend("/sub/chatroom/detail/" + str_roomId, chat);
     }
-
 
     @KafkaListener(topics = "${spring.kafka.topic.chat-message}", groupId = "${spring.kafka.group-id.chat-message-repository}")
     public void persist(
