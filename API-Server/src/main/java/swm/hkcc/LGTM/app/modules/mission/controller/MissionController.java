@@ -15,6 +15,7 @@ import swm.hkcc.LGTM.app.modules.mission.dto.UpdateMissionRequest;
 import swm.hkcc.LGTM.app.modules.mission.service.CreateMissionService;
 import swm.hkcc.LGTM.app.modules.mission.service.DeleteMissionService;
 import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
+import swm.hkcc.LGTM.app.modules.mission.service.UpdateMissionService;
 
 @RestController
 @RequestMapping("/v1/mission")
