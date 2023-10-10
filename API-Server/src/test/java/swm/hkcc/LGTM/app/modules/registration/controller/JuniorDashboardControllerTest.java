@@ -37,7 +37,7 @@ import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
-import swm.hkcc.LGTM.app.modules.registration.dto.registrationJuniorResponse.RegistrationJuniorResponse;
+import swm.hkcc.LGTM.app.modules.registration.dto.registrationJuniorResponse.*;
 import swm.hkcc.LGTM.app.modules.registration.exception.NotRegisteredMission;
 import swm.hkcc.LGTM.app.modules.registration.exception.NotRegisteredMissionInternal;
 import swm.hkcc.LGTM.app.modules.registration.service.RegistrationService;
@@ -46,7 +46,9 @@ import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -108,20 +110,19 @@ public class JuniorDashboardControllerTest {
         );
         ProcessStatus status = ProcessStatus.WAITING_FOR_PAYMENT;
 
-        RegistrationJuniorResponse mockResponse = RegistrationJuniorResponse.builder()
+        RegistrationJuniorAccountResponse mockResponse = RegistrationJuniorAccountResponse.builder()
                 .missionName("미션 이름")
                 .techTagList(getMockTechTags())
                 .processStatus(status)
-                .missionProcessInfo(new HashMap<>())
                 .buttonTitle(status.getJuniorBottomTitle())
+                .accountInfo(JuniorAdditionalAccountInfo.builder()
+                        .accountNumber("123-123-123")
+                        .bankName("국민은행")
+                        .price(10000)
+                        .sendTo("김주니어")
+                        .build())
                 .build();
         mockResponse.setMissionHistory(missionHistory);
-        Map<String, Object> additionalInfo = new HashMap<>();
-        additionalInfo.put("accountNumber", "123-123-123");
-        additionalInfo.put("bankName", "국민은행");
-        additionalInfo.put("price", 10000);
-        additionalInfo.put("sendTo", "김주니어");
-        mockResponse.setAdditionalInfo(additionalInfo);
         given(registrationService.getJuniorEnrollInfo(any(), any())).willReturn(mockResponse);
 
 
@@ -170,18 +171,18 @@ public class JuniorDashboardControllerTest {
                                                 tableRow("data.techTagList[].name", "String", "기술 태그 이름"),
                                                 tableRow("data.techTagList[].iconImageUrl", "String", "기술 태그 아이콘 이미지 url"),
                                                 tableRow("data.processStatus", "String", "미션 진행 상태"),
-                                                tableRow("data.missionProcessInfo", "List<MissionHistoryInfo>", "미션 진행 이력"),
-                                                tableRow("data.missionProcessInfo[].key", "String", "키"),
-                                                tableRow("data.missionProcessInfo[].value", "String", "값"),
-                                                tableRow("data.buttonTitle", "String", "버튼 텍스트")
-//                                                tableRow("---------------", "추가정보", "---------------"),
-//                                                tableRow("data.accountInfo", "Object", "계좌 정보 <br>WAITING_FOR_PAYMENT, PAYMENT_CONFIRMATION 상태에서만 나타난다."),
-//                                                tableRow("data.accountInfo.accountNumber", "String", "계좌 번호 <br>WAITING_FOR_PAYMENT, PAYMENT_CONFIRMATION 상태에서만 나타난다."),
-//                                                tableRow("data.accountInfo.bankName", "String", "은행 이름 <br>WAITING_FOR_PAYMENT, PAYMENT_CONFIRMATION 상태에서만 나타난다."),
-//                                                tableRow("data.accountInfo.price", "Long", "송금해야 할 금액 <br>WAITING_FOR_PAYMENT, PAYMENT_CONFIRMATION 상태에서만 나타난다."),
-//                                                tableRow("data.accountInfo.sendTo", "String", "예금주 이름 <br>WAITING_FOR_PAYMENT, PAYMENT_CONFIRMATION 상태에서만 나타난다."),
-//                                                tableRow("data.reviewId", "Long", "리뷰 아이디 <br>CODE_REVIEW, MISSION_FINISHED 상태에서만 나타난다."),
-//                                                tableRow("data.pullReqeustUrl", "String", "풀 리퀘스트 url <br>FEEDBACK_REVIEWED 상태에서만 나타난다.")
+                                                tableRow("data.missionHistory", "List<MissionHistoryInfo>", "미션 진행 이력"),
+                                                tableRow("data.missionHistory[].status", "String", "미션 진행 상태명"),
+                                                tableRow("data.missionHistory[].dateTime", "String", "해당 상태로 변경된 시간 timestamp"),
+                                                tableRow("data.buttonTitle", "String", "버튼 텍스트"),
+                                                tableRow("---------------", "추가정보", "---------------"),
+                                                tableRow("data.accountInfo", "Object", "계좌 정보 <br>WAITING_FOR_PAYMENT, PAYMENT_CONFIRMATION 상태에서만 나타난다."),
+                                                tableRow("data.accountInfo.accountNumber", "String", "계좌 번호 <br>WAITING_FOR_PAYMENT, PAYMENT_CONFIRMATION 상태에서만 나타난다."),
+                                                tableRow("data.accountInfo.bankName", "String", "은행 이름 <br>WAITING_FOR_PAYMENT, PAYMENT_CONFIRMATION 상태에서만 나타난다."),
+                                                tableRow("data.accountInfo.price", "Long", "송금해야 할 금액 <br>WAITING_FOR_PAYMENT, PAYMENT_CONFIRMATION 상태에서만 나타난다."),
+                                                tableRow("data.accountInfo.sendTo", "String", "예금주 이름 <br>WAITING_FOR_PAYMENT, PAYMENT_CONFIRMATION 상태에서만 나타난다."),
+                                                tableRow("data.reviewId", "Long", "리뷰 아이디 <br>CODE_REVIEW, MISSION_FINISHED 상태에서만 나타난다."),
+                                                tableRow("data.pullReqeustUrl", "String", "풀 리퀘스트 url <br>FEEDBACK_REVIEWED 상태에서만 나타난다.")
                                         )
                                         .line()
                                         .h1("[Errors]")
@@ -228,13 +229,14 @@ public class JuniorDashboardControllerTest {
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
                                         fieldWithPath("data.techTagList[].iconImageUrl").type(JsonFieldType.STRING).description("기술 태그 아이콘 이미지 url"),
                                         fieldWithPath("data.processStatus").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionProcessInfo").description("미션 진행 이력"),
-                                        fieldWithPath("data.missionProcessInfo.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory").description("미션 진행 이력"),
+                                        fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
                                         fieldWithPath("data.buttonTitle").type(JsonFieldType.STRING).description("버튼 타이틀"),
-                                        fieldWithPath("data.missionProcessInfo.accountNumber").type(JsonFieldType.STRING).description("계좌 번호"),
-                                        fieldWithPath("data.missionProcessInfo.bankName").type(JsonFieldType.STRING).description("은행 이름"),
-                                        fieldWithPath("data.missionProcessInfo.price").type(JsonFieldType.NUMBER).description("금액"),
-                                        fieldWithPath("data.missionProcessInfo.sendTo").type(JsonFieldType.STRING).description("예금주 이름")
+                                        fieldWithPath("data.accountInfo").type(JsonFieldType.OBJECT).description("계좌 정보"),
+                                        fieldWithPath("data.accountInfo.accountNumber").type(JsonFieldType.STRING).description("계좌 번호"),
+                                        fieldWithPath("data.accountInfo.bankName").type(JsonFieldType.STRING).description("은행 이름"),
+                                        fieldWithPath("data.accountInfo.price").type(JsonFieldType.NUMBER).description("금액"),
+                                        fieldWithPath("data.accountInfo.sendTo").type(JsonFieldType.STRING).description("예금주 이름")
                                 )
                                 .build())));
     }
@@ -254,15 +256,14 @@ public class JuniorDashboardControllerTest {
         );
         ProcessStatus status = ProcessStatus.CODE_REVIEW;
 
-        RegistrationJuniorResponse mockResponse = RegistrationJuniorResponse.builder()
+        RegistrationJuniorPullRequestResponse mockResponse = RegistrationJuniorPullRequestResponse.builder()
                 .missionName("미션 이름")
                 .techTagList(getMockTechTags())
                 .processStatus(status)
-                .missionProcessInfo(new HashMap<>())
                 .buttonTitle(status.getJuniorBottomTitle())
+                .pullRequestUrl("http://github.com/xxx/xxx")
                 .build();
         mockResponse.setMissionHistory(missionHistory);
-        mockResponse.setAdditionalInfo(Collections.singletonMap("pullRequestUrl", "http://github.com/xxx/xxx"));
         given(registrationService.getJuniorEnrollInfo(any(), any())).willReturn(mockResponse);
 
 
@@ -299,13 +300,13 @@ public class JuniorDashboardControllerTest {
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
                                         fieldWithPath("data.techTagList[].iconImageUrl").type(JsonFieldType.STRING).description("기술 태그 아이콘 이미지 url"),
                                         fieldWithPath("data.processStatus").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionProcessInfo").type(JsonFieldType.OBJECT).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionProcessInfo.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionProcessInfo.CODE_REVIEW").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionProcessInfo.MISSION_PROCEEDING").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionProcessInfo.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory").type(JsonFieldType.OBJECT).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.CODE_REVIEW").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.MISSION_PROCEEDING").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
                                         fieldWithPath("data.buttonTitle").type(JsonFieldType.STRING).description("버튼 타이틀"),
-                                        fieldWithPath("data.missionProcessInfo.pullRequestUrl").type(JsonFieldType.STRING).description("풀 리퀘스트 url")
+                                        fieldWithPath("data.pullRequestUrl").type(JsonFieldType.STRING).description("풀 리퀘스트 url")
                                 )
                                 .build())));
     }
@@ -326,15 +327,14 @@ public class JuniorDashboardControllerTest {
         );
         ProcessStatus status = ProcessStatus.FEEDBACK_REVIEWED;
 
-        RegistrationJuniorResponse mockResponse = RegistrationJuniorResponse.builder()
+        RegistrationJuniorFeedbackResponse mockResponse = RegistrationJuniorFeedbackResponse.builder()
                 .missionName("미션 이름")
                 .techTagList(getMockTechTags())
                 .processStatus(status)
                 .buttonTitle(status.getJuniorBottomTitle())
-                .missionProcessInfo(new HashMap<>())
+                .reviewId(1L)
                 .build();
         mockResponse.setMissionHistory(missionHistory);
-        mockResponse.setAdditionalInfo(Collections.singletonMap("feedbackId", 1L));
         given(registrationService.getJuniorEnrollInfo(any(), any())).willReturn(mockResponse);
 
 
@@ -371,15 +371,15 @@ public class JuniorDashboardControllerTest {
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
                                         fieldWithPath("data.techTagList[].iconImageUrl").type(JsonFieldType.STRING).description("기술 태그 아이콘 이미지 url"),
                                         fieldWithPath("data.processStatus").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionProcessInfo").description("미션 진행 이력"),
-                                        fieldWithPath("data.missionProcessInfo.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionProcessInfo.CODE_REVIEW").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionProcessInfo.MISSION_PROCEEDING").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionProcessInfo.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionProcessInfo.MISSION_FINISHED").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionProcessInfo.FEEDBACK_REVIEWED").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory").description("미션 진행 이력"),
+                                        fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.CODE_REVIEW").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.MISSION_PROCEEDING").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.MISSION_FINISHED").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.FEEDBACK_REVIEWED").type(JsonFieldType.STRING).description("미션 진행 상태"),
                                         fieldWithPath("data.buttonTitle").type(JsonFieldType.STRING).description("버튼 타이틀"),
-                                        fieldWithPath("data.missionProcessInfo.feedbackId").type(JsonFieldType.NUMBER).description("리뷰 아이디")
+                                        fieldWithPath("data.reviewId").type(JsonFieldType.NUMBER).description("리뷰 아이디")
                                 )
                                 .build())));
     }
