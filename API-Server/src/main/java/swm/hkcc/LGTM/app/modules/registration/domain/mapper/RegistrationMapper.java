@@ -50,12 +50,13 @@ public class RegistrationMapper {
             ProcessStatus status,
             JuniorAdditionalInfo additionalInfo
     ) {
-        RegistrationJuniorResponse response = additionalInfo.createResponse();
+        RegistrationJuniorResponse response = new RegistrationJuniorResponse();
 
         response.setMissionName(mission.getTitle());
         response.setTechTagList(techTagList);
         response.setProcessStatus(status);
         response.setMissionHistory(missinHistory);
+        response.setAdditionalInfo(additionalInfo.getAdditionalInfo());
         response.setButtonTitle(status.getJuniorBottomTitle());
 
         return response;
