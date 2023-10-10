@@ -15,7 +15,7 @@ import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionEmptyViewTypeDto;
 import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContent;
-import swm.hkcc.LGTM.app.modules.serverDrivenUI.ViewType;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.ViewType;
 
 import java.util.function.Function;
 

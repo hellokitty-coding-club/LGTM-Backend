@@ -48,6 +48,7 @@ public enum ResponseCode {
     NOT_EXIST_MISSION(10200, HttpStatus.BAD_REQUEST, "존재하지 않는 미션입니다."),
     INVALID_GITHUB_URL(10201, HttpStatus.BAD_REQUEST, "유효하지 않은 Github Repository URL입니다. public repository인 github 주소인지 확인해주세요."),
     IMPOSSIBLE_TO_DELETE(10202, HttpStatus.BAD_REQUEST, "이미 참여한 사람이 있어 삭제할 수 없는 미션입니다."),
+    USER_AB_TEST_GROUP_NOT_FOUND(10203, HttpStatus.INTERNAL_SERVER_ERROR, "사용자의 AB Test Group을 찾을 수 없습니다."),
 
     // 103xx : Mission Registration
     MISS_REGISTER_DEADLINE(10300, HttpStatus.BAD_REQUEST, "미션 등록 기간이 이미 마감되었습니다."),
@@ -68,6 +69,7 @@ public enum ResponseCode {
 
     // 107xx : Review(feedback)
     NOT_EXIST_REVIEW_INTERNAL(10700, HttpStatus.INTERNAL_SERVER_ERROR, "DB 조회 과정에서 문제가 발생했습니다: 존재하지 않는 리뷰입니다.")
+
     ;
 
     private final Integer code;
