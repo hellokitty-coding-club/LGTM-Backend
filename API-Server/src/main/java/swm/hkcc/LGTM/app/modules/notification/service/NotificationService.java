@@ -38,6 +38,7 @@ public class NotificationService {
                 firebaseMessaging.send(message);
             } catch (FirebaseMessagingException e) {
                 Sentry.captureException(e);
+                e.printStackTrace();
                 log.error("FCM - " + e.getMessage());
                 log.error("device token - {}", member.getDeviceToken());
             }
