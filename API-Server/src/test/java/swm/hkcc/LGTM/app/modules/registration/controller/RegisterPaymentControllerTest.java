@@ -129,7 +129,7 @@ public class RegisterPaymentControllerTest {
                                 .tag("미션 진행")
                                 .description(CustomMDGenerator.builder()
                                         .h1("[Descriptions]")
-                                        .h3("시니어 리뷰완료")
+                                        .h3("주니어 입금확인요청")
                                         .h1("[Request Headers]")
                                         .table(
                                                 tableHead("Request values", "Data Type", "Description"),
