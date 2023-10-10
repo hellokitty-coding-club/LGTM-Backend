@@ -3,15 +3,17 @@ package swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailRespo
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Map;
+
 @Builder
 @Data
 public class AdditionalPayInfo extends AdditionalInfo {
     private String realName;
 
     @Override
-    public RegistrationSeniorDetailResponse createResponse() {
-        RegistrationSeniorDetailPayResponse response = new RegistrationSeniorDetailPayResponse();
-        response.setRealName(realName);
-        return response;
+    public Map<String, Object> getAdditionalInfo() {
+        Map<String, Object> additionalInfo = super.getAdditionalInfo();
+        additionalInfo.put("realName", realName);
+        return additionalInfo;
     }
 }

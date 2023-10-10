@@ -16,13 +16,16 @@ public class RegistrationSeniorDetailResponse {
     protected String nickname;
     protected String githubId;
     protected ProcessStatus status;
-    protected Map<ProcessStatus,String> missionHistory;
+    protected Map<String,Object> missionProcessInfo = new HashMap<>();;
     protected String buttonTitle;
 
     public void setMissionHistory(List<MissionHistoryInfo> missionHistory) {
-        this.missionHistory = new HashMap<>();
         for (MissionHistoryInfo history : missionHistory) {
-            this.missionHistory.put(history.getStatus(),history.getDateTime());
+            this.missionProcessInfo.put(history.getStatus().toString(),history.getDateTime());
         }
+    }
+
+    public void setAdditionalInfo(Map<String, Object> additionalInfo) {
+        this.missionProcessInfo.putAll(additionalInfo);
     }
 }
