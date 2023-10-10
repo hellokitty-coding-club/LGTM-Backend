@@ -12,6 +12,6 @@ public class ABTestService {
 
     public String getGroupName(Long memberId, String testName) {
         return abTestUserGroupRepository.findGroupNameByMemberIdAndTestName(memberId, testName)
-                .orElse(null);
+                .orElse("A");
     }
 }
