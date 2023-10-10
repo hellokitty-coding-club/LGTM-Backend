@@ -1,14 +1,12 @@
 package swm.hkcc.LGTM.app.modules.registration.dto.registrationJuniorResponse;
 
-import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
+@Data
 @NoArgsConstructor
-public class JuniorAdditionalInfo {
-
-    public RegistrationJuniorResponse createResponse() {
-        return new RegistrationJuniorResponse();
-    }
+public class RegistrationJuniorPullRequestResponse extends RegistrationJuniorResponse {
+    private String pullRequestUrl;
 }

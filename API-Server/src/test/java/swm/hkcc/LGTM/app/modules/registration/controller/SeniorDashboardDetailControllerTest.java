@@ -38,6 +38,9 @@ import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
+import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse.RegistrationSeniorDetailFeedbackResponse;
+import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse.RegistrationSeniorDetailPayResponse;
+import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse.RegistrationSeniorDetailPullRequestResponse;
 import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse.RegistrationSeniorDetailResponse;
 import swm.hkcc.LGTM.app.modules.registration.exception.NotMyMission;
 import swm.hkcc.LGTM.app.modules.registration.exception.NotRegisteredMission;
@@ -205,8 +208,8 @@ class SeniorDashboardDetailControllerTest {
                                 fieldWithPath("data.nickname").description("참가자 닉네임"),
                                 fieldWithPath("data.githubId").description("참가자 깃허브 아이디"),
                                 fieldWithPath("data.status").description("참가자 미션상태"),
-                                fieldWithPath("data.missionProcessInfo").description("미션 상태"),
-                                fieldWithPath("data.missionProcessInfo.WAITING_FOR_PAYMENT").description("미션 상태명"),
+                                fieldWithPath("data.missionHistory").description("미션 상태"),
+                                fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").description("미션 상태명"),
                                 fieldWithPath("data.buttonTitle").description("바텀시트 버튼 타이틀")
                         )
                         .build())
@@ -225,7 +228,7 @@ class SeniorDashboardDetailControllerTest {
 
         ProcessStatus currentStatus = ProcessStatus.PAYMENT_CONFIRMATION;
 
-        RegistrationSeniorDetailResponse response = new RegistrationSeniorDetailResponse();
+        RegistrationSeniorDetailPayResponse response = new RegistrationSeniorDetailPayResponse();
         response.setMemberId(junior.getMemberId());
         response.setNickname(junior.getNickName());
         response.setGithubId(junior.getGithubId());
@@ -234,7 +237,7 @@ class SeniorDashboardDetailControllerTest {
                 new MissionHistoryInfo(ProcessStatus.WAITING_FOR_PAYMENT, LocalDateTime.now()),
                 new MissionHistoryInfo(ProcessStatus.PAYMENT_CONFIRMATION, LocalDateTime.now().plusDays(1))
         ));
-        response.setAdditionalInfo(Collections.singletonMap("realName", "홍길동"));
+        response.setRealName("홍길동");
         response.setButtonTitle(currentStatus.getSeniorBottomTitle());
         given(registrationService.getSeniorEnrollDetail(any(), any(), any())).willReturn(response);
         // when
@@ -249,6 +252,7 @@ class SeniorDashboardDetailControllerTest {
                 .andExpect(jsonPath("$.data.nickname").value(junior.getNickName()))
                 .andExpect(jsonPath("$.data.githubId").value(junior.getGithubId()))
                 .andExpect(jsonPath("$.data.status").value(currentStatus.name()))
+                .andExpect(jsonPath("$.data.realName").value("홍길동"))
                 .andExpect(jsonPath("$.data.buttonTitle").value(currentStatus.getSeniorBottomTitle()));
 
 
@@ -264,9 +268,9 @@ class SeniorDashboardDetailControllerTest {
                                 fieldWithPath("data.nickname").description("참가자 닉네임"),
                                 fieldWithPath("data.githubId").description("참가자 깃허브 아이디"),
                                 fieldWithPath("data.status").description("참가자 미션상태"),
-                                fieldWithPath("data.missionProcessInfo.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                fieldWithPath("data.missionProcessInfo.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                fieldWithPath("data.missionProcessInfo.realName").description("입금자 실명"),
+                                fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.missionHistory.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.realName").description("입금자 실명"),
                                 fieldWithPath("data.buttonTitle").description("바텀시트 버튼 타이틀"))
                         .build()))
         );
@@ -285,7 +289,7 @@ class SeniorDashboardDetailControllerTest {
 
         ProcessStatus currentStatus = ProcessStatus.CODE_REVIEW;
 
-        RegistrationSeniorDetailResponse response = new RegistrationSeniorDetailResponse();
+        RegistrationSeniorDetailPullRequestResponse response = new RegistrationSeniorDetailPullRequestResponse();
         response.setMemberId(junior.getMemberId());
         response.setNickname(junior.getNickName());
         response.setGithubId(junior.getGithubId());
@@ -296,7 +300,7 @@ class SeniorDashboardDetailControllerTest {
                 new MissionHistoryInfo(ProcessStatus.MISSION_PROCEEDING, LocalDateTime.now().plusDays(2)),
                 new MissionHistoryInfo(ProcessStatus.CODE_REVIEW, LocalDateTime.now().plusDays(3))
         ));
-        response.setAdditionalInfo(Collections.singletonMap("githubPullRequestUrl", "https://github.com/abc/abc/abc"));
+        response.setGithubPullRequestUrl("https://github.com/abc/abc/abc");
         response.setButtonTitle(currentStatus.getSeniorBottomTitle());
         given(registrationService.getSeniorEnrollDetail(any(), any(), any())).willReturn(response);
         // when
@@ -326,12 +330,12 @@ class SeniorDashboardDetailControllerTest {
                                 fieldWithPath("data.nickname").description("참가자 닉네임"),
                                 fieldWithPath("data.githubId").description("참가자 깃허브 아이디"),
                                 fieldWithPath("data.status").description("참가자 미션상태"),
-                                fieldWithPath("data.missionProcessInfo").description("미션 히스토리"),
-                                fieldWithPath("data.missionProcessInfo.PAYMENT_CONFIRMATION").description("미션 상태명"),
-                                fieldWithPath("data.missionProcessInfo.WAITING_FOR_PAYMENT").description("미션 상태명"),
-                                fieldWithPath("data.missionProcessInfo.CODE_REVIEW").description("미션 상태명"),
-                                fieldWithPath("data.missionProcessInfo.MISSION_PROCEEDING").description("미션 상태명"),
-                                fieldWithPath("data.missionProcessInfo.githubPullRequestUrl").description("깃허브 풀 리퀘스트 URL"),
+                                fieldWithPath("data.missionHistory").description("미션 히스토리"),
+                                fieldWithPath("data.missionHistory.PAYMENT_CONFIRMATION").description("미션 상태명"),
+                                fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").description("미션 상태명"),
+                                fieldWithPath("data.missionHistory.CODE_REVIEW").description("미션 상태명"),
+                                fieldWithPath("data.missionHistory.MISSION_PROCEEDING").description("미션 상태명"),
+                                fieldWithPath("data.githubPullRequestUrl").description("깃허브 풀 리퀘스트 URL"),
                                 fieldWithPath("data.buttonTitle").description("바텀시트 버튼 타이틀"))
                         .build()))
         );
@@ -349,7 +353,7 @@ class SeniorDashboardDetailControllerTest {
 
         ProcessStatus currentStatus = ProcessStatus.FEEDBACK_REVIEWED;
 
-        RegistrationSeniorDetailResponse response = new RegistrationSeniorDetailResponse();
+        RegistrationSeniorDetailFeedbackResponse response = new RegistrationSeniorDetailFeedbackResponse();
         response.setMemberId(junior.getMemberId());
         response.setNickname(junior.getNickName());
         response.setGithubId(junior.getGithubId());
@@ -362,7 +366,7 @@ class SeniorDashboardDetailControllerTest {
                 new MissionHistoryInfo(ProcessStatus.MISSION_FINISHED, LocalDateTime.now().plusDays(4)),
                 new MissionHistoryInfo(ProcessStatus.FEEDBACK_REVIEWED, LocalDateTime.now().plusDays(5))
         ));
-        response.setAdditionalInfo(Collections.singletonMap("feedbackId", 1L));
+        response.setFeedbackId(1L);
         response.setButtonTitle(currentStatus.getSeniorBottomTitle());
         given(registrationService.getSeniorEnrollDetail(any(), any(), any())).willReturn(response);
         // when
@@ -377,6 +381,7 @@ class SeniorDashboardDetailControllerTest {
                 .andExpect(jsonPath("$.data.nickname").value(junior.getNickName()))
                 .andExpect(jsonPath("$.data.githubId").value(junior.getGithubId()))
                 .andExpect(jsonPath("$.data.status").value(currentStatus.name()))
+                .andExpect(jsonPath("$.data.feedbackId").value(1L))
                 .andExpect(jsonPath("$.data.buttonTitle").value(currentStatus.getSeniorBottomTitle()));
 
 
@@ -392,13 +397,13 @@ class SeniorDashboardDetailControllerTest {
                                 fieldWithPath("data.nickname").description("참가자 닉네임"),
                                 fieldWithPath("data.githubId").description("참가자 깃허브 아이디"),
                                 fieldWithPath("data.status").description("참가자 미션상태"),
-                                fieldWithPath("data.missionProcessInfo.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                fieldWithPath("data.missionProcessInfo.CODE_REVIEW").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                fieldWithPath("data.missionProcessInfo.MISSION_PROCEEDING").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                fieldWithPath("data.missionProcessInfo.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                fieldWithPath("data.missionProcessInfo.MISSION_FINISHED").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                fieldWithPath("data.missionProcessInfo.FEEDBACK_REVIEWED").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                fieldWithPath("data.missionProcessInfo.feedbackId").description("작성한 후기 아이디"),
+                                fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.missionHistory.CODE_REVIEW").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.missionHistory.MISSION_PROCEEDING").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.missionHistory.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.missionHistory.MISSION_FINISHED").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.missionHistory.FEEDBACK_REVIEWED").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.feedbackId").description("작성한 후기 아이디"),
                                 fieldWithPath("data.buttonTitle").description("바텀시트 버튼 타이틀"))
                         .build()))
         );

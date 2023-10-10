@@ -30,14 +30,13 @@ public class RegistrationMapper {
     }
 
     public static RegistrationSeniorDetailResponse toRegistrationSeniorDetailResponse(Mission mission, Member junior, ProcessStatus status, List<MissionHistoryInfo> missionHistory, AdditionalInfo additionalInfo) {
-        RegistrationSeniorDetailResponse response = new RegistrationSeniorDetailResponse();
+        RegistrationSeniorDetailResponse response = additionalInfo.createResponse();
 
         response.setMemberId(junior.getMemberId());
         response.setNickname(junior.getNickName());
         response.setGithubId(junior.getGithubId());
         response.setStatus(status);
         response.setMissionHistory(missionHistory);
-        response.setAdditionalInfo(additionalInfo.getAdditionalInfo());
         response.setButtonTitle(status.getSeniorBottomTitle());
 
         return response;
@@ -50,13 +49,12 @@ public class RegistrationMapper {
             ProcessStatus status,
             JuniorAdditionalInfo additionalInfo
     ) {
-        RegistrationJuniorResponse response = new RegistrationJuniorResponse();
+        RegistrationJuniorResponse response = additionalInfo.createResponse();
 
         response.setMissionName(mission.getTitle());
         response.setTechTagList(techTagList);
         response.setProcessStatus(status);
         response.setMissionHistory(missinHistory);
-        response.setAdditionalInfo(additionalInfo.getAdditionalInfo());
         response.setButtonTitle(status.getJuniorBottomTitle());
 
         return response;

@@ -4,9 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Data @SuperBuilder
 public class JuniorAdditionalAccountInfo extends JuniorAdditionalInfo {
     private String accountNumber;
@@ -14,13 +11,10 @@ public class JuniorAdditionalAccountInfo extends JuniorAdditionalInfo {
     private int price;
     private String sendTo;
 
-    @Override
-    public Map<String, Object> getAdditionalInfo() {
-        Map<String, Object> additionalInfo = new HashMap<>();
-        additionalInfo.put("accountNumber", this.accountNumber);
-        additionalInfo.put("bankName", this.bankName);
-        additionalInfo.put("price", this.price);
-        additionalInfo.put("sendTo", this.sendTo);
-        return additionalInfo;
+
+    public RegistrationJuniorResponse createResponse() {
+        RegistrationJuniorAccountResponse response = new RegistrationJuniorAccountResponse();
+        response.setAccountInfo(this);
+        return response;
     }
 }

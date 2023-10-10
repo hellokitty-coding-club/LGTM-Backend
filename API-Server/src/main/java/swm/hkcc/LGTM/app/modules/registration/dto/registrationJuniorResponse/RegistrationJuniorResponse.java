@@ -18,16 +18,13 @@ public class RegistrationJuniorResponse {
     protected String missionName;
     protected List<TechTag> techTagList;
     protected ProcessStatus processStatus;
-    protected Map<String, Object> missionProcessInfo = new HashMap<>();
+    protected Map<ProcessStatus,String> missionHistory;
     protected String buttonTitle;
 
     public void setMissionHistory(List<MissionHistoryInfo> missionHistory) {
+        this.missionHistory = new HashMap<>();
         for (MissionHistoryInfo history : missionHistory) {
-            this.missionProcessInfo.put(history.getStatus().toString(), history.getDateTime());
+            this.missionHistory.put(history.getStatus(),history.getDateTime());
         }
-    }
-
-    public void setAdditionalInfo(Map<String, Object> additionalInfo) {
-        this.missionProcessInfo.putAll(additionalInfo);
     }
 }
