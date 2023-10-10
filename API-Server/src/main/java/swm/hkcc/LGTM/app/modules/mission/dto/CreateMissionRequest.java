@@ -29,34 +29,26 @@ public class CreateMissionRequest {
     @Size(max = 1000)
     private String description;
 
-    @NotBlank
     @Size(max = 1000)
-    private String reomnnandTo;
+    private String recommendTo;
 
-    @NotBlank
     @Size(max = 1000)
-    private String notReomnnandTo;
+    private String notRecommendTo;
 
     @NotNull
     @FutureOrPresent
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
     private LocalDate registrationDueDate;
 
     @NotNull
-    @FutureOrPresent
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private LocalDate assignmentDueDate;
-
-    @NotNull
-    @FutureOrPresent
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private LocalDate reviewCompletationDueDate;
-
-    @NotNull
-    @Positive
+    @PositiveOrZero
     private Integer price;
 
     @NotNull
     @Positive
     private Integer maxPeopleNumber;
+
+    public void trimTitle() {
+        this.title = this.title.trim();
+    }
 }

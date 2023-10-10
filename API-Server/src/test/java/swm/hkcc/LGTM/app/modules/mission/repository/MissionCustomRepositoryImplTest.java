@@ -13,7 +13,7 @@ import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
-import swm.hkcc.LGTM.app.modules.registration.domain.PersonalStatus;
+import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 
 import java.time.LocalDate;
@@ -56,13 +56,11 @@ class MissionCustomRepositoryImplTest {
                 .writer(member)
                 .missionRepositoryUrl("https://github.com/test/repo1")
                 .title("Test Mission 1")
-                .missionStatus(MissionStatus.MISSION_PROCEEDING)
+                .missionStatus(MissionStatus.RECRUITING)
                 .description("Test Description 1")
-                .reomnnandTo("To Everyone")
-                .notReomnnandTo("To No One")
+                .recommendTo("To Everyone")
+                .notRecommendTo("To No One")
                 .registrationDueDate(LocalDate.now())
-                .assignmentDueDate(LocalDate.now().plusDays(7))
-                .reviewCompletationDueDate(LocalDate.now().plusDays(14))
                 .price(100)
                 .maxPeopleNumber(10)
                 .build();
@@ -71,13 +69,11 @@ class MissionCustomRepositoryImplTest {
                 .writer(member)
                 .missionRepositoryUrl("https://github.com/test/repo2")
                 .title("Test Mission 2")
-                .missionStatus(MissionStatus.MISSION_PROCEEDING)
+                .missionStatus(MissionStatus.RECRUITING)
                 .description("Test Description 2")
-                .reomnnandTo("To Everyone")
-                .notReomnnandTo("To No One")
+                .recommendTo("To Everyone")
+                .notRecommendTo("To No One")
                 .registrationDueDate(LocalDate.now())
-                .assignmentDueDate(LocalDate.now().plusDays(7))
-                .reviewCompletationDueDate(LocalDate.now().plusDays(14))
                 .price(200)
                 .maxPeopleNumber(20)
                 .build();
@@ -86,13 +82,11 @@ class MissionCustomRepositoryImplTest {
                 .writer(member)
                 .missionRepositoryUrl("https://github.com/test/repo3")
                 .title("Test Mission 3")
-                .missionStatus(MissionStatus.MISSION_PROCEEDING)
+                .missionStatus(MissionStatus.RECRUITING)
                 .description("Test Description 3")
-                .reomnnandTo("To Everyone")
-                .notReomnnandTo("To No One")
+                .recommendTo("To Everyone")
+                .notRecommendTo("To No One")
                 .registrationDueDate(LocalDate.now())
-                .assignmentDueDate(LocalDate.now().plusDays(7))
-                .reviewCompletationDueDate(LocalDate.now().plusDays(14))
                 .price(300)
                 .maxPeopleNumber(30)
                 .build();
@@ -115,13 +109,13 @@ class MissionCustomRepositoryImplTest {
     void getOnGoingMissions() {
         // Given
         MissionRegistration registration1 = MissionRegistration.builder()
-                .status(PersonalStatus.WAITING_FOR_PAYMENT)
+                .status(ProcessStatus.WAITING_FOR_PAYMENT)
                 .mission(mission1)
                 .junior(member)
                 .build();
 
         MissionRegistration registration3 = MissionRegistration.builder()
-                .status(PersonalStatus.MISSION_PROCEEDING)
+                .status(ProcessStatus.MISSION_PROCEEDING)
                 .mission(mission3)
                 .junior(member)
                 .build();
@@ -132,7 +126,7 @@ class MissionCustomRepositoryImplTest {
         Long memberId = member.getMemberId();
 
         // When
-        List<Mission> onGoingMissions = missionRepository.getOnGoingMissions(memberId);
+        List<Mission> onGoingMissions = missionRepository.getJuniorOnGoingMissions(memberId);
 
         // Then
         assertThat(onGoingMissions).isNotNull();

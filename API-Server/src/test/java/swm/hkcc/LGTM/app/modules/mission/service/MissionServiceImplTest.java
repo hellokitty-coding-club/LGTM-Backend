@@ -49,11 +49,11 @@ public class MissionServiceImplTest {
     @DisplayName("진행중인 미션을 가져온다. MissionDto의 리스트를 담은 MissionContentData를 반환한다.")
     public void getOngoingMissions() {
         // Given
-        when(missionRepository.getOnGoingMissions(1L))
+        when(missionRepository.getJuniorOnGoingMissions(1L))
                 .thenReturn(Arrays.asList(createMockMission(1L), createMockMission(2L)));
 
         // When
-        MissionContentData result = missionService.getOngoingMissions(1L);
+        MissionContentData result = missionService.getJuniorOngoingMissions(1L);
 
         // Then
         assertEquals(2, result.getMissionData().size());
@@ -119,11 +119,9 @@ public class MissionServiceImplTest {
                 .title("Test Mission ")
                 .missionStatus(MissionStatus.MISSION_PROCEEDING)
                 .description("TestDescription")
-                .reomnnandTo("TestRecommendTo")
-                .notReomnnandTo("TestNotRecommendTo")
+                .recommendTo("TestRecommendTo")
+                .notRecommendTo("TestNotRecommendTo")
                 .registrationDueDate(LocalDate.now())
-                .assignmentDueDate(LocalDate.now())
-                .reviewCompletationDueDate(LocalDate.now())
                 .price(1000)
                 .maxPeopleNumber(10)
                 .build();

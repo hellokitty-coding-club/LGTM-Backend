@@ -10,7 +10,6 @@ import swm.hkcc.LGTM.app.global.entity.BaseEntity;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MissionHistory extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "history_id")
@@ -20,4 +19,14 @@ public class MissionHistory extends BaseEntity {
     @JoinColumn(name = "registration_id")
     private MissionRegistration registration;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProcessStatus status;
+
+    public static MissionHistory from(MissionRegistration registration) {
+        return MissionHistory.builder()
+                .registration(registration)
+                .status(registration.getStatus())
+                .build();
+    }
 }

@@ -5,7 +5,9 @@ import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import java.util.List;
 
 public interface MissionCustomRepository {
-    List<Mission> getOnGoingMissions(Long memberId);
+    List<Mission> getJuniorOnGoingMissions(Long memberId);
+
+    List<Mission> getSeniorOngoingMissions(Long memberId);
 
     List<Mission> getRecommendedMissions();
 

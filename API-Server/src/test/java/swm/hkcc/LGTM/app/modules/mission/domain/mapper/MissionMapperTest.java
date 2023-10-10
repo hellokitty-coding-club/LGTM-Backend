@@ -22,7 +22,7 @@ class MissionMapperTest {
 
     @BeforeEach
     void setUp() {
-        techTagSampleList = Arrays.asList(new TechTag(1L, "Java"), new TechTag(2L,"Spring"));
+        techTagSampleList = Arrays.asList(new TechTag(1L, "Java", "img"), new TechTag(2L,"Spring", "img"));
 
         missionSample = Mission.builder()
                 .missionId(1L)
@@ -33,10 +33,8 @@ class MissionMapperTest {
                 .description("Test Description")
                 .missionRepositoryUrl("Test Repository URL")
                 .missionStatus(MissionStatus.MISSION_PROCEEDING)
-                .reomnnandTo("Developers")
-                .notReomnnandTo("Designers")
-                .assignmentDueDate(LocalDate.now().plusDays(10))
-                .reviewCompletationDueDate(LocalDate.now().plusDays(15))
+                .recommendTo("Developers")
+                .notRecommendTo("Designers")
                 .build();
     }
 

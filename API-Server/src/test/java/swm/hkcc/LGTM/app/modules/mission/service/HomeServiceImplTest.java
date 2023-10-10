@@ -6,6 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
+import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentSequence;
@@ -36,6 +38,9 @@ class HomeServiceImplTest {
     @Mock
     private MissionService missionService;
 
+    @Mock
+    private MemberService memberService;
+
     @InjectMocks
     private HomeServiceImpl homeService;
 
@@ -50,6 +55,9 @@ class HomeServiceImplTest {
         Long memberId = 1L;
         String ABTestGroupName = ABTest.HOME_SCREEN_SEQUENCE_TEST.getTestName();
 
+        MemberType memberType = MemberType.JUNIOR;
+
+
         List<MissionContentType> mockMissionContentTypeList = List.of(
                 MissionContentType.ON_GOING_MISSION_TITLE_V1,
                 MissionContentType.ON_GOING_MISSION_LIST_V1,
@@ -63,17 +71,18 @@ class HomeServiceImplTest {
         );
         MissionContentSequence mockContentSequence = new MissionContentSequence(mockMissionContentTypeList);
         when(sequenceFactory.getServerDrivenUISequence(ABTestGroupName)).thenReturn(mockContentSequence);
+        when(memberService.getMemberType(memberId)).thenReturn(memberType);
 
         MissionContentData ongoingMissionContent = MissionContentData.of(List.of(createMockMissionDto(), createMockMissionDto()));
         MissionContentData recommendMissionContent = MissionContentData.of(List.of(createMockMissionDetailsDto(), createMockMissionDetailsDto()));
         MissionContentData totalMissionContent = MissionContentData.of(List.of(createMockMissionDetailsDto(), createMockMissionDetailsDto()));
-        when(missionService.getOngoingMissions(anyLong())).thenReturn(ongoingMissionContent);
+        when(missionService.getJuniorOngoingMissions(anyLong())).thenReturn(ongoingMissionContent);
         when(missionService.getRecommendMissions(anyLong())).thenReturn(recommendMissionContent);
         when(missionService.getTotalMissions(anyLong())).thenReturn(totalMissionContent);
 
-        when(missionItemHolder.getMissionListFunction(ON_GOING_MISSION_LIST_V1)).thenReturn(missionService::getOngoingMissions);
-        when(missionItemHolder.getMissionListFunction(RECOMMENDED_MISSION_LIST_V1)).thenReturn(missionService::getRecommendMissions);
-        when(missionItemHolder.getMissionListFunction(TOTAL_MISSION_LIST_V1)).thenReturn(missionService::getTotalMissions);
+        when(missionItemHolder.getMissionListFunction(ON_GOING_MISSION_LIST_V1, memberType)).thenReturn(missionService::getJuniorOngoingMissions);
+        when(missionItemHolder.getMissionListFunction(RECOMMENDED_MISSION_LIST_V1, memberType)).thenReturn(missionService::getRecommendMissions);
+        when(missionItemHolder.getMissionListFunction(TOTAL_MISSION_LIST_V1, memberType)).thenReturn(missionService::getTotalMissions);
 
 
         // when

@@ -43,7 +43,7 @@ public class Senior implements Serializable {
 
     public static Senior from(SeniorSignUpRequest request, Member member) {
         validateCareerPeriod(request.getCareerPeriod());
-        return Senior.builder()
+        Senior senior = Senior.builder()
                 .member(member)
                 .companyInfo(request.getCompanyInfo())
                 .careerPeriod(request.getCareerPeriod())
@@ -51,6 +51,9 @@ public class Senior implements Serializable {
                 .accountNumber(request.getAccountNumber())
                 .bank(Bank.fromName(request.getBankName()))
                 .build();
+        member.setSenior(senior);
+
+        return senior;
     }
 
     private static void validateCareerPeriod(Integer careerPeriod) {

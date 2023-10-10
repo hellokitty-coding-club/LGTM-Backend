@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionView;
 
 public interface MissionViewRepository extends JpaRepository<MissionView, Long> {
-    @Cacheable(value = "mission_view_count", key = "#missionId")
+    @Cacheable(value = "mission_view_count", key = "#p0")
     int countByMission_MissionId(Long missionId);
 }
