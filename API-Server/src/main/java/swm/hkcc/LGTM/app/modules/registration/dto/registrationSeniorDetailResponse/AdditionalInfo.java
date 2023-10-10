@@ -1,7 +1,10 @@
 package swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AdditionalInfo {
-    public RegistrationSeniorDetailResponse createResponse() {
-        return new RegistrationSeniorDetailResponse();
+    public Map<String, Object> getAdditionalInfo() {
+        return new HashMap<>();
     }
 }
