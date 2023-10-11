@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.member.domain.Senior;
 import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
-import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.member.repository.SeniorRepository;
 import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
@@ -37,7 +36,6 @@ public class MissionServiceImpl implements MissionService {
     private final MissionViewRepository missionViewRepository;
     private final MissionRegistrationRepository missionRegistrationRepository;
     private final TechTagPerMissionRepository techTagPerMissionRepository;
-    private final MemberRepository memberRepository;
     private final SeniorRepository seniorRepository;
     private final MemberService memberService;
 
@@ -73,26 +71,7 @@ public class MissionServiceImpl implements MissionService {
     public MissionContentData getTotalMissions(Long memberId) {
         List<Mission> missions = missionRepository.getTotalMissions();
 
-        List<MissionDetailsDto> missionDetailsDtos = missions.stream()
-                .map(mission -> {
-                    List<TechTag> techTags = techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId());
-                    int viewCount = missionViewRepository.countByMission_MissionId(mission.getMissionId());
-                    int currentPeopleNumber = missionRegistrationRepository.countByMission_MissionId(mission.getMissionId());
-                    boolean isScraped = missionScrapRepository.existsByScrapper_MemberIdAndMission_MissionId(memberId, mission.getMissionId());
-                    int scrapCount = missionScrapRepository.countByMission_MissionId(mission.getMissionId());
-
-                    return MissionMapper.missionToMissionDetailDto(
-                            mission,
-                            techTags,
-                            viewCount,
-                            currentPeopleNumber,
-                            isScraped,
-                            scrapCount
-                    );
-                })
-                .collect(Collectors.toList());
-
-        return MissionContentData.of(missionDetailsDtos);
+        return getMissionContentData(memberId, missions);
     }
 
     @Override
@@ -112,10 +91,14 @@ public class MissionServiceImpl implements MissionService {
     }
 
     // 미완성
-    @Override // todo: 추천 미션 가져오기 구현 미완료 -> 전체 미션 가져오기로 임시 대체
+    @Override
     public MissionContentData getRecommendMissions(Long memberId) {
-        List<Mission> missions = missionRepository.getTotalMissions();
+        List<Mission> missions = missionRepository.getRecommendedMissions(memberId);
 
+        return getMissionContentData(memberId, missions);
+    }
+
+    private MissionContentData getMissionContentData(Long memberId, List<Mission> missions) {
         List<MissionDetailsDto> missionDetailsDtos = missions.stream()
                 .map(mission -> {
                     List<TechTag> techTags = techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId());
