@@ -8,15 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import swm.hkcc.LGTM.app.global.dto.ApiDataResponse;
 import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
-import swm.hkcc.LGTM.app.modules.mission.domain.MissionRecommendation;
-import swm.hkcc.LGTM.app.modules.mission.repository.MissionRecommendationRepository;
 import swm.hkcc.LGTM.app.modules.mission.service.HomeService;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenScreenResponse;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.domain.ABTestService;
 
-import java.util.List;
-
-import static swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.ABTest.*;
+import static swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.ABTest.HOME_SCREEN_SEQUENCE_TEST;
 
 @Slf4j
 @RestController
@@ -38,11 +34,4 @@ public class HomeController {
                 homeService.getHomeScreen(memberId, ABTestGroupName)
         );
     }
-//
-//    @GetMapping("/test")
-//    public ApiDataResponse<String> getTest() {
-//        List<MissionRecommendation> t = missionRecommendationRepository.findByIdMemberId(50L);
-//        log.info(t.get(0).getMember().getNickName());
-//        return ApiDataResponse.of("test");
-//    }
 }
