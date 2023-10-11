@@ -13,6 +13,7 @@ import swm.hkcc.LGTM.app.modules.mission.domain.MissionRecommendation;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +45,17 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     public List<Mission> getRecommendedMissions (Long memberId) {
         List<MissionRecommendation> missionRecommendations = missionRecommendationRepository.findByIdMemberId(memberId);
         return getMissions(isMissionRecruiting(), missionRecommendations);
+    }
+
+    @Override
+    public List<Mission> getMissionsRandomOrder() {
+        return jpaQueryFactory
+                .select(mission)
+                .from(mission)
+                .where(isMissionRecruiting())
+                .orderBy(randomOrder())
+                .limit(3)
+                .fetch();
     }
 
     @Override

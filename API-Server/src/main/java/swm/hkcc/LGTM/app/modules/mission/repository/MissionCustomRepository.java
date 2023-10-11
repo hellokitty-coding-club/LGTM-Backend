@@ -12,4 +12,6 @@ public interface MissionCustomRepository {
     List<Mission> getRecommendedMissions(Long memberId);
 
     List<Mission> getTotalMissions();
+
+    List<Mission> getMissionsRandomOrder();
 }

@@ -94,6 +94,13 @@ public class MissionServiceImpl implements MissionService {
     @Override
     public MissionContentData getRecommendMissions(Long memberId) {
         List<Mission> missions = missionRepository.getRecommendedMissions(memberId);
+        List<Mission> rest_missions = missionRepository.getMissionsRandomOrder();
+
+        for (Mission rest_mission: rest_missions) {
+            if(!missions.contains(rest_mission) && missions.size() < 3) {
+                missions.add(rest_mission);
+            }
+        }
 
         return getMissionContentData(memberId, missions);
     }
