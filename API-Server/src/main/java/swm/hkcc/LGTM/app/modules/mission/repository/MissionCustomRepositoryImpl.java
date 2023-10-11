@@ -72,7 +72,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
                 .join(member).on(member.memberId.eq(missionRegistration.junior.memberId))
                 .where(isParticipating.and(isNotCompleted))
                 .orderBy(mission.createdAt.desc())
-                .limit(3)
                 .fetch();
     }
 
@@ -82,7 +81,6 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
                 .from(mission)
                 .where(isMissionNotFinished.and(isWriterMatchingMember(memberId)))
                 .orderBy(mission.createdAt.desc())
-                .limit(3)
                 .fetch();
     }
 
