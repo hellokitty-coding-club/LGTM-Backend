@@ -2,6 +2,7 @@ spring:
   config:
     activate:
       on-profile: prod
+server:
 
   datasource:
     url: ${PROD_DB_HOST}
@@ -52,3 +53,4 @@ spring:
     redis:
       cluster:
         nodes: ${PROD_REDIS_NODES}
+  port: 8090
