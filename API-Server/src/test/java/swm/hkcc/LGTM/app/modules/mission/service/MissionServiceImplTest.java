@@ -67,7 +67,7 @@ public class MissionServiceImplTest {
     @DisplayName("맞춤 추천 미션을 가져온다. MissionDetailDto의 리스트를 담은 MissionContentData를 반환한다.")
     public void getRecommendMissions() {
         // Given
-        when(missionRepository.getTotalMissions())
+        when(missionRepository.getRecommendedMissions(1L))
                 .thenReturn(Arrays.asList(createMockMission(1L), createMockMission(2L), createMockMission(3L)));
 
         // When
