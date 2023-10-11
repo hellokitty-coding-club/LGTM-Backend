@@ -9,7 +9,9 @@ public interface MissionCustomRepository {
 
     List<Mission> getSeniorOngoingMissions(Long memberId);
 
-    List<Mission> getRecommendedMissions();
+    List<Mission> getRecommendedMissions(Long memberId);
 
     List<Mission> getTotalMissions();
+
+    List<Mission> getMissionsRandomOrder();
 }

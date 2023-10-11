@@ -12,7 +12,7 @@ import swm.hkcc.LGTM.app.modules.mission.service.HomeService;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenScreenResponse;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.domain.ABTestService;
 
-import static swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.ABTest.*;
+import static swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.ABTest.HOME_SCREEN_SEQUENCE_TEST;
 
 @Slf4j
 @RestController
