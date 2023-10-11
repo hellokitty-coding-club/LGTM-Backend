@@ -1,5 +1,6 @@
 package swm.hkcc.LGTM.app.modules.mission.repository;
 
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -8,10 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
+import swm.hkcc.LGTM.app.modules.mission.domain.MissionRecommendation;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static swm.hkcc.LGTM.app.modules.member.domain.QMember.member;
 import static swm.hkcc.LGTM.app.modules.mission.domain.QMission.mission;
@@ -23,6 +26,7 @@ import static swm.hkcc.LGTM.app.modules.registration.domain.QMissionRegistration
 public class MissionCustomRepositoryImpl implements MissionCustomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
+    private final MissionRecommendationRepository missionRecommendationRepository;
 
     @Override
     @Cacheable(value = "on_going_missions", key = "#p0")
@@ -36,9 +40,10 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
         return getMissions(memberId, isMissionNotFinished());
     }
 
-    @Override // todo: get recommended missions
-    public List<Mission> getRecommendedMissions () {
-        return null;
+    @Override
+    public List<Mission> getRecommendedMissions (Long memberId) {
+        List<MissionRecommendation> missionRecommendations = missionRecommendationRepository.findByIdMemberId(memberId);
+        return getMissions(isMissionRecruiting(), missionRecommendations);
     }
 
     @Override
@@ -77,6 +82,25 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
                 .orderBy(mission.createdAt.desc())
                 .limit(3)
                 .fetch();
+    }
+
+    private List<Mission> getMissions(BooleanExpression isMissionRecruiting, List<MissionRecommendation> missionRecommendations) {
+
+        List<Long> recommendedMissionIdList = missionRecommendations.stream()
+                .map(mr -> mr.getMission().getMissionId())
+                .collect(Collectors.toList());
+
+        return jpaQueryFactory
+                .select(mission)
+                .from(mission)
+                .where(isMissionRecruiting.and(mission.missionId.in(recommendedMissionIdList)))
+                .orderBy(randomOrder())
+                .limit(3)
+                .fetch();
+    }
+
+    private OrderSpecifier<Double> randomOrder() {
+        return Expressions.numberTemplate(Double.class, "function('rand')").asc();
     }
 
     private BooleanExpression isMemberParticipating(Long memberId) {
