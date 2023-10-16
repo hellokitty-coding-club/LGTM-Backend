@@ -47,7 +47,8 @@ public class MissionServiceImpl implements MissionService {
                 missions.stream()
                         .map(mission -> MissionMapper.missionToMissionDto(
                                 mission,
-                                techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId())
+                                techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId()),
+                                "OnGoingMission"
                         ))
                         .toList()
         );
@@ -61,7 +62,8 @@ public class MissionServiceImpl implements MissionService {
                 missions.stream()
                         .map(mission -> MissionMapper.missionToMissionDto(
                                 mission,
-                                techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId())
+                                techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId()),
+                                "OnGoingMission"
                         ))
                         .toList()
         );
@@ -71,7 +73,7 @@ public class MissionServiceImpl implements MissionService {
     public MissionContentData getTotalMissions(Long memberId) {
         List<Mission> missions = missionRepository.getTotalMissions();
 
-        return getMissionContentData(memberId, missions);
+        return getMissionContentData(memberId, missions, "TotalMission");
     }
 
     @Override
@@ -102,10 +104,10 @@ public class MissionServiceImpl implements MissionService {
             }
         }
 
-        return getMissionContentData(memberId, missions);
+        return getMissionContentData(memberId, missions, "RecommendMission");
     }
 
-    private MissionContentData getMissionContentData(Long memberId, List<Mission> missions) {
+    private MissionContentData getMissionContentData(Long memberId, List<Mission> missions, String missionCategory) {
         List<MissionDetailsDto> missionDetailsDtos = missions.stream()
                 .map(mission -> {
                     List<TechTag> techTags = techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId());
@@ -120,7 +122,8 @@ public class MissionServiceImpl implements MissionService {
                             viewCount,
                             currentPeopleNumber,
                             isScraped,
-                            scrapCount
+                            scrapCount,
+                            missionCategory
                     );
                 })
                 .collect(Collectors.toList());

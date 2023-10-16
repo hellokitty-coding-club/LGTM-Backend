@@ -9,9 +9,8 @@ import java.util.List;
 
 @Getter
 @Builder
-public class MissionDto {
+public class MissionDtoV2 {
     private Long missionId;
     private String missionTitle;
     private List<TechTag> techTagList;
-    private String missionCategory;
 }

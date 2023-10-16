@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
-import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
+import swm.hkcc.LGTM.app.modules.mission.dto.MissionDtoV2;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 
 import java.time.LocalDate;
@@ -41,7 +41,7 @@ class MissionMapperTest {
     @Test
     @DisplayName("Mission 객체를 MissionDto로 변환하는 테스트")
     void testMissionToMissionDto() {
-        MissionDto result = MissionMapper.missionToMissionDto(missionSample, techTagSampleList);
+        MissionDtoV2 result = MissionMapper.missionToMissionDto(missionSample, techTagSampleList);
 
         assertEquals(missionSample.getMissionId(), result.getMissionId());
         assertEquals(missionSample.getTitle(), result.getMissionTitle());
@@ -55,8 +55,9 @@ class MissionMapperTest {
         int currentPeopleNumber = 25;
         boolean isScraped = true;
         int scrapCount = 30;
+        String missionCategory = "Test Category";
 
-        MissionDetailsDto result = MissionMapper.missionToMissionDetailDto(missionSample, techTagSampleList, viewCount, currentPeopleNumber, isScraped, scrapCount);
+        MissionDetailsDto result = MissionMapper.missionToMissionDetailDto(missionSample, techTagSampleList, viewCount, currentPeopleNumber, isScraped, scrapCount, missionCategory);
 
         assertEquals(missionSample.getMissionId(), result.getMissionId());
         assertEquals(missionSample.getTitle(), result.getMissionTitle());
@@ -68,5 +69,6 @@ class MissionMapperTest {
         assertEquals(missionSample.getMaxPeopleNumber(), result.getMaxPeopleNumber());
         assertEquals(isScraped, result.isScraped());
         assertEquals(scrapCount, result.getScrapCount());
+        assertEquals(missionCategory, result.getMissionCategory());
     }
 }
