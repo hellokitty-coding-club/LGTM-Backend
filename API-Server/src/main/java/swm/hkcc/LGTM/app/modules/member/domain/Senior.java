@@ -41,7 +41,7 @@ public class Senior implements Serializable {
     @NotNull
     private Bank bank;
 
-    @NotNull
+//    @NotNull
     private String accountHolderName;
 
     public static Senior from(SeniorSignUpRequest request, Member member) {
