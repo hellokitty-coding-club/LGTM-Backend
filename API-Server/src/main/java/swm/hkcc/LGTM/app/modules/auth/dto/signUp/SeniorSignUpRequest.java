@@ -27,4 +27,7 @@ public class SeniorSignUpRequest extends CommonUserData{
     @NotNull
     private String bankName;
 
+    @NotNull
+    private String accountHolderName;
+
 }

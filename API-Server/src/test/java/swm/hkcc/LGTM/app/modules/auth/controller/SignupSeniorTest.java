@@ -89,6 +89,7 @@ public class SignupSeniorTest {
                 .position("서버 개발자")
                 .accountNumber("111-11-1111111")
                 .bankName("국민은행")
+                .accountHolderName("홍길동")
                 .build();
     }
 
@@ -150,7 +151,8 @@ public class SignupSeniorTest {
                                                         tableRow("careerPeriod", "Integer", "경력 기간, 개월 단위로 입력, 1 이상의 정수, 12개월 이상이어야 한다."),
                                                         tableRow("position", "String", "직급, 1자 이상 10자 이하, 클라이언트에서 trim()처리하여 보낸다"),
                                                         tableRow("accountNumber", "String", "계좌번호, 숫자와 '-'로만 이루어져야 한다."),
-                                                        tableRow("bankName", "String", "은행명, 등록되지 않은 이름일 경우 400 에러 반환")
+                                                        tableRow("bankName", "String", "은행명, 등록되지 않은 이름일 경우 400 에러 반환"),
+                                                        tableRow("accountHolderName", "String", "시니어의 예금주 명")
                                                 )
                                                 .line()
                                                 .h1("[Errors]")
@@ -188,7 +190,8 @@ public class SignupSeniorTest {
                                         fieldWithPath("careerPeriod").type(JsonFieldType.NUMBER).description("경력 기간"),
                                         fieldWithPath("position").type(JsonFieldType.STRING).description("직급"),
                                         fieldWithPath("accountNumber").type(JsonFieldType.STRING).description("계좌 번호"),
-                                        fieldWithPath("bankName").type(JsonFieldType.STRING).description("은행 이름")
+                                        fieldWithPath("bankName").type(JsonFieldType.STRING).description("은행 이름"),
+                                        fieldWithPath("accountHolderName").type(JsonFieldType.STRING).description("예금주 이름")
                                 )
                                 .responseFields(
                                         fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),

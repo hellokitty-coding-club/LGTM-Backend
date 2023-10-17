@@ -17,7 +17,8 @@ import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContent;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenScreenResponse;
-import swm.hkcc.LGTM.app.modules.serverDrivenUI.ViewType;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.ABTest;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.ViewType;
 
 import java.util.List;
 
@@ -52,8 +53,10 @@ class HomeServiceImplTest {
     void getHomeScreen_WithNonEmptyContents() {
         // given
         Long memberId = 1L;
-        int version = 1;
+        String ABTestGroupName = ABTest.HOME_SCREEN_SEQUENCE_TEST.getTestName();
+
         MemberType memberType = MemberType.JUNIOR;
+
 
         List<MissionContentType> mockMissionContentTypeList = List.of(
                 MissionContentType.ON_GOING_MISSION_TITLE_V1,
@@ -67,7 +70,7 @@ class HomeServiceImplTest {
                 MissionContentType.SECTION_LIGHT_CLOSER_V1
         );
         MissionContentSequence mockContentSequence = new MissionContentSequence(mockMissionContentTypeList);
-        when(sequenceFactory.getServerDrivenUISequence(version)).thenReturn(mockContentSequence);
+        when(sequenceFactory.getServerDrivenUISequence(ABTestGroupName)).thenReturn(mockContentSequence);
         when(memberService.getMemberType(memberId)).thenReturn(memberType);
 
         MissionContentData ongoingMissionContent = MissionContentData.of(List.of(createMockMissionDto(), createMockMissionDto()));
@@ -83,7 +86,7 @@ class HomeServiceImplTest {
 
 
         // when
-        ServerDrivenScreenResponse response = homeService.getHomeScreen(memberId, version);
+        ServerDrivenScreenResponse response = homeService.getHomeScreen(memberId, ABTestGroupName);
 
         // then
         assertThat(response).isNotNull();

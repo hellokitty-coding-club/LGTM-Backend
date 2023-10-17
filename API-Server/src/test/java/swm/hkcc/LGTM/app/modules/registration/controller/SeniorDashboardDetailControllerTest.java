@@ -366,7 +366,7 @@ class SeniorDashboardDetailControllerTest {
                 new MissionHistoryInfo(ProcessStatus.MISSION_FINISHED, LocalDateTime.now().plusDays(4)),
                 new MissionHistoryInfo(ProcessStatus.FEEDBACK_REVIEWED, LocalDateTime.now().plusDays(5))
         ));
-        response.setReviewId(1L);
+        response.setFeedbackId(1L);
         response.setButtonTitle(currentStatus.getSeniorBottomTitle());
         given(registrationService.getSeniorEnrollDetail(any(), any(), any())).willReturn(response);
         // when
@@ -381,7 +381,7 @@ class SeniorDashboardDetailControllerTest {
                 .andExpect(jsonPath("$.data.nickname").value(junior.getNickName()))
                 .andExpect(jsonPath("$.data.githubId").value(junior.getGithubId()))
                 .andExpect(jsonPath("$.data.status").value(currentStatus.name()))
-                .andExpect(jsonPath("$.data.reviewId").value(1L))
+                .andExpect(jsonPath("$.data.feedbackId").value(1L))
                 .andExpect(jsonPath("$.data.buttonTitle").value(currentStatus.getSeniorBottomTitle()));
 
 
@@ -403,7 +403,7 @@ class SeniorDashboardDetailControllerTest {
                                 fieldWithPath("data.missionHistory.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
                                 fieldWithPath("data.missionHistory.MISSION_FINISHED").type(JsonFieldType.STRING).description("미션 진행 상태"),
                                 fieldWithPath("data.missionHistory.FEEDBACK_REVIEWED").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                fieldWithPath("data.reviewId").description("작성한 후기 아이디"),
+                                fieldWithPath("data.feedbackId").description("작성한 후기 아이디"),
                                 fieldWithPath("data.buttonTitle").description("바텀시트 버튼 타이틀"))
                         .build()))
         );

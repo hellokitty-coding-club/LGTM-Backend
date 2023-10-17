@@ -332,7 +332,7 @@ public class JuniorDashboardControllerTest {
                 .techTagList(getMockTechTags())
                 .processStatus(status)
                 .buttonTitle(status.getJuniorBottomTitle())
-                .reviewId(1L)
+                .feedbackId(1L)
                 .build();
         mockResponse.setMissionHistory(missionHistory);
         given(registrationService.getJuniorEnrollInfo(any(), any())).willReturn(mockResponse);
@@ -379,7 +379,7 @@ public class JuniorDashboardControllerTest {
                                         fieldWithPath("data.missionHistory.MISSION_FINISHED").type(JsonFieldType.STRING).description("미션 진행 상태"),
                                         fieldWithPath("data.missionHistory.FEEDBACK_REVIEWED").type(JsonFieldType.STRING).description("미션 진행 상태"),
                                         fieldWithPath("data.buttonTitle").type(JsonFieldType.STRING).description("버튼 타이틀"),
-                                        fieldWithPath("data.reviewId").type(JsonFieldType.NUMBER).description("리뷰 아이디")
+                                        fieldWithPath("data.feedbackId").type(JsonFieldType.NUMBER).description("리뷰 아이디")
                                 )
                                 .build())));
     }

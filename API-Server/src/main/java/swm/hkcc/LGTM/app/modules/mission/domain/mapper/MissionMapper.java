@@ -4,10 +4,7 @@ import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.domain.Senior;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
-import swm.hkcc.LGTM.app.modules.mission.dto.MemberProfile;
-import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailViewResponse;
-import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
-import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
+import swm.hkcc.LGTM.app.modules.mission.dto.*;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 
 import java.time.LocalDate;
@@ -17,15 +14,24 @@ import java.util.List;
 import static swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus.MISSION_FINISHED;
 
 public class MissionMapper {
-    public static MissionDto missionToMissionDto(Mission mission, List<TechTag> techTags) {
+    public static MissionDto missionToMissionDto(Mission mission, List<TechTag> techTags, String missionCategory) {
         return MissionDto.builder()
+                .missionId(mission.getMissionId())
+                .missionTitle(mission.getTitle())
+                .techTagList(techTags)
+                .missionCategory(missionCategory)
+                .build();
+    }
+
+    public static MissionDtoV2 missionToMissionDto(Mission mission, List<TechTag> techTags) {
+        return MissionDtoV2.builder()
                 .missionId(mission.getMissionId())
                 .missionTitle(mission.getTitle())
                 .techTagList(techTags)
                 .build();
     }
 
-    public static MissionDetailsDto missionToMissionDetailDto(Mission mission, List<TechTag> techTags, int viewCount, int currentPeopleNumber, boolean isScraped, int scrapCount) {
+    public static MissionDetailsDto missionToMissionDetailDto(Mission mission, List<TechTag> techTags, int viewCount, int currentPeopleNumber, boolean isScraped, int scrapCount, String missionCategory) {
         return MissionDetailsDto.builder()
                 .missionId(mission.getMissionId())
                 .missionTitle(mission.getTitle())
@@ -37,6 +43,7 @@ public class MissionMapper {
                 .maxPeopleNumber(mission.getMaxPeopleNumber())
                 .isScraped(isScraped)
                 .scrapCount(scrapCount)
+                .missionCategory(missionCategory)
                 .build();
     }
 

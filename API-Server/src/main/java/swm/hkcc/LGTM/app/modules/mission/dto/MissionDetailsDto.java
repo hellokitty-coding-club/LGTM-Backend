@@ -22,4 +22,5 @@ public class MissionDetailsDto {
     private int maxPeopleNumber;
     private boolean isScraped;
     private int scrapCount;
+    private String missionCategory;
 }

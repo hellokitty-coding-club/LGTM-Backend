@@ -1,4 +1,4 @@
-package swm.hkcc.LGTM.app.modules.serverDrivenUI;
+package swm.hkcc.LGTM.app.modules.serverDrivenUI.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

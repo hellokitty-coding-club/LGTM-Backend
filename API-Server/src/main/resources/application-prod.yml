@@ -2,6 +2,15 @@ spring:
   config:
     activate:
       on-profile: prod
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: ${PROD_GITHUB_CLIENT_ID}
+            clientSecret: ${PROD_GITHUB_CLIENT_SECRET}
+            redirectUri: ${PROD_GITHUB_REDIRECT_URI}
+            baseUri: "https://github.com/login/oauth/authorize"
 
   datasource:
     url: ${PROD_DB_HOST}

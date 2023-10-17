@@ -1,10 +1,12 @@
 package swm.hkcc.LGTM.app.modules.mission.constant;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenUISequenceByVersion;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType.*;
@@ -12,8 +14,8 @@ import static swm.hkcc.LGTM.app.modules.mission.constant.MissionContentType.*;
 @Getter
 @RequiredArgsConstructor
 public enum HomeServerDrivenUISequenceByVersion implements ServerDrivenUISequenceByVersion {
-    V1_HOME_SERVER_DRIVEN_UI_SEQUENCE(
-            1,
+    A_HOME_SERVER_DRIVEN_UI_SEQUENCE(
+            "A",
             List.of(ON_GOING_MISSION_TITLE_V1,
                     ON_GOING_MISSION_LIST_V1,
                     SECTION_DARK_CLOSER_V1,
@@ -25,8 +27,8 @@ public enum HomeServerDrivenUISequenceByVersion implements ServerDrivenUISequenc
                     SECTION_LIGHT_CLOSER_V1
             )),
 
-    V2_HOME_SERVER_DRIVEN_UI_SEQUENCE(
-            2,
+    B_HOME_SERVER_DRIVEN_UI_SEQUENCE(
+            "B",
             List.of(RECOMMENDED_MISSION_TITLE_V1,
                     RECOMMENDED_MISSION_LIST_V1,
                     SECTION_DARK_CLOSER_V1,
@@ -38,13 +40,13 @@ public enum HomeServerDrivenUISequenceByVersion implements ServerDrivenUISequenc
                     SECTION_LIGHT_CLOSER_V1
             ));
 
-    private final int version;
+    private final String ABTestGroupName;
 
     private final List<MissionContentType> contents;
 
-    public static Optional<HomeServerDrivenUISequenceByVersion> findByVersion(int version) {
+    public static Optional<HomeServerDrivenUISequenceByVersion> find(String ABTestGroupName) {
         return Arrays.stream(HomeServerDrivenUISequenceByVersion.values())
-                .filter(value -> value.version == version)
+                .filter(value -> Objects.equals(value.ABTestGroupName, ABTestGroupName))
                 .findFirst();
     }
 }

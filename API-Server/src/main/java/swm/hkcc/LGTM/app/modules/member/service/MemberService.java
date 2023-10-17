@@ -15,7 +15,7 @@ import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.mapper.MissionMapper;
-import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
+import swm.hkcc.LGTM.app.modules.mission.dto.MissionDtoV2;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
@@ -71,7 +71,7 @@ public class MemberService {
                 .educationalHistory(junior.getEducationalHistory())
                 .build();
 
-        List<MissionDto> missionDtos = juniorMissionHistory.stream()
+        List<MissionDtoV2> missionDtos = juniorMissionHistory.stream()
                 .map(MissionRegistration::getMission)
                 .map(mission -> MissionMapper.missionToMissionDto(
                         mission,
@@ -96,7 +96,7 @@ public class MemberService {
                 .position(senior.getPosition())
                 .build();
 
-        List<MissionDto> missionDtos = seniorMissionHistory.stream()
+        List<MissionDtoV2> missionDtos = seniorMissionHistory.stream()
                 .map(mission -> MissionMapper.missionToMissionDto(
                         mission,
                         techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId())

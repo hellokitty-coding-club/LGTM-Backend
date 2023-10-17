@@ -8,5 +8,5 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor
 public class RegistrationJuniorFeedbackResponse extends RegistrationJuniorResponse {
-    private Long reviewId;
+    private Long feedbackId;
 }
