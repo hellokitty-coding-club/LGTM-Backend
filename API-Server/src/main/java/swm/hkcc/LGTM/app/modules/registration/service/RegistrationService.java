@@ -84,10 +84,10 @@ public class RegistrationService {
         List<MemberRegisterSimpleInfo> memberInfoList = missionRegistrationRepository.getRegisteredMembersByMission(missionId);
         memberInfoList.forEach(memberInfo -> {
             if (memberInfo.getProcessStatus().isPayed()) {
-                memberInfo.setPaymentDate(missionRegistrationRepository.getStatusDateTime(ProcessStatus.MISSION_PROCEEDING, mission, senior).orElse(null));
+                memberInfo.setPaymentDate(missionRegistrationRepository.getStatusDateTime(ProcessStatus.MISSION_PROCEEDING, mission, memberInfo.getMemberId()).orElse(null));
             }
             if (memberInfo.getProcessStatus().isPullRequestCreated()) {
-                memberInfo.setMissionFinishedDate(missionRegistrationRepository.getStatusDateTime(ProcessStatus.CODE_REVIEW, mission, senior).orElse(null));
+                memberInfo.setMissionFinishedDate(missionRegistrationRepository.getStatusDateTime(ProcessStatus.CODE_REVIEW, mission, memberInfo.getMemberId()).orElse(null));
             }
         });
         return toRegistrationSeniorResponse(mission, techTagList, memberInfoList);
