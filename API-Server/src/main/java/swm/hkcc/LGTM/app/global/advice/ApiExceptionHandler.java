@@ -53,7 +53,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         Set<FieldError> fieldErrors = new HashSet<>(e.getBindingResult().getFieldErrors());
         fieldErrors
                 .forEach(error -> {
-                    sb.append(error.getField()).append(" : ").append(error.getDefaultMessage()).append("\n");
+                    sb.append(error.getDefaultMessage()).append("\n");
                 });
         // other errors info
         e.getBindingResult().getAllErrors()
@@ -62,10 +62,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .forEach(error -> {
                     sb.append(error.getDefaultMessage()).append("\n");
                 });
-
-        // request info
-        sb.append("(").append(request.getDescription(false)).append(")");
-
 
         GeneralException ge = new GeneralException(ResponseCode.VALIDATION_ERROR, sb.toString(), e.getCause());
         return handleExceptionInternal(ge, ge.getResponseCode(), request);
