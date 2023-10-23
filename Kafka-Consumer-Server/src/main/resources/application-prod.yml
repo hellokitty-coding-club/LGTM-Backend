@@ -43,8 +43,10 @@ spring:
     template:
       default-topic: lgtm-prod
     topic:
-      user-log: user-data-log-dev
+      user-log-dev: user-data-log-dev
+      user-log-prod: user-data-log-prod
       chat-message: chat-message-prod
     group-id:
-      user-log: user-log-c-prod-001
+      user-log-dev: user-log-c-dev-001
+      user-log-prod: user-log-c-prod-001
       chat-message: chat-message-c-prod-002
