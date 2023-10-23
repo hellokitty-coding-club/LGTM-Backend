@@ -106,6 +106,10 @@ public class MemberService {
         return toMemberDetailProfile(member, memberType, isMyProfile, seniorDetailInfo, techTagList, missionDtos);
     }
 
+    public Member getMember(Long memberId) {
+        return memberRepository.findById(memberId).orElseThrow(NotExistMember::new);
+    }
+
     private List<TechTag> getTechTagList(Long memberId) {
         return techTagPerMemberRepository.findWithTechTagByMemberId(memberId) // N+1 문제 방지를 위해 fetch join 사용
                 .stream()
