@@ -6,13 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
-import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.member.service.MemberValidator;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
 import swm.hkcc.LGTM.app.modules.mission.utils.GithubUrlValidator;
-import swm.hkcc.LGTM.app.modules.notification.service.NotificationService;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionHistory;
 import swm.hkcc.LGTM.app.modules.registration.domain.MissionRegistration;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
@@ -44,8 +42,6 @@ import static swm.hkcc.LGTM.app.modules.registration.domain.mapper.RegistrationM
 @Service
 @Transactional
 public class RegistrationService {
-    NotificationService notificationService;
-    private final MemberRepository memberRepository;
     private final MissionRepository missionRepository;
     private final MissionRegistrationRepository missionRegistrationRepository;
     private final MissionHistoryRepository missionHistoryRepository;
