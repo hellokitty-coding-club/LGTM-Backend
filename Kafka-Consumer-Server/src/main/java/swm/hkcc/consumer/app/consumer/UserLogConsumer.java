@@ -17,8 +17,19 @@ public class UserLogConsumer {
 
     private final UserDataLogRepository userDataLogRepository;
 
-    @KafkaListener(topics = "${spring.kafka.topic.user-log}", groupId = "${spring.kafka.group-id.user-log}")
+    @KafkaListener(topics = "${spring.kafka.topic.user-log-dev}", groupId = "${spring.kafka.group-id.user-log-dev}")
     public void consume(
+            @Payload LogMessage message,
+            @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
+            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
+            @Header(KafkaHeaders.RECEIVED_TIMESTAMP) long ts
+    ) {
+        log.info(String.format("Json message recieved -> %s", message.toString()));
+        userDataLogRepository.save(message.toUserLog(topic, partition, ts));
+    }
+
+    @KafkaListener(topics = "${spring.kafka.topic.user-log-prod}", groupId = "${spring.kafka.group-id.user-log-prod}")
+    public void consumeProd(
             @Payload LogMessage message,
             @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
