@@ -11,6 +11,7 @@ import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
+import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 
 import java.util.Map;
 
@@ -23,46 +24,13 @@ public class RegistrationNotificationAopConfig {
     private final MemberService memberService;
 
     @Async
-    @AfterReturning("execution(* swm.hkcc.LGTM.app.modules.registration.service.RegistrationService.pushTestMethod(..))")
-    public void afterPush(JoinPoint joinPoint) {
-        Object[] args = joinPoint.getArgs();
-        Member junior = (Member) args[0];
-        Mission mission = (Mission) args[1];
-
-//        Long targetMemberId = mission.getWriter().getMemberId();
-        Long targetMemberId = 166L;
-
-        Map<String, String> data = Map.of(
-                "title", String.format("%s", mission.getTitle()),
-                "body", String.format("%s님이 미션에 참여했습니다!", junior.getNickName()),
-                "missionId", String.valueOf(mission.getMissionId()),
-                "missionTitle", mission.getTitle(),
-                "nickName", junior.getNickName(),
-                "targetMemberType", "SENIOR",
-                "isFromPush", "true"
-        );
-        notificationService.sendNotification(targetMemberId, data);
-        log.info("pushed");
-    }
-
-    @Async
     @AfterReturning("execution(* swm.hkcc.LGTM.app.modules.registration.service.RegistrationService.registerJunior(..))")
     public void registerJunior(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         Member junior = (Member) args[0];
         Mission mission = (Mission) args[1];
         Long targetMemberId = mission.getWriter().getMemberId();
-
-        Map<String, String> data = Map.of(
-                "title", String.format("%s", mission.getTitle()),
-                "body", String.format("%s님이 미션에 참여했습니다!", junior.getNickName()),
-                "missionId", String.valueOf(mission.getMissionId()),
-                "missionTitle", mission.getTitle(),
-                "nickName", junior.getNickName(),
-                "targetMemberType", MemberType.SENIOR.toString(),
-                "isFromPush", "true"
-        );
-        notificationService.sendNotification(targetMemberId, data);
+        sendNotification(targetMemberId, mission, "%s님이 미션에 참여했습니다!", junior.getNickName(), MemberType.SENIOR, ProcessStatus.WAITING_FOR_PAYMENT);
     }
 
     @Async
@@ -73,18 +41,7 @@ public class RegistrationNotificationAopConfig {
         Mission mission = (Mission) args[1];
         Long juniorId = (Long) args[2];
         Long targetMemberId = senior.getMemberId();
-
-
-        Map<String, String> data = Map.of(
-                "title", String.format("%s", mission.getTitle()),
-                "body", String.format("%s님이 입금을 확인했습니다. 미션을 시작해주세요!", senior.getNickName()),
-                "missionId", String.valueOf(mission.getMissionId()),
-                "missionTitle", mission.getTitle(),
-                "nickName", senior.getNickName(),
-                "targetMemberType", MemberType.JUNIOR.toString(),
-                "isFromPush", "true"
-        );
-        notificationService.sendNotification(targetMemberId, data);
+        sendNotification(targetMemberId, mission, "%s님이 입금을 확인했습니다. 미션을 시작해주세요!", senior.getNickName(), MemberType.JUNIOR, ProcessStatus.MISSION_PROCEEDING);
     }
 
     @Async
@@ -96,18 +53,7 @@ public class RegistrationNotificationAopConfig {
         Long juniorId = (Long) args[2];
         Member junior = memberService.getMember(juniorId);
         Long targetMemberId = senior.getMemberId();
-
-
-        Map<String, String> data = Map.of(
-                "title", String.format("%s", mission.getTitle()),
-                "body", String.format("%s님의 코드리뷰가 완료되었습니다. 리뷰를 보러갈까요?", senior.getNickName()),
-                "missionId", String.valueOf(mission.getMissionId()),
-                "missionTitle", mission.getTitle(),
-                "nickName", senior.getNickName(),
-                "targetMemberType", MemberType.JUNIOR.toString(),
-                "isFromPush", "true"
-        );
-        notificationService.sendNotification(targetMemberId, data);
+        sendNotification(targetMemberId, mission, "%s님이 코드리뷰를 완료했습니다. 리뷰를 보러갈까요?", junior.getNickName(), MemberType.JUNIOR, ProcessStatus.MISSION_FINISHED);
     }
 
     @Async
@@ -117,18 +63,7 @@ public class RegistrationNotificationAopConfig {
         Member junior = (Member) args[0];
         Mission mission = (Mission) args[1];
         Long targetMemberId = mission.getWriter().getMemberId();
-
-
-        Map<String, String> data = Map.of(
-                "title", String.format("%s", mission.getTitle()),
-                "body", String.format("%s님이 입금을 완료했습니다. 확인 후 입금 확인 버튼을 눌러주세요!", junior.getNickName()),
-                "missionId", String.valueOf(mission.getMissionId()),
-                "missionTitle", mission.getTitle(),
-                "nickName", junior.getNickName(),
-                "targetMemberType", MemberType.SENIOR.toString(),
-                "isFromPush", "true"
-        );
-        notificationService.sendNotification(targetMemberId, data);
+        sendNotification(targetMemberId, mission, "%s님이 입금을 완료했습니다. 확인 후 입금 확인 버튼을 눌러주세요!", junior.getNickName(), MemberType.SENIOR, ProcessStatus.PAYMENT_CONFIRMATION);
     }
 
     @Async
@@ -138,17 +73,21 @@ public class RegistrationNotificationAopConfig {
         Member junior = (Member) args[0];
         Mission mission = (Mission) args[1];
         Long targetMemberId = mission.getWriter().getMemberId();
+        sendNotification(targetMemberId, mission, "%s님이 미션을 제출했습니다! 리뷰를 시작해주세요!", junior.getNickName(), MemberType.SENIOR, ProcessStatus.CODE_REVIEW);
+    }
 
-
+    private void sendNotification(Long targetMemberId, Mission mission, String bodyFormat, String name, MemberType memberType, ProcessStatus processStatus) {
         Map<String, String> data = Map.of(
                 "title", String.format("%s", mission.getTitle()),
-                "body", String.format("%s님이 미션을 제출했습니다! 리뷰를 시작해주세요!", junior.getNickName()),
+                "body", String.format(bodyFormat, name),
                 "missionId", String.valueOf(mission.getMissionId()),
                 "missionTitle", mission.getTitle(),
-                "nickName", junior.getNickName(),
-                "targetMemberType", MemberType.SENIOR.toString(),
+                "pushCategory", processStatus.toString(),
+                "nickName", name,
+                "targetMemberType", memberType.toString(),
                 "isFromPush", "true"
         );
         notificationService.sendNotification(targetMemberId, data);
     }
 }
+
