@@ -24,7 +24,7 @@ public class IntroController {
     }
 
     @GetMapping("/push")
-    public ApiDataResponse<IntroResponse> pushTest(
+    public ApiDataResponse<Long> pushTest(
             @RequestParam Long targetMemberId
     ) {
         Map<String, String> data = Map.of(
@@ -34,6 +34,6 @@ public class IntroController {
         );
         notificationService.sendNotification(targetMemberId, data);
         // 임시로 100,100 넣어둠
-        return ApiDataResponse.of(new IntroResponse(100, 100));
+        return ApiDataResponse.of(targetMemberId);
     }
 }
