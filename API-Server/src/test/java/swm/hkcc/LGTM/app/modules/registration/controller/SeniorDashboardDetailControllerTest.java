@@ -34,8 +34,10 @@ import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
 import swm.hkcc.LGTM.app.modules.member.exception.NotJuniorMember;
 import swm.hkcc.LGTM.app.modules.member.exception.NotSeniorMember;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
+import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
+import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.registrationSeniorDetailResponse.RegistrationSeniorDetailFeedbackResponse;
@@ -83,6 +85,13 @@ class SeniorDashboardDetailControllerTest {
     @MockBean
     private MemberRepository memberRepository;
 
+    @MockBean
+    private MissionService missionService;
+
+    @MockBean
+    private MemberService memberService;
+
+
     private Member mockJunior;
     private Member mockSenior;
     private Mission mockMission;
@@ -107,6 +116,8 @@ class SeniorDashboardDetailControllerTest {
 
         Member member = getMockSenior();
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
+        given(memberService.getMember(any())).willReturn(junior);
 
         RegistrationSeniorDetailResponse response = new RegistrationSeniorDetailResponse();
         response.setMemberId(junior.getMemberId());
@@ -225,6 +236,8 @@ class SeniorDashboardDetailControllerTest {
 
         Member member = getMockSenior();
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
+        given(memberService.getMember(any())).willReturn(junior);
 
         ProcessStatus currentStatus = ProcessStatus.PAYMENT_CONFIRMATION;
 
@@ -286,6 +299,8 @@ class SeniorDashboardDetailControllerTest {
 
         Member member = getMockSenior();
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
+        given(memberService.getMember(any())).willReturn(junior);
 
         ProcessStatus currentStatus = ProcessStatus.CODE_REVIEW;
 
@@ -350,6 +365,8 @@ class SeniorDashboardDetailControllerTest {
 
         Member member = getMockSenior();
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
+        given(memberService.getMember(any())).willReturn(junior);
 
         ProcessStatus currentStatus = ProcessStatus.FEEDBACK_REVIEWED;
 
@@ -420,6 +437,8 @@ class SeniorDashboardDetailControllerTest {
 
         Member member = getMockSenior();
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
+        given(memberService.getMember(any())).willReturn(junior);
 
         ResponseCode expectedResponseCode = ResponseCode.NOT_SENIOR_MEMBER;
 
@@ -486,6 +505,8 @@ class SeniorDashboardDetailControllerTest {
 
         Member member = getMockSenior();
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
+        given(memberService.getMember(any())).willReturn(junior);
 
         ResponseCode expectedResponseCode = ResponseCode.NOT_MY_MISSION;
 
@@ -520,6 +541,8 @@ class SeniorDashboardDetailControllerTest {
 
         Member member = getMockSenior();
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
+        given(memberService.getMember(any())).willReturn(junior);
 
         ResponseCode expectedResponseCode = ResponseCode.NOT_EXIST_MEMBER;
 
@@ -554,6 +577,8 @@ class SeniorDashboardDetailControllerTest {
 
         Member member = getMockSenior();
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
+        given(memberService.getMember(any())).willReturn(junior);
 
         ResponseCode expectedResponseCode = ResponseCode.NOT_JUNIOR_MEMBER;
 
@@ -588,6 +613,8 @@ class SeniorDashboardDetailControllerTest {
 
         Member member = getMockSenior();
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
+        given(memberService.getMember(any())).willReturn(junior);
 
         ResponseCode expectedResponseCode = ResponseCode.NOT_REGISTERED_MISSION;
 

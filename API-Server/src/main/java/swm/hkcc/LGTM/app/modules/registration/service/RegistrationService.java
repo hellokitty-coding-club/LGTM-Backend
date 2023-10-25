@@ -6,8 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
-import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
-import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.member.service.MemberValidator;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
@@ -44,7 +42,6 @@ import static swm.hkcc.LGTM.app.modules.registration.domain.mapper.RegistrationM
 @Service
 @Transactional
 public class RegistrationService {
-    private final MemberRepository memberRepository;
     private final MissionRepository missionRepository;
     private final MissionRegistrationRepository missionRegistrationRepository;
     private final MissionHistoryRepository missionHistoryRepository;
@@ -58,9 +55,8 @@ public class RegistrationService {
     private static final int LOCK_RETRY_DELAY_MS = 100;
 
 
-    public long registerJunior(Member junior, Long missionId) throws InterruptedException {
+    public long registerJunior(Member junior, Mission mission) throws InterruptedException {
         memberValidator.validateJunior(junior);
-        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
 
         // todo : 동시성 테스트하기
         // todo: rdb lock 고려해보기
@@ -73,15 +69,14 @@ public class RegistrationService {
         }
     }
 
-    public RegistrationSeniorResponse getSeniorEnrollInfo(Member senior, Long missionId) {
+    public RegistrationSeniorResponse getSeniorEnrollInfo(Member senior, Mission mission) {
         memberValidator.validateSenior(senior);
-        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
         registrationValidator.validateMissionForSenior(mission, senior.getMemberId());
 
         List<TechTag> techTagList = techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId());
 
         // todo : isPayed & isPullRequestCreated registration에 추가해서 한번에 조회
-        List<MemberRegisterSimpleInfo> memberInfoList = missionRegistrationRepository.getRegisteredMembersByMission(missionId);
+        List<MemberRegisterSimpleInfo> memberInfoList = missionRegistrationRepository.getRegisteredMembersByMission(mission.getMissionId());
         memberInfoList.forEach(memberInfo -> {
             if (memberInfo.getProcessStatus().isPayed()) {
                 memberInfo.setPaymentDate(missionRegistrationRepository.getStatusDateTime(ProcessStatus.MISSION_PROCEEDING, mission, memberInfo.getMemberId()).orElse(null));
@@ -93,11 +88,9 @@ public class RegistrationService {
         return toRegistrationSeniorResponse(mission, techTagList, memberInfoList);
     }
 
-    public RegistrationSeniorDetailResponse getSeniorEnrollDetail(Member senior, Long missionId, Long juniorId) {
+    public RegistrationSeniorDetailResponse getSeniorEnrollDetail(Member senior, Mission mission, Member junior) {
         memberValidator.validateSenior(senior);
-        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
         registrationValidator.validateMissionForSenior(mission, senior.getMemberId());
-        Member junior = memberRepository.findById(juniorId).orElseThrow(NotExistMember::new);
         memberValidator.validateJunior(junior);
 
         // 미션에 참가중인 주니어인지
@@ -108,14 +101,13 @@ public class RegistrationService {
 
         ProcessStatus status = getLatestProcessStatus(missionHistory);
 
-        AdditionalInfo additionalInfo = additionalInfoProviderFactory.getProvider(status).provide(junior, missionId);
+        AdditionalInfo additionalInfo = additionalInfoProviderFactory.getProvider(status).provide(junior, mission.getMissionId());
 
         return RegistrationMapper.toRegistrationSeniorDetailResponse(mission, junior, status, missionHistory, additionalInfo);
     }
 
-    public RegistrationJuniorResponse getJuniorEnrollInfo(Member junior, Long missionId) {
+    public RegistrationJuniorResponse getJuniorEnrollInfo(Member junior, Mission mission) {
         memberValidator.validateJunior(junior);
-        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
         registrationValidator.validateMissionForJunior(mission, junior.getMemberId());
 
         List<TechTag> techTagList = techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId());
@@ -128,9 +120,8 @@ public class RegistrationService {
         return toRegistrationJuniorResponse(mission, techTagList, missionHistory, status, additionalInfo);
     }
 
-    public MissionHistoryInfo confirmPayment(Member senior, Long missionId, Long juniorId) {
+    public MissionHistoryInfo confirmPayment(Member senior, Mission mission, Long juniorId) {
         memberValidator.validateSenior(senior);
-        Mission mission = getValidatedMissionForSenior(missionId, senior.getMemberId());
         memberValidator.validateJunior(juniorId);
 
         MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), juniorId)
@@ -144,9 +135,8 @@ public class RegistrationService {
         return MissionHistoryInfo.from(history);
     }
 
-    public MissionHistoryInfo completeReview(Member senior, Long missionId, Long juniorId) {
+    public MissionHistoryInfo completeReview(Member senior, Mission mission, Long juniorId) {
         memberValidator.validateSenior(senior);
-        Mission mission = getValidatedMissionForSenior(missionId, senior.getMemberId());
         memberValidator.validateJunior(juniorId);
 
         MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), juniorId)
@@ -160,9 +150,8 @@ public class RegistrationService {
         return MissionHistoryInfo.from(history);
     }
 
-    public MissionHistoryInfo registerPayment(Member junior, Long missionId) {
+    public MissionHistoryInfo registerPayment(Member junior, Mission mission) {
         memberValidator.validateJunior(junior);
-        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
 
         MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), junior.getMemberId())
                 .orElseThrow(NotRegisteredMission::new);
@@ -175,9 +164,8 @@ public class RegistrationService {
         return MissionHistoryInfo.from(history);
     }
 
-    public MissionHistoryInfo registerPullRequest(Member junior, Long missionId, String githubPullRequestUrl) {
+    public MissionHistoryInfo registerPullRequest(Member junior, Mission mission, String githubPullRequestUrl) {
         memberValidator.validateJunior(junior);
-        Mission mission = missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
         GithubUrlValidator.validateGithubPrUrl(githubPullRequestUrl);
 
         MissionRegistration registration = missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(mission.getMissionId(), junior.getMemberId())

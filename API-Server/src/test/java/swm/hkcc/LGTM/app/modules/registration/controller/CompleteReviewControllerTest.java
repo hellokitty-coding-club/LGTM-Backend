@@ -34,8 +34,10 @@ import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
 import swm.hkcc.LGTM.app.modules.member.exception.NotJuniorMember;
 import swm.hkcc.LGTM.app.modules.member.exception.NotSeniorMember;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
+import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
+import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
 import swm.hkcc.LGTM.app.modules.registration.exception.NotMyMission;
@@ -48,6 +50,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.*;
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
@@ -85,6 +88,12 @@ public class CompleteReviewControllerTest {
     private MemberRepository memberRepository;
 
     @MockBean
+    private MemberService memberService;
+
+    @MockBean
+    private MissionService missionService;
+
+    @MockBean
     private CustomUserDetails customUserDetails;
 
     private Member mockJunior;
@@ -105,7 +114,9 @@ public class CompleteReviewControllerTest {
     @DisplayName("completeReview_동작_테스트")
     void completeReview_동작_테스트() throws Exception {
         // given
-        given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockSenior()));
+        given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(Optional.ofNullable(getMockSenior()));
+        given(memberService.getMember(any())).willReturn(getMockJunior());
+        given(missionService.getMission(any())).willReturn(getMockMission());
         given(registrationService.completeReview(any(), any(), any())).willReturn(
                 MissionHistoryInfo.builder()
                         .status(ProcessStatus.MISSION_FINISHED)
@@ -212,6 +223,8 @@ public class CompleteReviewControllerTest {
         ResponseCode expectedResponseCode = ResponseCode.NOT_SENIOR_MEMBER;
 
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockSenior()));
+        given(memberService.getMember(any())).willReturn(getMockJunior());
+        given(missionService.getMission(any())).willReturn(getMockMission());
         given(registrationService.completeReview(any(), any(), any())).willThrow(new NotSeniorMember());
 
         // when
@@ -237,6 +250,8 @@ public class CompleteReviewControllerTest {
         ResponseCode expectedResponseCode = ResponseCode.NOT_EXIST_MISSION;
 
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockSenior()));
+        given(memberService.getMember(any())).willReturn(getMockJunior());
+        given(missionService.getMission(any())).willReturn(getMockMission());
         given(registrationService.completeReview(any(), any(), any())).willThrow(new NotExistMission());
 
         // when
@@ -262,6 +277,8 @@ public class CompleteReviewControllerTest {
         ResponseCode expectedResponseCode = ResponseCode.NOT_MY_MISSION;
 
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockSenior()));
+        given(memberService.getMember(any())).willReturn(getMockJunior());
+        given(missionService.getMission(any())).willReturn(getMockMission());
         given(registrationService.completeReview(any(), any(), any())).willThrow(new NotMyMission());
 
         // when
@@ -287,6 +304,8 @@ public class CompleteReviewControllerTest {
         ResponseCode expectedResponseCode = ResponseCode.NOT_EXIST_MEMBER;
 
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockSenior()));
+        given(memberService.getMember(any())).willReturn(getMockJunior());
+        given(missionService.getMission(any())).willReturn(getMockMission());
         given(registrationService.completeReview(any(), any(), any())).willThrow(new NotExistMember());
 
         // when
@@ -312,6 +331,8 @@ public class CompleteReviewControllerTest {
         ResponseCode expectedResponseCode = ResponseCode.NOT_JUNIOR_MEMBER;
 
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockSenior()));
+        given(memberService.getMember(any())).willReturn(getMockJunior());
+        given(missionService.getMission(any())).willReturn(getMockMission());
         given(registrationService.completeReview(any(), any(), any())).willThrow(new NotJuniorMember());
 
         // when
@@ -337,6 +358,8 @@ public class CompleteReviewControllerTest {
         ResponseCode expectedResponseCode = ResponseCode.NOT_REGISTERED_MISSION;
 
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockSenior()));
+        given(memberService.getMember(any())).willReturn(getMockJunior());
+        given(missionService.getMission(any())).willReturn(getMockMission());
         given(registrationService.completeReview(any(), any(), any())).willThrow(new NotRegisteredMission());
 
         // when

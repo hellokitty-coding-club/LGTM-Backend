@@ -32,6 +32,7 @@ import swm.hkcc.LGTM.app.modules.member.exception.NotSeniorMember;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
+import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
@@ -46,6 +47,7 @@ import java.util.List;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.ResourceDocumentation.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -75,6 +77,10 @@ class SeniorDashboardControllerTest {
     @MockBean
     private MemberRepository memberRepository;
 
+    @MockBean
+    private MissionService missionService;
+
+
     @BeforeEach
     public void setUp(@Autowired WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -101,6 +107,7 @@ class SeniorDashboardControllerTest {
 
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
         String memberAccessToken = getMockToken(member);
 
 
@@ -128,7 +135,7 @@ class SeniorDashboardControllerTest {
                 .memberInfoList(Arrays.asList(memberInfo))
                 .build();
 
-        given(registrationService.getSeniorEnrollInfo(member, mission.getMissionId())).willReturn(mockResponse);
+        given(registrationService.getSeniorEnrollInfo(member, mission)).willReturn(mockResponse);
         // when
         // then
         ResultActions actions = mockMvc.perform(get("/v1/mission/{missionId}/senior", mission.getMissionId())
@@ -224,9 +231,9 @@ class SeniorDashboardControllerTest {
                 .build();
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
 
-
-        given(registrationService.getSeniorEnrollInfo(member, mission.getMissionId())).willThrow(new NotSeniorMember());
+        given(registrationService.getSeniorEnrollInfo(member, mission)).willThrow(new NotSeniorMember());
 
         String memberAccessToken = getMockToken(member);
         // when
@@ -263,10 +270,11 @@ class SeniorDashboardControllerTest {
                 .build();
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
 
         String memberAccessToken = getMockToken(member);
 
-        given(registrationService.getSeniorEnrollInfo(member, mission.getMissionId())).willThrow(new NotExistMission());
+        given(registrationService.getSeniorEnrollInfo(member, mission)).willThrow(new NotExistMission());
         // when
 
         // then
@@ -301,10 +309,11 @@ class SeniorDashboardControllerTest {
                 .build();
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
 
         String memberAccessToken = getMockToken(member);
 
-        given(registrationService.getSeniorEnrollInfo(member, mission.getMissionId())).willThrow(new NotMyMission());
+        given(registrationService.getSeniorEnrollInfo(member, mission)).willThrow(new NotMyMission());
         // when
 
         // then

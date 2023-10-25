@@ -36,6 +36,7 @@ import swm.hkcc.LGTM.app.modules.member.exception.NotSeniorMember;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
+import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
 import swm.hkcc.LGTM.app.modules.registration.exception.NotMyMission;
@@ -84,7 +85,7 @@ public class ConfirmPaymentControllerTest {
     private MemberRepository memberRepository;
 
     @MockBean
-    private CustomUserDetails customUserDetails;
+    private MissionService missionService;
 
     private Member mockJunior;
     private Member mockSenior;
@@ -104,6 +105,7 @@ public class ConfirmPaymentControllerTest {
     void confirmPayment_동작_테스트() throws Exception {
         // given
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockSenior()));
+        given(missionService.getMission(any())).willReturn(getMockMission());
         given(registrationService.confirmPayment(any(), any(), any())).willReturn(
                 MissionHistoryInfo.builder()
                         .status(ProcessStatus.MISSION_PROCEEDING)

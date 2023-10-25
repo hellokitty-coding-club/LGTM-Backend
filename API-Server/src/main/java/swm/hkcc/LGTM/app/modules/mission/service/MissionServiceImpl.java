@@ -107,6 +107,11 @@ public class MissionServiceImpl implements MissionService {
         return getMissionContentData(memberId, missions, "RecommendMission");
     }
 
+    @Override
+    public Mission getMission(Long missionId) {
+        return missionRepository.findById(missionId).orElseThrow(NotExistMission::new);
+    }
+
     private MissionContentData getMissionContentData(Long memberId, List<Mission> missions, String missionCategory) {
         List<MissionDetailsDto> missionDetailsDtos = missions.stream()
                 .map(mission -> {
@@ -137,5 +142,4 @@ public class MissionServiceImpl implements MissionService {
         }
         return missionRepository.existsByMissionIdAndWriter_MemberId(missionId, memberId);
     }
-
 }
