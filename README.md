@@ -3,8 +3,14 @@
 
 Looks good to me (LGTM) 코드 리뷰 매칭 플랫폼 Backend
 
-# Architecture
+# Architecture on AWS
 ![image](https://github.com/hellokitty-coding-club/LGTM-Backend/assets/83508073/4999fe10-b8b3-4f44-bfc9-58872b8d7d44)
+
+# Data Pipeline with Kafka Cluster
+<img width="603" alt="스크린샷 2023-10-25 오후 3 09 29" src="https://github.com/hellokitty-coding-club/LGTM-Backend/assets/83508073/d7371f47-0044-4f73-9eda-45c099c3fb26">
+<img width="390" alt="스크린샷 2023-10-25 오후 3 08 49" src="https://github.com/hellokitty-coding-club/LGTM-Backend/assets/83508073/ed7f014c-7573-41eb-b1a7-01052b0751f5">
+<img width="708" alt="스크린샷 2023-10-25 오후 3 10 17" src="https://github.com/hellokitty-coding-club/LGTM-Backend/assets/83508073/a987598b-0348-478f-87bf-a0d0dc3fb194">
+
 
 ## ERD
 ![스크린샷 2023-09-13 오후 6 59 10](https://github.com/hellokitty-coding-club/LGTM-Backend/assets/83508073/a0fb4f95-825f-4e55-823c-a16400c71bec)
