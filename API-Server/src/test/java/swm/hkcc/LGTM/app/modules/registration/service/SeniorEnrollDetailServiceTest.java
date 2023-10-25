@@ -87,7 +87,7 @@ class SeniorEnrollDetailServiceTest {
         given(missionRepository.findById(any())).willReturn(Optional.ofNullable(mission));
 
         // when
-        RegistrationSeniorDetailResponse response = registrationService.getSeniorEnrollDetail(senior, 1L, 1L);
+        RegistrationSeniorDetailResponse response = registrationService.getSeniorEnrollDetail(senior, mission, junior);
 
         // then
         assertThat(response.getStatus()).isEqualTo(ProcessStatus.PAYMENT_CONFIRMATION);
@@ -116,7 +116,7 @@ class SeniorEnrollDetailServiceTest {
         given(missionRegistrationRepository.findByMission_MissionIdAndJunior_MemberId(any(), any())).willReturn(Optional.ofNullable(missionRegistration));
 
         // when
-        RegistrationSeniorDetailResponse response = registrationService.getSeniorEnrollDetail(senior, 1L, 1L);
+        RegistrationSeniorDetailResponse response = registrationService.getSeniorEnrollDetail(senior, mission, junior);
 
         // then
         assertThat(response.getStatus()).isEqualTo(ProcessStatus.CODE_REVIEW);
@@ -146,7 +146,7 @@ class SeniorEnrollDetailServiceTest {
         given(reviewRepository.findByMission_MissionIdAndReviewer_MemberId(any(), any())).willReturn(Optional.ofNullable(Review.builder().reviewId(1L).build()));
 
         // when
-        RegistrationSeniorDetailResponse response = registrationService.getSeniorEnrollDetail(senior, 1L, 1L);
+        RegistrationSeniorDetailResponse response = registrationService.getSeniorEnrollDetail(senior,  mission, junior);
 
         // then
         assertThat(response.getStatus()).isEqualTo(ProcessStatus.FEEDBACK_REVIEWED);
@@ -170,7 +170,7 @@ class SeniorEnrollDetailServiceTest {
         given(missionRepository.findById(any())).willReturn(Optional.ofNullable(mission));
 
         // when
-        RegistrationSeniorDetailResponse response = registrationService.getSeniorEnrollDetail(senior, 1L, 1L);
+        RegistrationSeniorDetailResponse response = registrationService.getSeniorEnrollDetail(senior, mission, junior);
 
         // then
         assertThat(response.getStatus()).isEqualTo(ProcessStatus.WAITING_FOR_PAYMENT);

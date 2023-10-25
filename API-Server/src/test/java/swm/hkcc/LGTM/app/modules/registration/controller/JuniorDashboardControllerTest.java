@@ -35,6 +35,7 @@ import swm.hkcc.LGTM.app.modules.member.exception.NotJuniorMember;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
+import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MissionHistoryInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.registrationJuniorResponse.*;
@@ -84,7 +85,7 @@ public class JuniorDashboardControllerTest {
     private MemberRepository memberRepository;
 
     @MockBean
-    private CustomUserDetails customUserDetails;
+    private MissionService missionService;
 
     private Member mockJunior;
     private Member mockSenior;
@@ -104,6 +105,7 @@ public class JuniorDashboardControllerTest {
     void 주니어_미션_대시보드_예금정보() throws Exception {
         // given
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockJunior()));
+        given(missionService.getMission(any())).willReturn(getMockMission());
 
         List<MissionHistoryInfo> missionHistory = List.of(
                 MissionHistoryInfo.builder().status(ProcessStatus.WAITING_FOR_PAYMENT).dateTime(LocalDateTime.now().toString()).build()
@@ -247,6 +249,7 @@ public class JuniorDashboardControllerTest {
     void 주니어_미션_대시보드_pr정보() throws Exception {
         // given
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockJunior()));
+        given(missionService.getMission(any())).willReturn(getMockMission());
 
         List<MissionHistoryInfo> missionHistory = List.of(
                 MissionHistoryInfo.builder().status(ProcessStatus.WAITING_FOR_PAYMENT).dateTime(LocalDateTime.now().toString()).build(),

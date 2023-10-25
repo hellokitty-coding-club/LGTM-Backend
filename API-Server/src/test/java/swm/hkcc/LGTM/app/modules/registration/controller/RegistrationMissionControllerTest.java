@@ -31,8 +31,10 @@ import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
 import swm.hkcc.LGTM.app.modules.member.exception.NotJuniorMember;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
+import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.exception.NotExistMission;
+import swm.hkcc.LGTM.app.modules.mission.service.MissionService;
 import swm.hkcc.LGTM.app.modules.registration.domain.ProcessStatus;
 import swm.hkcc.LGTM.app.modules.registration.dto.MemberRegisterSimpleInfo;
 import swm.hkcc.LGTM.app.modules.registration.dto.RegistrationSeniorResponse;
@@ -51,6 +53,7 @@ import java.util.Optional;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.ResourceDocumentation.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -81,6 +84,9 @@ class RegistrationMissionControllerTest {
     @MockBean
     private MemberRepository memberRepository;
 
+    @MockBean
+    private MissionService missionService;
+
     @BeforeEach
     public void setUp(@Autowired WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -110,7 +116,7 @@ class RegistrationMissionControllerTest {
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(member));
 
 
-        given(registrationService.registerJunior(member, mission.getMissionId())).willReturn(1L);
+        given(registrationService.registerJunior(member, mission)).willReturn(1L);
         // when
         // then
         ResultActions actions = mockMvc.perform(post("/v1/mission/{missionId}", mission.getMissionId())
@@ -203,9 +209,10 @@ class RegistrationMissionControllerTest {
 
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
 
 
-        given(registrationService.registerJunior(member, mission.getMissionId())).willThrow(new NotJuniorMember());
+        given(registrationService.registerJunior(member, mission)).willThrow(new NotJuniorMember());
 
         // when
         // then
@@ -242,9 +249,9 @@ class RegistrationMissionControllerTest {
 
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
 
-
-        given(registrationService.registerJunior(member, mission.getMissionId())).willThrow(new NotExistMission());
+        given(registrationService.registerJunior(member, mission)).willThrow(new NotExistMission());
 
         // when
         // then
@@ -281,8 +288,9 @@ class RegistrationMissionControllerTest {
 
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
 
-        given(registrationService.registerJunior(member, mission.getMissionId())).willThrow(new AlreadyRegisteredMission());
+        given(registrationService.registerJunior(member, mission)).willThrow(new AlreadyRegisteredMission());
 
         // when
         // then
@@ -320,8 +328,9 @@ class RegistrationMissionControllerTest {
 
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
 
-        given(registrationService.registerJunior(member, mission.getMissionId())).willThrow(new MissRegisterDeadline());
+        given(registrationService.registerJunior(member, mission)).willThrow(new MissRegisterDeadline());
 
         // when
         // then
@@ -359,8 +368,9 @@ class RegistrationMissionControllerTest {
 
         member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(Optional.ofNullable(member));
+        given(missionService.getMission(any())).willReturn(mission);
 
-        given(registrationService.registerJunior(member, mission.getMissionId())).willThrow(new FullRegisterMembers());
+        given(registrationService.registerJunior(member, mission)).willThrow(new FullRegisterMembers());
 
         // when
         // then
