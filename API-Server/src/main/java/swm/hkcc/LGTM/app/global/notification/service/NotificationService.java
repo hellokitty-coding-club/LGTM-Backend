@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
-import swm.hkcc.LGTM.app.global.notification.dto.NotificationDTO;
 
 import java.util.Map;
 
@@ -25,27 +24,30 @@ public class NotificationService {
             Long targetMemberId,
             Map<String, String> data
     ) {
-        NotificationDTO request = NotificationDTO.from(targetMemberId, data);
-        sendNotification(request);
+        Member member = memberRepository.findById(targetMemberId).orElseThrow(NotExistMember::new);
+        sendNotification(member, data);
     }
 
-    public void sendNotification(NotificationDTO request) {
-        Member member = memberRepository.findById(request.getTargetMemberId()).orElseThrow(NotExistMember::new);
+    public void broadcast(Map<String, String> data) {
+        memberRepository.findAll().forEach(member -> sendNotification(member, data));
+    }
 
-        if (member.getDeviceToken() != null) {
-            Message message = Message.builder()
-                    .setToken(member.getDeviceToken())
-                    .putAllData(request.getData())
-                    .build();
+    public void sendNotification(
+            Member member,
+            Map<String, String> data
+    ) {
+        if (member.getDeviceToken() == null) return;
 
-            try {
-                firebaseMessaging.send(message);
-            } catch (FirebaseMessagingException e) {
-                Sentry.captureException(e);
-                e.printStackTrace();
-                log.error("FCM - " + e.getMessage());
-                log.error("device token - {}", member.getDeviceToken());
-            }
+        Message message = Message.builder()
+                .setToken(member.getDeviceToken())
+                .putAllData(data)
+                .build();
+        try {
+            firebaseMessaging.send(message);
+        } catch (FirebaseMessagingException e) {
+            Sentry.captureException(e);
+            log.error("FCM - " + e.getMessage());
+            log.error("device token - {}", member.getDeviceToken());
         }
     }
 }
