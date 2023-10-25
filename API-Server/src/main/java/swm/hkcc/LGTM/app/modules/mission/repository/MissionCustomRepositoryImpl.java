@@ -61,7 +61,7 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
     @Override
     @Cacheable(value = "total_missions")
     public List<Mission> getTotalMissions() {
-        return getMissions(isMissionRecruiting());
+        return getMissions(isMissionNotFinished());
     }
 
     private List<Mission> getMissions(BooleanExpression isParticipating, BooleanExpression isNotCompleted) {
@@ -84,13 +84,12 @@ public class MissionCustomRepositoryImpl implements MissionCustomRepository {
                 .fetch();
     }
 
-    private List<Mission> getMissions(BooleanExpression isMissionRecruiting) {
+    private List<Mission> getMissions(BooleanExpression isMissionNotFinished) {
         return jpaQueryFactory
                 .select(mission)
                 .from(mission)
-                .where(isMissionRecruiting)
+                .where(isMissionNotFinished)
                 .orderBy(mission.createdAt.desc())
-                .limit(3)
                 .fetch();
     }
 
