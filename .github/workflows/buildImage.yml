@@ -45,7 +45,7 @@ jobs:
         cat ./src/main/resources/application-test.yml
         chmod +x ./gradlew
         mkdir -p ./src/main/resources/static/docs
-        ./gradlew build --no-daemon -Dorg.gradle.debug=true
+        ./gradlew build --no-daemon -Dorg.gradle.debug=true --stacktrace
       working-directory: ${{ env.working-directory }}
       
     - name: Configure AWS credentials
