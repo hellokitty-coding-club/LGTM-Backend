@@ -4,20 +4,25 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 
 @Configuration
 public class FcmConfig {
+    @Value("${firebase.json-key}")
+    private String FIREBASE_CONFIG;
     @Bean
     FirebaseMessaging firebaseMessaging() throws IOException {
-        ClassPathResource resource = new ClassPathResource("firebase/lgtm-aeb7a-firebase-adminsdk-sx5gi-c8b21c8e56.json");
-        InputStream refreshToken = resource.getInputStream();
+        InputStream refreshToken = new ByteArrayInputStream(FIREBASE_CONFIG.getBytes());
 
         FirebaseApp firebaseApp = null;
         List<FirebaseApp> firebaseAppList = FirebaseApp.getApps();
