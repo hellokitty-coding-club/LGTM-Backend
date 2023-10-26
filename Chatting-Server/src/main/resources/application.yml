@@ -1,0 +1,31 @@
+server:
+  port: 8082
+
+spring:
+  profiles:
+    default: dev
+  data:
+    mongodb:
+      uri: ${MONGO_DB_URI}
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: false
+  freemarker:
+    cache: false
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: ${GITHUB_CLIENT_ID}
+            clientSecret: ${GITHUB_CLIENT_SECRET}
+            redirectUri: ${GITHUB_REDIRECT_URI}
+            baseUri: "https://github.com/login/oauth/authorize"
+
+jwt:
+  header: Authorization
+  secret: ${JWT_SECRET}
+  token-validity-in-seconds: 8640000
