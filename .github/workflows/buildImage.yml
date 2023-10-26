@@ -45,6 +45,8 @@ jobs:
         cat ./src/main/resources/application-test.yml
         chmod +x ./gradlew
         mkdir -p ./src/main/resources/static/docs
+        mkdir -p ./src/main/resources/firebase
+        echo "${{ secrets.FIREBASE_JSON_KEY }}" > ./src/main/resources/firebase/lgtm.json
         ./gradlew build --no-daemon --stacktrace --scan
       working-directory: ${{ env.working-directory }}
       
