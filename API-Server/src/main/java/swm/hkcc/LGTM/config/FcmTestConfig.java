@@ -11,22 +11,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Objects;
 
 @Configuration
 @Slf4j
-@Profile({"dev", "prod"})
-public class FcmConfig {
-    @Value("${firebase.json-key}")
-    private String FIREBASE_CONFIG;
+@Profile("test")
+public class FcmTestConfig {
     @Bean
     FirebaseMessaging firebaseMessaging() throws IOException {
-        InputStream refreshToken = new ByteArrayInputStream(FIREBASE_CONFIG.getBytes());
+        ClassPathResource resource = new ClassPathResource("firebase/lgtm.json");
+        InputStream refreshToken = resource.getInputStream();
 
         FirebaseApp firebaseApp = null;
         List<FirebaseApp> firebaseAppList = FirebaseApp.getApps();
