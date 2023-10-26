@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import swm.hkcc.LGTM.app.global.notification.service.NotificationService;
+import swm.hkcc.LGTM.app.global.notification.service.NotificationServiceImpl;
 import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
@@ -36,7 +36,7 @@ public class IntroPushControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private NotificationService notificationService;
+    private NotificationServiceImpl notificationServiceImpl;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
