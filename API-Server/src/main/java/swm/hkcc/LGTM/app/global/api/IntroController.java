@@ -8,7 +8,7 @@ import swm.hkcc.LGTM.app.global.api.dto.PushTestRequest;
 import swm.hkcc.LGTM.app.global.constant.ResponseCode;
 import swm.hkcc.LGTM.app.global.dto.ApiDataResponse;
 import swm.hkcc.LGTM.app.global.exception.GeneralException;
-import swm.hkcc.LGTM.app.global.notification.service.NotificationService;
+import swm.hkcc.LGTM.app.modules.notification.service.NotificationService;
 
 import java.util.Optional;
 
