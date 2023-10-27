@@ -1,4 +1,4 @@
-package swm.hkcc.LGTM.app.global.notification.service;
+package swm.hkcc.LGTM.app.modules.notification.service;
 
 import java.util.Map;
 
