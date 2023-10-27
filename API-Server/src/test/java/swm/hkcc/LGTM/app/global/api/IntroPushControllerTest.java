@@ -2,6 +2,7 @@ package swm.hkcc.LGTM.app.global.api;
 
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.SimpleType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +20,7 @@ import swm.hkcc.LGTM.app.modules.notification.service.NotificationServiceImpl;
 import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
-import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.epages.restdocs.apispec.ResourceDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -92,6 +93,15 @@ public class IntroPushControllerTest {
                                                         tableRow("400", "10100", "존재하지 않는 회원입니다.")
                                                 )
                                         .build())
+                                .queryParameters(
+                                        parameterWithName("isBroadcast").type(SimpleType.BOOLEAN).optional().description("전체 방송 여부"),
+                                        parameterWithName("targetMemberId").type(SimpleType.NUMBER).optional().description("전송 멤버 id")
+                                )
+                                .requestFields(
+                                        fieldWithPath("data").type(JsonFieldType.OBJECT).description("푸시 알림 데이터"),
+                                        fieldWithPath("data.title").type(JsonFieldType.STRING).description("푸시 알림 제목"),
+                                        fieldWithPath("data.body").type(JsonFieldType.STRING).description("푸시 알림 내용")
+                                )
                                 .responseFields(                          // 문서의 응답 필드
                                         fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공여부"),
                                         fieldWithPath("responseCode").type(JsonFieldType.NUMBER).description("응답코드"),
