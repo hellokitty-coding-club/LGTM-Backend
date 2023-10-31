@@ -13,4 +13,5 @@ public class MissionDto {
     private Long missionId;
     private String missionTitle;
     private List<TechTag> techTagList;
+    private String missionCategory;
 }

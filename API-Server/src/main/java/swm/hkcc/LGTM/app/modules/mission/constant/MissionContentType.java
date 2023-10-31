@@ -2,8 +2,8 @@ package swm.hkcc.LGTM.app.modules.mission.constant;
 
 import lombok.Getter;
 
-import swm.hkcc.LGTM.app.modules.serverDrivenUI.Theme;
-import swm.hkcc.LGTM.app.modules.serverDrivenUI.ViewType;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.Theme;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.ViewType;
 
 @Getter
 public enum MissionContentType {

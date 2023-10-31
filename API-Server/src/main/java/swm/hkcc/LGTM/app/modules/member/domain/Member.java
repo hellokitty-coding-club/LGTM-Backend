@@ -81,4 +81,12 @@ public class Member extends BaseEntity implements Serializable {
     public void setDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
     }
+
+    public void setJunior(Junior junior) {
+        this.junior = junior;
+    }
+
+    public void setSenior(Senior senior) {
+        this.senior = senior;
+    }
 }

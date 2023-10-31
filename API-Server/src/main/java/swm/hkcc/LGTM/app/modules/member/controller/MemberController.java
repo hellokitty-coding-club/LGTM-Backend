@@ -32,15 +32,19 @@ public class MemberController {
 
     @GetMapping("/profile")
     public ApiDataResponse<MemberDetailProfile> getMemberProfile(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam(required = false) Optional<Long> memberId
     ) {
-        Long memberId = customUserDetails.getMemberId();
-        MemberType memberType = memberService.getMemberType(memberId);
+        Long myMemberId = customUserDetails.getMemberId();
+        Long targetMemberId = memberId.orElse(myMemberId);
+
+        MemberType memberType = memberService.getMemberType(targetMemberId);
+        boolean isMyProfile = myMemberId.equals(targetMemberId);
 
         if (memberType == MemberType.JUNIOR) {
-            return ApiDataResponse.of(memberService.getJuniorProfile(memberId, memberType));
+            return ApiDataResponse.of(memberService.getJuniorProfile(targetMemberId, memberType, isMyProfile));
         }
 
-        return ApiDataResponse.of(memberService.getSeniorProfile(memberId, memberType));
+        return ApiDataResponse.of(memberService.getSeniorProfile(targetMemberId, memberType, isMyProfile));
     }
 }

@@ -47,11 +47,11 @@ public class MissionRegistrationCustomRepositoryImpl implements MissionRegistrat
     }
 
     @Override
-    public Optional<LocalDateTime> getStatusDateTime(ProcessStatus status, Mission mission, Member junior) {
+    public Optional<LocalDateTime> getStatusDateTime(ProcessStatus status, Mission mission, Long juniorId) {
         return Optional.ofNullable(jpaQueryFactory.select(missionHistory.createdAt)
                 .from(missionRegistration)
                 .leftJoin(missionHistory).on(missionRegistration.eq(missionHistory.registration))
-                .where(missionRegistration.mission.eq(mission), missionRegistration.junior.eq(junior), missionRegistration.status.eq(status))
+                .where(missionRegistration.mission.eq(mission), missionRegistration.junior.memberId.eq(juniorId), missionHistory.status.eq(status))
                 .fetchOne());
     }
 

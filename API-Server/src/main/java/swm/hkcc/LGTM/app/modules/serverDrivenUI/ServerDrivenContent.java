@@ -2,9 +2,8 @@ package swm.hkcc.LGTM.app.modules.serverDrivenUI;
 
 import lombok.Builder;
 import lombok.Getter;
-import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
-import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
-import swm.hkcc.LGTM.app.modules.mission.dto.MissionTitleDto;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.Theme;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.ViewType;
 
 @Builder
 @Getter

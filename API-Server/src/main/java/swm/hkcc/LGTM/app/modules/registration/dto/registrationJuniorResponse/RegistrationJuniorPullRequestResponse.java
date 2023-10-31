@@ -8,5 +8,5 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor
 public class RegistrationJuniorPullRequestResponse extends RegistrationJuniorResponse {
-    private String pullReqeustUrl;
+    private String pullRequestUrl;
 }

@@ -23,4 +23,10 @@ public class MissionHistory extends BaseEntity {
     @Column(nullable = false)
     private ProcessStatus status;
 
+    public static MissionHistory from(MissionRegistration registration) {
+        return MissionHistory.builder()
+                .registration(registration)
+                .status(registration.getStatus())
+                .build();
+    }
 }

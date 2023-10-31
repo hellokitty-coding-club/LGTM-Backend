@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class RegistrationSeniorDetailFeedbackResponse extends RegistrationSeniorDetailResponse {
-    private Long reviewId;
+    private Long feedbackId;
 
 }

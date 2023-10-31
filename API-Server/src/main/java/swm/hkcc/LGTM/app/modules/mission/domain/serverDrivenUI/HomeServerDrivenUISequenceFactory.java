@@ -10,8 +10,8 @@ import swm.hkcc.LGTM.app.modules.serverDrivenUI.domain.ServerDrivenUISequenceFac
 @Component
 public class HomeServerDrivenUISequenceFactory implements ServerDrivenUISequenceFactory {
     @Override
-    public MissionContentSequence getServerDrivenUISequence(int version) {
-        return HomeServerDrivenUISequenceByVersion.findByVersion(version)
+    public MissionContentSequence getServerDrivenUISequence(String ABTestGroupName) {
+        return HomeServerDrivenUISequenceByVersion.find(ABTestGroupName)
                 .map(HomeServerDrivenUISequenceByVersion::getContents)
                 .map(MissionContentSequence::new)
                 .orElseThrow(() -> new GeneralException(ResponseCode.DATA_ACCESS_ERROR));

@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -129,7 +130,6 @@ class SeniorDashboardDetailControllerTest {
                 .andExpect(jsonPath("$.data.nickname").value(junior.getNickName()))
                 .andExpect(jsonPath("$.data.githubId").value(junior.getGithubId()))
                 .andExpect(jsonPath("$.data.status").value(ProcessStatus.WAITING_FOR_PAYMENT.name()))
-                .andExpect(jsonPath("$.data.missionHistory[0].status").value(ProcessStatus.WAITING_FOR_PAYMENT.name()))
                 .andExpect(jsonPath("$.data.buttonTitle").value(ProcessStatus.WAITING_FOR_PAYMENT.getSeniorBottomTitle()));
 
 
@@ -208,8 +208,8 @@ class SeniorDashboardDetailControllerTest {
                                 fieldWithPath("data.nickname").description("참가자 닉네임"),
                                 fieldWithPath("data.githubId").description("참가자 깃허브 아이디"),
                                 fieldWithPath("data.status").description("참가자 미션상태"),
-                                fieldWithPath("data.missionHistory[].status").description("미션 상태명"),
-                                fieldWithPath("data.missionHistory[].dateTime").description("미션 상태 변경 시간"),
+                                fieldWithPath("data.missionHistory").description("미션 상태"),
+                                fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").description("미션 상태명"),
                                 fieldWithPath("data.buttonTitle").description("바텀시트 버튼 타이틀")
                         )
                         .build())
@@ -252,7 +252,6 @@ class SeniorDashboardDetailControllerTest {
                 .andExpect(jsonPath("$.data.nickname").value(junior.getNickName()))
                 .andExpect(jsonPath("$.data.githubId").value(junior.getGithubId()))
                 .andExpect(jsonPath("$.data.status").value(currentStatus.name()))
-                .andExpect(jsonPath("$.data.missionHistory[0].status").value(ProcessStatus.WAITING_FOR_PAYMENT.name()))
                 .andExpect(jsonPath("$.data.realName").value("홍길동"))
                 .andExpect(jsonPath("$.data.buttonTitle").value(currentStatus.getSeniorBottomTitle()));
 
@@ -269,8 +268,8 @@ class SeniorDashboardDetailControllerTest {
                                 fieldWithPath("data.nickname").description("참가자 닉네임"),
                                 fieldWithPath("data.githubId").description("참가자 깃허브 아이디"),
                                 fieldWithPath("data.status").description("참가자 미션상태"),
-                                fieldWithPath("data.missionHistory[].status").description("미션 상태명"),
-                                fieldWithPath("data.missionHistory[].dateTime").description("미션 상태 변경 시간"),
+                                fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.missionHistory.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
                                 fieldWithPath("data.realName").description("입금자 실명"),
                                 fieldWithPath("data.buttonTitle").description("바텀시트 버튼 타이틀"))
                         .build()))
@@ -316,7 +315,6 @@ class SeniorDashboardDetailControllerTest {
                 .andExpect(jsonPath("$.data.nickname").value(junior.getNickName()))
                 .andExpect(jsonPath("$.data.githubId").value(junior.getGithubId()))
                 .andExpect(jsonPath("$.data.status").value(currentStatus.name()))
-                .andExpect(jsonPath("$.data.missionHistory[0].status").value(ProcessStatus.WAITING_FOR_PAYMENT.name()))
                 .andExpect(jsonPath("$.data.buttonTitle").value(currentStatus.getSeniorBottomTitle()));
 
 
@@ -332,8 +330,11 @@ class SeniorDashboardDetailControllerTest {
                                 fieldWithPath("data.nickname").description("참가자 닉네임"),
                                 fieldWithPath("data.githubId").description("참가자 깃허브 아이디"),
                                 fieldWithPath("data.status").description("참가자 미션상태"),
-                                fieldWithPath("data.missionHistory[].status").description("미션 상태명"),
-                                fieldWithPath("data.missionHistory[].dateTime").description("미션 상태 변경 시간"),
+                                fieldWithPath("data.missionHistory").description("미션 히스토리"),
+                                fieldWithPath("data.missionHistory.PAYMENT_CONFIRMATION").description("미션 상태명"),
+                                fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").description("미션 상태명"),
+                                fieldWithPath("data.missionHistory.CODE_REVIEW").description("미션 상태명"),
+                                fieldWithPath("data.missionHistory.MISSION_PROCEEDING").description("미션 상태명"),
                                 fieldWithPath("data.githubPullRequestUrl").description("깃허브 풀 리퀘스트 URL"),
                                 fieldWithPath("data.buttonTitle").description("바텀시트 버튼 타이틀"))
                         .build()))
@@ -365,7 +366,7 @@ class SeniorDashboardDetailControllerTest {
                 new MissionHistoryInfo(ProcessStatus.MISSION_FINISHED, LocalDateTime.now().plusDays(4)),
                 new MissionHistoryInfo(ProcessStatus.FEEDBACK_REVIEWED, LocalDateTime.now().plusDays(5))
         ));
-        response.setReviewId(1L);
+        response.setFeedbackId(1L);
         response.setButtonTitle(currentStatus.getSeniorBottomTitle());
         given(registrationService.getSeniorEnrollDetail(any(), any(), any())).willReturn(response);
         // when
@@ -380,8 +381,7 @@ class SeniorDashboardDetailControllerTest {
                 .andExpect(jsonPath("$.data.nickname").value(junior.getNickName()))
                 .andExpect(jsonPath("$.data.githubId").value(junior.getGithubId()))
                 .andExpect(jsonPath("$.data.status").value(currentStatus.name()))
-                .andExpect(jsonPath("$.data.missionHistory[0].status").value(ProcessStatus.WAITING_FOR_PAYMENT.name()))
-                .andExpect(jsonPath("$.data.reviewId").value(1L))
+                .andExpect(jsonPath("$.data.feedbackId").value(1L))
                 .andExpect(jsonPath("$.data.buttonTitle").value(currentStatus.getSeniorBottomTitle()));
 
 
@@ -397,9 +397,13 @@ class SeniorDashboardDetailControllerTest {
                                 fieldWithPath("data.nickname").description("참가자 닉네임"),
                                 fieldWithPath("data.githubId").description("참가자 깃허브 아이디"),
                                 fieldWithPath("data.status").description("참가자 미션상태"),
-                                fieldWithPath("data.missionHistory[].status").description("미션 상태명"),
-                                fieldWithPath("data.missionHistory[].dateTime").description("미션 상태 변경 시간"),
-                                fieldWithPath("data.reviewId").description("작성한 후기 아이디"),
+                                fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.missionHistory.CODE_REVIEW").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.missionHistory.MISSION_PROCEEDING").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.missionHistory.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.missionHistory.MISSION_FINISHED").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.missionHistory.FEEDBACK_REVIEWED").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                fieldWithPath("data.feedbackId").description("작성한 후기 아이디"),
                                 fieldWithPath("data.buttonTitle").description("바텀시트 버튼 타이틀"))
                         .build()))
         );

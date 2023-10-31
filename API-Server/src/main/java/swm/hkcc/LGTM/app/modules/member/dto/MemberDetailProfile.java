@@ -1,8 +1,10 @@
 package swm.hkcc.LGTM.app.modules.member.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
-import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
+import swm.hkcc.LGTM.app.modules.mission.dto.MissionDtoV2;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 public class MemberDetailProfile {
     private Long memberId;
     private MemberType memberType;
+    private boolean isMyProfile;
     private String githubId;
     private String nickName;
     private String profileImageUrl;
@@ -20,5 +23,5 @@ public class MemberDetailProfile {
     private List<TechTag> techTagList;
     private boolean isAgreeWithEventInfo;
     private MemberDetailInfo memberDetailInfo;
-    private List<MissionDto> memberMissionHistory;
+    private List<MissionDtoV2> memberMissionHistory;
 }

@@ -27,10 +27,12 @@ public class Junior implements Serializable {
     private String realName;
 
     public static Junior from(JuniorSignUpRequest request, Member member) {
-        return Junior.builder()
+        Junior junior = Junior.builder()
                 .member(member)
                 .educationalHistory(request.getEducationalHistory())
                 .realName(request.getRealName())
                 .build();
+        member.setJunior(junior);
+        return junior;
     }
 }

@@ -13,21 +13,14 @@ public class LogMessage {
     private String eventLogName;
     private String screenName;
     private Integer logVersion;
+    private String sessionID;
+    private Integer userID;
+    private String deviceOS;
+    private String deviceModel;
+    private String appVersion;
+    private String region;
 
     private Map<String, Object> logData;
-
-    public UserDataLog toUserDataLog(String topic, int partition, long receivedTimeStamp) {
-        return UserDataLog.builder()
-                .logId(eventLogName + "_" + receivedTimeStamp + "_" + topic + "_" + partition)
-                .eventLogName(eventLogName)
-                .screenName(screenName)
-                .logVersion(logVersion)
-                .logData(logData)
-                .topic(topic)
-                .partition(partition)
-                .receivedTimeStamp(receivedTimeStamp)
-                .build();
-    }
 
     public UserLog toUserLog(String topic, int partition, long receivedTimeStamp) {
         return UserLog.builder()
@@ -35,6 +28,12 @@ public class LogMessage {
                 .screenName(screenName)
                 .logVersion(logVersion)
                 .logData(logData)
+                .sessionID(sessionID)
+                .userID(userID)
+                .deviceOS(deviceOS)
+                .deviceModel(deviceModel)
+                .appVersion(appVersion)
+                .region(region)
                 .topic(topic)
                 .partitionNumber(partition)
                 .receivedTimeStamp(receivedTimeStamp)

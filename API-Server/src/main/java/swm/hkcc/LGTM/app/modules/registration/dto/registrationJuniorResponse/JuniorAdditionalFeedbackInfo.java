@@ -11,7 +11,7 @@ public class JuniorAdditionalFeedbackInfo extends JuniorAdditionalInfo {
 
     public RegistrationJuniorResponse createResponse() {
         RegistrationJuniorFeedbackResponse response = new RegistrationJuniorFeedbackResponse();
-        response.setReviewId(this.getReviewId());
+        response.setFeedbackId(this.getReviewId());
         return response;
     }
 }

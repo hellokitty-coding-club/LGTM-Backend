@@ -27,14 +27,14 @@ public class HomeServerDrivenUISequenceFactoryTest {
     }
 
     @Test
-    @DisplayName("valid한 version을 입력했을 때, 해당하는 MissionContentSequence를 반환한다.")
+    @DisplayName("valid한 groupName을 입력했을 때, 해당하는 MissionContentSequence를 반환한다.")
     public void testGetServerDrivenUISequenceByVersion_ValidVersion() {
         // Given
-        int validVersion = 1;
-        List<MissionContentType> contents = HomeServerDrivenUISequenceByVersion.V1_HOME_SERVER_DRIVEN_UI_SEQUENCE.getContents();
+        String validGroupName = "A";
+        List<MissionContentType> contents = HomeServerDrivenUISequenceByVersion.A_HOME_SERVER_DRIVEN_UI_SEQUENCE.getContents();
 
         // When
-        MissionContentSequence result = homeServerDrivenUISequenceFactory.getServerDrivenUISequence(validVersion);
+        MissionContentSequence result = homeServerDrivenUISequenceFactory.getServerDrivenUISequence(validGroupName);
 
         // Then
         assertNotNull(result);
@@ -42,14 +42,14 @@ public class HomeServerDrivenUISequenceFactoryTest {
     }
 
     @Test
-    @DisplayName("invalid한 version을 입력했을 때, Exception이 발생한다.")
+    @DisplayName("invalid한 groupName을 입력했을 때, Exception이 발생한다.")
     public void testGetServerDrivenUISequenceByVersion_InvalidVersion() {
         // Given
-        int invalidVersion = -1;
+        String invalidGroupName = "invalidGroupName";
 
         // When & Then
         assertThrows(GeneralException.class,
-                () -> homeServerDrivenUISequenceFactory.getServerDrivenUISequence(invalidVersion),
+                () -> homeServerDrivenUISequenceFactory.getServerDrivenUISequence(invalidGroupName),
                 ResponseCode.DATA_ACCESS_ERROR.getMessage());
     }
 }

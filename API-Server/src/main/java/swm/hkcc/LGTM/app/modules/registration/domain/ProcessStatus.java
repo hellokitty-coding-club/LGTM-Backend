@@ -1,13 +1,14 @@
 package swm.hkcc.LGTM.app.modules.registration.domain;
 
 import lombok.Getter;
+import swm.hkcc.LGTM.app.modules.registration.exception.InvalidProcessStatus;
 
 @Getter
 public enum ProcessStatus {
     WAITING_FOR_PAYMENT("입금 대기중", 0, "리뷰이의 입금을 대기중이에요.", "입금 완료 알리기"),
     PAYMENT_CONFIRMATION("입금 확인중", 1, "입금 확인하기", "입금 확인 대기중"),
     MISSION_PROCEEDING("미션 수행중", 2, "리뷰이가 미션 수행중이에요.", "리뷰 요청하기"),
-    CODE_REVIEW("코드 리뷰 작성", 3, "미션 리뷰 완료", ""),
+    CODE_REVIEW("코드 리뷰 작성", 3, "미션 리뷰 완료", "리뷰어의 코드리뷰 확인중"),
     MISSION_FINISHED("미션 완료!", 4, "미션이 완료되었어요. \uD83C\uDF89", "후기 작성하기"),
     FEEDBACK_REVIEWED("리뷰 완료!", 5, "후기 보러가기", "후기 보거가기");
 
@@ -33,5 +34,14 @@ public enum ProcessStatus {
 
     public boolean isCompleted() {
         return this.sequence >= MISSION_FINISHED.sequence;
+    }
+
+    public ProcessStatus getNextStatus() {
+        for (ProcessStatus processStatus : ProcessStatus.values()) {
+            if (processStatus.sequence == this.sequence + 1) {
+                return processStatus;
+            }
+        }
+        throw new InvalidProcessStatus(this);
     }
 }

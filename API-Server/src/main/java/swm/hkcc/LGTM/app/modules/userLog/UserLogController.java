@@ -21,11 +21,8 @@ public class UserLogController {
 
     @PostMapping
     public ApiDataResponse<?> userlog(
-            @RequestBody LogMessage logMessage,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
+            @RequestBody LogMessage logMessage
     ) {
-
-        Long memberId = customUserDetails.getMemberId();
         String topic = logProducer.sendMessage(logMessage);
 
         return ApiDataResponse.of(topic);

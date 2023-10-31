@@ -31,6 +31,18 @@ public class UserLog {
     @Column(columnDefinition = "json")
     private Map<String, Object> logData;
 
+    private String sessionID;
+
+    private Integer userID;
+
+    private String deviceOS;
+
+    private String deviceModel;
+
+    private String appVersion;
+
+    private String region;
+
     private String topic;
 
     private int partitionNumber;

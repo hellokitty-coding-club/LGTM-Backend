@@ -2,16 +2,6 @@ spring:
   profiles:
     default: dev
 
-  security:
-    oauth2:
-      client:
-        registration:
-          github:
-            clientId: ${GITHUB_CLIENT_ID}
-            clientSecret: ${GITHUB_CLIENT_SECRET}
-            redirectUri: ${GITHUB_REDIRECT_URI}
-            baseUri: "https://github.com/login/oauth/authorize"
-
   kafka:
     bootstrap-servers: 10.0.75.183:9092,10.0.90.35:9092,10.0.84.239:9092
     ### dev-prod 분리 ###

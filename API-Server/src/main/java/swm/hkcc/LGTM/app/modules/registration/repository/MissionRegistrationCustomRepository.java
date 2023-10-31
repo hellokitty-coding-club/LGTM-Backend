@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface MissionRegistrationCustomRepository {
     public List<MemberRegisterSimpleInfo> getRegisteredMembersByMission(Long missionId);
 
-    public Optional<LocalDateTime> getStatusDateTime(ProcessStatus status, Mission mission, Member junior);
+    public Optional<LocalDateTime> getStatusDateTime(ProcessStatus status, Mission mission, Long juniorId);
 
     public List<MissionHistoryInfo> getMissionHistoryByMissionAndJunior(Mission mission, Member junior);
 

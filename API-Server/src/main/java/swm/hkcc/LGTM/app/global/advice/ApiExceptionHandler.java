@@ -49,21 +49,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         Sentry.captureException(e);
         StringBuilder sb = new StringBuilder();
 
-        // request info
-        sb.append("request endpoint ").append(request.getDescription(false)).append(" ");
-
         // field errors info
         Set<FieldError> fieldErrors = new HashSet<>(e.getBindingResult().getFieldErrors());
         fieldErrors
                 .forEach(error -> {
-                    sb.append("\n[").append(error.getField()).append(" : ").append(error.getDefaultMessage()).append("]");
+                    sb.append(error.getDefaultMessage()).append("\n");
                 });
         // other errors info
         e.getBindingResult().getAllErrors()
                 .stream()
                 .filter(error -> !fieldErrors.contains(error))
                 .forEach(error -> {
-                    sb.append("\n[").append(error.getDefaultMessage()).append("]");
+                    sb.append(error.getDefaultMessage()).append("\n");
                 });
 
         GeneralException ge = new GeneralException(ResponseCode.VALIDATION_ERROR, sb.toString(), e.getCause());

@@ -4,17 +4,18 @@ import swm.hkcc.LGTM.app.modules.auth.constants.MemberType;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.dto.MemberDetailInfo;
 import swm.hkcc.LGTM.app.modules.member.dto.MemberDetailProfile;
-import swm.hkcc.LGTM.app.modules.mission.dto.MissionDto;
+import swm.hkcc.LGTM.app.modules.mission.dto.MissionDtoV2;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 
 import java.util.List;
 
 public class MemberMapper {
 
-    public static MemberDetailProfile toMemberDetailProfile(Member member, MemberType memberType, MemberDetailInfo memberDetailInfo, List<TechTag> techTagList, List<MissionDto> missionDtos) {
+    public static MemberDetailProfile toMemberDetailProfile(Member member, MemberType memberType, boolean isMyProfile, MemberDetailInfo memberDetailInfo, List<TechTag> techTagList, List<MissionDtoV2> missionDtos) {
         return MemberDetailProfile.builder()
                 .memberId(member.getMemberId())
                 .memberType(memberType)
+                .isMyProfile(isMyProfile)
                 .githubId(member.getGithubId())
                 .nickName(member.getNickName())
                 .profileImageUrl(member.getProfileImageUrl())

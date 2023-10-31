@@ -114,7 +114,6 @@ public class JuniorDashboardControllerTest {
                 .missionName("미션 이름")
                 .techTagList(getMockTechTags())
                 .processStatus(status)
-                .missionHistory(missionHistory)
                 .buttonTitle(status.getJuniorBottomTitle())
                 .accountInfo(JuniorAdditionalAccountInfo.builder()
                         .accountNumber("123-123-123")
@@ -123,6 +122,7 @@ public class JuniorDashboardControllerTest {
                         .sendTo("김주니어")
                         .build())
                 .build();
+        mockResponse.setMissionHistory(missionHistory);
         given(registrationService.getJuniorEnrollInfo(any(), any())).willReturn(mockResponse);
 
 
@@ -229,9 +229,8 @@ public class JuniorDashboardControllerTest {
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
                                         fieldWithPath("data.techTagList[].iconImageUrl").type(JsonFieldType.STRING).description("기술 태그 아이콘 이미지 url"),
                                         fieldWithPath("data.processStatus").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionHistory").type(JsonFieldType.ARRAY).description("미션 진행 이력"),
-                                        fieldWithPath("data.missionHistory[].status").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionHistory[].dateTime").type(JsonFieldType.STRING).description("미션 진행 시간"),
+                                        fieldWithPath("data.missionHistory").description("미션 진행 이력"),
+                                        fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
                                         fieldWithPath("data.buttonTitle").type(JsonFieldType.STRING).description("버튼 타이틀"),
                                         fieldWithPath("data.accountInfo").type(JsonFieldType.OBJECT).description("계좌 정보"),
                                         fieldWithPath("data.accountInfo.accountNumber").type(JsonFieldType.STRING).description("계좌 번호"),
@@ -261,10 +260,10 @@ public class JuniorDashboardControllerTest {
                 .missionName("미션 이름")
                 .techTagList(getMockTechTags())
                 .processStatus(status)
-                .missionHistory(missionHistory)
                 .buttonTitle(status.getJuniorBottomTitle())
-                .pullReqeustUrl("http://github.com/xxx/xxx")
+                .pullRequestUrl("http://github.com/xxx/xxx")
                 .build();
+        mockResponse.setMissionHistory(missionHistory);
         given(registrationService.getJuniorEnrollInfo(any(), any())).willReturn(mockResponse);
 
 
@@ -301,11 +300,13 @@ public class JuniorDashboardControllerTest {
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
                                         fieldWithPath("data.techTagList[].iconImageUrl").type(JsonFieldType.STRING).description("기술 태그 아이콘 이미지 url"),
                                         fieldWithPath("data.processStatus").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionHistory").type(JsonFieldType.ARRAY).description("미션 진행 이력"),
-                                        fieldWithPath("data.missionHistory[].status").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionHistory[].dateTime").type(JsonFieldType.STRING).description("미션 진행 시간"),
+                                        fieldWithPath("data.missionHistory").type(JsonFieldType.OBJECT).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.CODE_REVIEW").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.MISSION_PROCEEDING").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
                                         fieldWithPath("data.buttonTitle").type(JsonFieldType.STRING).description("버튼 타이틀"),
-                                        fieldWithPath("data.pullReqeustUrl").type(JsonFieldType.STRING).description("풀 리퀘스트 url")
+                                        fieldWithPath("data.pullRequestUrl").type(JsonFieldType.STRING).description("풀 리퀘스트 url")
                                 )
                                 .build())));
     }
@@ -330,10 +331,10 @@ public class JuniorDashboardControllerTest {
                 .missionName("미션 이름")
                 .techTagList(getMockTechTags())
                 .processStatus(status)
-                .missionHistory(missionHistory)
                 .buttonTitle(status.getJuniorBottomTitle())
-                .reviewId(1L)
+                .feedbackId(1L)
                 .build();
+        mockResponse.setMissionHistory(missionHistory);
         given(registrationService.getJuniorEnrollInfo(any(), any())).willReturn(mockResponse);
 
 
@@ -370,11 +371,15 @@ public class JuniorDashboardControllerTest {
                                         fieldWithPath("data.techTagList[].name").type(JsonFieldType.STRING).description("기술 태그 이름"),
                                         fieldWithPath("data.techTagList[].iconImageUrl").type(JsonFieldType.STRING).description("기술 태그 아이콘 이미지 url"),
                                         fieldWithPath("data.processStatus").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionHistory").type(JsonFieldType.ARRAY).description("미션 진행 이력"),
-                                        fieldWithPath("data.missionHistory[].status").type(JsonFieldType.STRING).description("미션 진행 상태"),
-                                        fieldWithPath("data.missionHistory[].dateTime").type(JsonFieldType.STRING).description("미션 진행 시간"),
+                                        fieldWithPath("data.missionHistory").description("미션 진행 이력"),
+                                        fieldWithPath("data.missionHistory.WAITING_FOR_PAYMENT").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.CODE_REVIEW").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.MISSION_PROCEEDING").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.PAYMENT_CONFIRMATION").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.MISSION_FINISHED").type(JsonFieldType.STRING).description("미션 진행 상태"),
+                                        fieldWithPath("data.missionHistory.FEEDBACK_REVIEWED").type(JsonFieldType.STRING).description("미션 진행 상태"),
                                         fieldWithPath("data.buttonTitle").type(JsonFieldType.STRING).description("버튼 타이틀"),
-                                        fieldWithPath("data.reviewId").type(JsonFieldType.NUMBER).description("리뷰 아이디")
+                                        fieldWithPath("data.feedbackId").type(JsonFieldType.NUMBER).description("리뷰 아이디")
                                 )
                                 .build())));
     }

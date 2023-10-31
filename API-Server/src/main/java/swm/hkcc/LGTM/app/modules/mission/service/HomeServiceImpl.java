@@ -16,7 +16,7 @@ import swm.hkcc.LGTM.app.modules.mission.dto.MissionTitleDto;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContent;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContents;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenScreenResponse;
-import swm.hkcc.LGTM.app.modules.serverDrivenUI.ViewType;
+import swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.ViewType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +34,8 @@ public class HomeServiceImpl implements HomeService{
 
     @Override
     @Transactional(readOnly = true)
-    public ServerDrivenScreenResponse getHomeScreen(Long memberId, int version) {
-        MissionContentSequence contentSequence = sequenceFactory.getServerDrivenUISequence(version);
+    public ServerDrivenScreenResponse getHomeScreen(Long memberId, String ABTestGroupName) {
+        MissionContentSequence contentSequence = sequenceFactory.getServerDrivenUISequence(ABTestGroupName);
         List<ServerDrivenContent> serverDrivenContentList = new ArrayList<>();
 
         contentSequence.getMissionContents()

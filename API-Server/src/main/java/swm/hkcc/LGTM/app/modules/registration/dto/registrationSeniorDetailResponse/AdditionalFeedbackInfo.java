@@ -11,7 +11,7 @@ public class AdditionalFeedbackInfo extends AdditionalInfo {
     @Override
     public RegistrationSeniorDetailResponse createResponse() {
         RegistrationSeniorDetailFeedbackResponse response = new RegistrationSeniorDetailFeedbackResponse();
-        response.setReviewId(reviewId);
+        response.setFeedbackId(reviewId);
         return response;
     }
 }
