@@ -18,13 +18,14 @@ import swm.hkcc.LGTM.app.modules.userLog.producer.LogProducer;
 @RequestMapping("v1/log")
 public class UserLogController {
     private final LogProducer logProducer;
+    private final UserLogService userLogService;
 
     @PostMapping
     public ApiDataResponse<?> userlog(
             @RequestBody LogMessage logMessage
     ) {
+        userLogService.addLogMessage(logMessage);
         String topic = logProducer.sendMessage(logMessage);
-
         return ApiDataResponse.of(topic);
     }
 }
