@@ -23,7 +23,7 @@ public class UserLogService {
     }
 
     private void addServerTime(LogMessage logMessage) {
-        logMessage.getLogData().put("serverTime", System.currentTimeMillis());
+        logMessage.getLogData().put("serverTimeMs", System.currentTimeMillis());
     }
 
 
