@@ -36,24 +36,4 @@ public class UserLogService {
         }
     }
 
-    private void addMissionCategoryInfo(LogMessage logMessage) {
-        if (!logMessage.getLogData().containsKey("sduiList") || !logMessage.getLogData().containsKey("clickedIndex"))
-            return;
-
-        try {
-            List<Object> sduiList = (List<Object>) logMessage.getLogData().get("sduiList");
-            int clickedIndex = (int) logMessage.getLogData().get("clickedIndex");
-
-            String category = "";
-            for (int i = 0; i < clickedIndex; i++) {
-                Map<String, Object> sdui = (Map<String, Object>) sduiList.get(i);
-                if (sdui.get("viewType").equals("TITLE"))
-                    //{"theme": "WHITE", "content": {"title": "진행 중인 미션"}, "viewType": "TITLE"}
-                    category = (String) ((Map<String, Object>) sdui.get("content")).get("title");
-            }
-            logMessage.getLogData().put("clickedCategory", category);
-        } catch (Exception e) {
-            return;
-        }
-    }
 }
