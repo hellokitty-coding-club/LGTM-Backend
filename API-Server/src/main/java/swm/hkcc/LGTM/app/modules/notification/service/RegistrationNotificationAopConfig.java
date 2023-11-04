@@ -40,7 +40,7 @@ public class RegistrationNotificationAopConfig {
         Member senior = (Member) args[0];
         Mission mission = (Mission) args[1];
         Long juniorId = (Long) args[2];
-        Long targetMemberId = senior.getMemberId();
+        Long targetMemberId = juniorId;
         sendNotification(targetMemberId, mission, "%s님이 입금을 확인했습니다. 미션을 시작해주세요!", senior.getNickName(), MemberType.JUNIOR, ProcessStatus.MISSION_PROCEEDING);
     }
 
@@ -51,9 +51,8 @@ public class RegistrationNotificationAopConfig {
         Member senior = (Member) args[0];
         Mission mission = (Mission) args[1];
         Long juniorId = (Long) args[2];
-        Member junior = memberService.getMember(juniorId);
-        Long targetMemberId = senior.getMemberId();
-        sendNotification(targetMemberId, mission, "%s님이 코드리뷰를 완료했습니다. 리뷰를 보러갈까요?", junior.getNickName(), MemberType.JUNIOR, ProcessStatus.MISSION_FINISHED);
+        Long targetMemberId = juniorId;
+        sendNotification(targetMemberId, mission, "%s님이 코드리뷰를 완료했습니다. 리뷰를 보러갈까요?", senior.getNickName(), MemberType.JUNIOR, ProcessStatus.MISSION_FINISHED);
     }
 
     @Async
