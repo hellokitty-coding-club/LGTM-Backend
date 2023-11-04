@@ -72,7 +72,7 @@ class RegistrationValidatorTest {
                 .registrationDueDate(LocalDate.now().plusDays(1))
                 .maxPeopleNumber(10)
                 .build();
-        given(missionRegistrationRepository.countByMission_MissionId(1L)).willReturn(10);
+        given(missionRegistrationRepository.countByMission(mission)).willReturn(10);
 
 
         // when
