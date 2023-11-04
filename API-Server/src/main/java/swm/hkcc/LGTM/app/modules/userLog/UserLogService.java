@@ -19,7 +19,6 @@ public class UserLogService {
     public void addLogMessage(LogMessage logMessage) {
         addServerTime(logMessage);
         addAbTestInfo(logMessage);
-        addMissionCategoryInfo(logMessage);
     }
 
     private void addServerTime(LogMessage logMessage) {
