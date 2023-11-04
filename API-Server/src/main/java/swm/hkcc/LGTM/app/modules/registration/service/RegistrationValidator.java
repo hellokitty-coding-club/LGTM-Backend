@@ -51,7 +51,7 @@ public class RegistrationValidator {
     }
 
     private void validateMissionMaxPeopleNumber(Mission mission) {
-        int countRegisters = missionRegistrationRepository.countByMission_MissionId(mission.getMissionId());
+        int countRegisters = missionRegistrationRepository.countByMission(mission);
         if (mission.getMaxPeopleNumber() <= countRegisters) {
             throw new FullRegisterMembers();
         }
