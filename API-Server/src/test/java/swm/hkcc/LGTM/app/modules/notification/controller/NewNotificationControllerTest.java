@@ -94,7 +94,7 @@ public class NewNotificationControllerTest {
                 .andExpect(jsonPath("$.message").value("Ok"));
 
         // documentation
-        actions.andDo(document("get-notification",// 문서의 고유 id
+        actions.andDo(document("get-new-notification",// 문서의 고유 id
                 preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
                 preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
                 resource(
