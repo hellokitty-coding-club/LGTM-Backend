@@ -11,8 +11,6 @@ import swm.hkcc.LGTM.app.modules.notification.repository.NotificationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -38,5 +36,9 @@ public class NotificationCenterService {
             notificationRepository.saveAll(unreadNotifications);
 
         return notificationDTOList;
+    }
+
+    public boolean getNewNotification(Member member) {
+        return notificationRepository.hasNewNotification(member);
     }
 }
