@@ -18,26 +18,26 @@ public enum HomeServerDrivenUISequenceByVersion implements ServerDrivenUISequenc
             "A",
             List.of(ON_GOING_MISSION_TITLE_V1,
                     ON_GOING_MISSION_LIST_V1,
-                    SECTION_DARK_CLOSER_V1,
+                    SECTION_LIGHT_CLOSER_V1,
                     RECOMMENDED_MISSION_TITLE_V1,
                     RECOMMENDED_MISSION_LIST_V1,
-                    SECTION_LIGHT_CLOSER_V1,
+                    SECTION_DARK_CLOSER_V1,
                     TOTAL_MISSION_TITLE_V1,
                     TOTAL_MISSION_LIST_V1,
-                    SECTION_LIGHT_CLOSER_V1
+                    SECTION_DARK_CLOSER_V1
             )),
 
     B_HOME_SERVER_DRIVEN_UI_SEQUENCE(
             "B",
-            List.of(RECOMMENDED_MISSION_TITLE_V1,
-                    RECOMMENDED_MISSION_LIST_V1,
-                    SECTION_DARK_CLOSER_V1,
-                    ON_GOING_MISSION_TITLE_V1,
+            List.of(ON_GOING_MISSION_TITLE_V1,
                     ON_GOING_MISSION_LIST_V1,
                     SECTION_LIGHT_CLOSER_V1,
                     TOTAL_MISSION_TITLE_V1,
                     TOTAL_MISSION_LIST_V1,
-                    SECTION_LIGHT_CLOSER_V1
+                    SECTION_DARK_CLOSER_V1,
+                    RECOMMENDED_MISSION_TITLE_V1,
+                    RECOMMENDED_MISSION_LIST_V1,
+                    SECTION_DARK_CLOSER_V1
             ));
 
     private final String ABTestGroupName;
