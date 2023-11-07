@@ -14,38 +14,37 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode
 public class CreateMissionRequest {
-    @NotBlank
-    @URL
+    @URL(message = "저장소 URL 형식이 올바르지 않습니다.")
     private String missionRepositoryUrl;
 
-    @NotBlank
-    @Size(max = 100)
+    @NotBlank(message = "제목을 입력해주세요.")
+    @Size(max = 100, message = "제목은 100자 이내로 입력해주세요.")
     private String title;
 
-    @NotNull
+    @NotNull(message = "태그는 최소 1개 이상이어야 합니다.")
     protected List<String> tagList;
 
-    @NotBlank
-    @Size(max = 1000)
+    @NotBlank(message = "설명을 입력해주세요.")
+    @Size(max = 1000, message = "설명은 1000자 이내로 입력해주세요.")
     private String description;
 
-    @Size(max = 1000)
+    @Size(max = 1000, message = "추천하는 사람은 1000자 이내로 입력해주세요.")
     private String recommendTo;
 
-    @Size(max = 1000)
+    @Size(max = 1000, message = "추천하지 않는 사람은 1000자 이내로 입력해주세요.")
     private String notRecommendTo;
 
-    @NotNull
-    @FutureOrPresent
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
+    @NotNull(message = "등록 마감일을 입력해주세요.")
+    @FutureOrPresent(message = "등록 마감일은 오늘 또는 이후여야 합니다.")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate registrationDueDate;
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "가격을 입력해주세요.")
+    @PositiveOrZero(message = "가격은 0 이상이어야 합니다.")
     private Integer price;
 
-    @NotNull
-    @Positive
+    @NotNull(message = "최대 인원을 입력해주세요.")
+    @Positive(message = "최대 인원은 1 이상이어야 합니다.")
     private Integer maxPeopleNumber;
 
     public void trimTitle() {

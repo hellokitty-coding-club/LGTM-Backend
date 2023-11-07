@@ -63,7 +63,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                     sb.append(error.getDefaultMessage()).append("\n");
                 });
 
-        GeneralException ge = new GeneralException(ResponseCode.VALIDATION_ERROR, sb.toString(), e.getCause());
+        GeneralException ge = new GeneralException(ResponseCode.VALIDATION_ERROR, sb.toString().trim(), e.getCause());
         return handleExceptionInternal(ge, ge.getResponseCode(), request);
     }
 
