@@ -26,7 +26,6 @@ public class Mission extends BaseEntity implements Serializable {
     private Member writer;
 
     @Lob
-    @Column(nullable = false)
     private String missionRepositoryUrl;
 
     @Column(nullable = false, length = 100)
@@ -57,7 +56,7 @@ public class Mission extends BaseEntity implements Serializable {
     public static Mission from(CreateMissionRequest request, Member writer) {
         return Mission.builder()
                 .writer(writer)
-                .missionRepositoryUrl(request.getMissionRepositoryUrl())
+                .missionRepositoryUrl(request.getMissionRepositoryUrl() == null ? "" : request.getMissionRepositoryUrl())
                 .title(request.getTitle())
                 .missionStatus(MissionStatus.RECRUITING)
                 .description(request.getDescription())
