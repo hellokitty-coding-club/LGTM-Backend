@@ -20,9 +20,9 @@ public enum MissionContentType {
 
     TOTAL_MISSION_LIST_V1(ViewType.ITEM, Theme.GRAY, 5),
 
-    SECTION_DARK_CLOSER_V1(ViewType.CLOSER, Theme.WHITE),
+    SECTION_DARK_CLOSER_V1(ViewType.CLOSER, Theme.GRAY),
 
-    SECTION_LIGHT_CLOSER_V1(ViewType.CLOSER, Theme.GRAY);
+    SECTION_LIGHT_CLOSER_V1(ViewType.CLOSER, Theme.WHITE);
 
     private final ViewType viewType;
     private final Theme theme;

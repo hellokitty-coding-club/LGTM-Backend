@@ -24,6 +24,7 @@ import swm.hkcc.LGTM.app.modules.tag.domain.TechTagPerMember;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMemberRepository;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,6 +90,7 @@ public class MemberService {
 
         Senior senior = member.getSenior();
         List<Mission> seniorMissionHistory = missionRepository.findAllByWriter_MemberId(memberId);
+        Collections.reverse(seniorMissionHistory);
 
         SeniorDetailInfo seniorDetailInfo = SeniorDetailInfo.builder()
                 .companyInfo(senior.getCompanyInfo())
