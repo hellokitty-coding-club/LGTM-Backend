@@ -70,12 +70,4 @@ public class MissionRegistrationCustomRepositoryImpl implements MissionRegistrat
                 .fetch();
     }
 
-    @Override
-    public Optional<Member> getSeniorByMissionAndJunior(Mission findMission) {
-        return Optional.ofNullable(jpaQueryFactory.select(member)
-                .from(mission)
-                .leftJoin(member).on(mission.writer.eq(member))
-                .where(mission.eq(mission))
-                .fetchFirst());
-    }
 }
