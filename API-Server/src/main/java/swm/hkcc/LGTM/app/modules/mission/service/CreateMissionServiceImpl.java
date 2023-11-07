@@ -38,6 +38,7 @@ public class CreateMissionServiceImpl implements CreateMissionService {
     private void validateRequest(Member writer, CreateMissionRequest request) {
         memberValidator.validateSenior(writer);
         techTagValidator.validateTagList(request.getTagList());
-        GithubUrlValidator.validateGithubRepositoryUrl(request.getMissionRepositoryUrl());
+        if (request.getMissionRepositoryUrl() != null && !request.getMissionRepositoryUrl().isEmpty())
+            GithubUrlValidator.validateGithubRepositoryUrl(request.getMissionRepositoryUrl());
     }
 }
