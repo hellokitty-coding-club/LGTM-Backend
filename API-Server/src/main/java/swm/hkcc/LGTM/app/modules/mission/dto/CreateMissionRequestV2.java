@@ -13,9 +13,8 @@ import java.util.List;
 @Getter
 @Builder
 @EqualsAndHashCode
-public class CreateMissionRequest {
+public class CreateMissionRequestV2 {
     @URL(message = "깃헙 레포지토리 URL 형식이 올바르지 않습니다.")
-    @NotBlank(message = "깃헙 레포지토리 URL을 입력해주세요.")
     private String missionRepositoryUrl;
 
     @NotBlank(message = "제목을 입력해주세요.")
@@ -37,7 +36,7 @@ public class CreateMissionRequest {
 
     @NotNull(message = "등록 마감일을 입력해주세요.")
     @FutureOrPresent(message = "등록 마감일은 오늘 또는 이후여야 합니다.")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate registrationDueDate;
 
     @NotNull(message = "가격을 입력해주세요.")
