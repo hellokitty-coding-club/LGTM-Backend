@@ -1,4 +1,4 @@
-package swm.hkcc.LGTM.app.global.notification.controller;
+package swm.hkcc.LGTM.app.modules.notification.controller;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import lombok.extern.slf4j.Slf4j;
