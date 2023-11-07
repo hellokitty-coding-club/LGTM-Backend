@@ -65,6 +65,7 @@ public class UserLog {
                 .appVersion(message.getAppVersion())
                 .region(message.getRegion())
                 .serverTimeStamp(System.currentTimeMillis())
+                .receivedTimeStamp(System.currentTimeMillis())
                 .build();
     }
 
