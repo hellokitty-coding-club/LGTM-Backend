@@ -5,6 +5,7 @@ import lombok.*;
 import swm.hkcc.LGTM.app.global.entity.BaseEntity;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequest;
+import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequestV2;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -54,6 +55,21 @@ public class Mission extends BaseEntity implements Serializable {
     private Integer maxPeopleNumber;
 
     public static Mission from(CreateMissionRequest request, Member writer) {
+        return Mission.builder()
+                .writer(writer)
+                .missionRepositoryUrl(request.getMissionRepositoryUrl())
+                .title(request.getTitle())
+                .missionStatus(MissionStatus.RECRUITING)
+                .description(request.getDescription())
+                .recommendTo(request.getRecommendTo())
+                .notRecommendTo(request.getNotRecommendTo())
+                .registrationDueDate(request.getRegistrationDueDate())
+                .price(request.getPrice())
+                .maxPeopleNumber(request.getMaxPeopleNumber())
+                .build();
+    }
+
+    public static Mission from(CreateMissionRequestV2 request, Member writer) {
         return Mission.builder()
                 .writer(writer)
                 .missionRepositoryUrl(request.getMissionRepositoryUrl() == null ? "" : request.getMissionRepositoryUrl())
