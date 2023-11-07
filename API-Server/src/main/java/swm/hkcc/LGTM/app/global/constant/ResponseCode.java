@@ -36,7 +36,7 @@ public enum ResponseCode {
     INVALID_GITHUB_ACCESS_TOKEN(10003, HttpStatus.BAD_REQUEST, "유효하지 않은 Github Access Token입니다. 다시 시도해주세요."),
     DUPLICATE_NICK_NAME(10004, HttpStatus.BAD_REQUEST, "중복된 닉네임입니다. 다른 닉네임을 사용해주세요."),
     INVALID_TECH_TAG(10005, HttpStatus.BAD_REQUEST, "유효하지 않은 기술 태그입니다. 다시 시도해주세요."),
-    INVALID_CAREER_PERIOD(10006, HttpStatus.BAD_REQUEST, "유효하지 않은 경력 기간입니다. 경력 기간은 최소 12달 이상이어야 합니다."),
+    INVALID_CAREER_PERIOD(10006, HttpStatus.BAD_REQUEST, "유효하지 않은 경력 기간입니다. 경력 기간은 최소 1달 이상이어야 합니다."),
     INVALID_BANK_NAME(10007, HttpStatus.BAD_REQUEST, "유효하지 않은 은행 이름입니다. 다시 시도해주세요."),
 
     // 101xx : Member Authority

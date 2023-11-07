@@ -16,7 +16,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Senior implements Serializable {
 
-    private static final Integer MINIMUM_CAREER_PERIOD = 12;
+    private static final Integer MINIMUM_CAREER_PERIOD = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
