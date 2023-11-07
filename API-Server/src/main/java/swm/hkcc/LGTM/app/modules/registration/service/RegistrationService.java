@@ -3,6 +3,8 @@ package swm.hkcc.LGTM.app.modules.registration.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
@@ -54,7 +56,7 @@ public class RegistrationService {
     private static final int MAX_LOCK_RETRIES = 10;
     private static final int LOCK_RETRY_DELAY_MS = 100;
 
-
+    @CacheEvict(value = "mission_participant_count", key = "#p1.missionId")
     public long registerJunior(Member junior, Mission mission) throws InterruptedException {
         memberValidator.validateJunior(junior);
 
