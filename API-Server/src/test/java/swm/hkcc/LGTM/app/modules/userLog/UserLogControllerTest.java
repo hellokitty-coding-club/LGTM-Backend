@@ -91,24 +91,24 @@ class UserLogControllerTest {
         // given
         given(memberRepository.findOneByGithubId(Mockito.anyString())).willReturn(java.util.Optional.ofNullable(getMockJunior()));
         given(logProducer.sendMessage(any())).willReturn("test-topic");
+
         LogMessage logMessage = LogMessage.builder()
                 .eventLogName("test-name")
                 .screenName("test-screen")
-                .logVersion(1)
-                .logData(new ConcurrentHashMap<>())
+                .logVersion("1")
                 .sessionID("test-session")
-                .userID(1)
-                .deviceOS("test-os")
+                .userID("1")
+                .osNameAndVersion("test-os")
                 .deviceModel("test-model")
                 .appVersion("test-version")
                 .region("test-region")
+                .logData(new ConcurrentHashMap<>())
                 .build();
         System.out.println(new ObjectMapper().writeValueAsString(logMessage));
 
         // when
         // then
         ResultActions actions = mockMvc.perform(post("/v1/log")
-                        .header("Authorization", "Bearer " + getMockToken(getMockJunior()))
                         .contentType("application/json")
                         .content(new ObjectMapper().writeValueAsString(logMessage)))
                 .andExpect(status().isOk())
@@ -138,13 +138,15 @@ class UserLogControllerTest {
                                         .table(
                                                 tableHead("Response values", "Data Type", "Description"),
                                                 tableRow("eventLogName", "String", "이벤트 로그 이름"),
-                                                tableRow("logVersion", "Integer", "로그 버전, name & version이 동일한 경우, logData의 값 구성은 동일해야 한다"),
+                                                tableRow("logVersion", "String", "로그 버전, 숫자를 문자로 변환하여 전송, name & version이 동일한 경우, logData의 값 구성은 동일해야 한다"),
                                                 tableRow("screenName", "String", "화면 이름, 로그 전송 시점 사용자의 뷰 이름"),
+                                                tableRow("", "", ""),
                                                 tableRow("logData", "Map", "로그 데이터"),
+                                                tableRow("", "", ""),
                                                 tableRow("sessionID", "String", "세션 ID, 클라이언트측에서 UUID 생성"),
-                                                tableRow("userID", "Integer", "사용자 ID"),
-                                                tableRow("deviceOS", "String", "디바이스 OS, ex) IOS 16"),
-                                                tableRow("deviceModel", "String", "디바이스 모델, ex) Iphone 16"),
+                                                tableRow("userID", "String", "사용자 ID 숫자를 문자로 변환하여 전송"),
+                                                tableRow("osNameAndVersion", "String", "디바이스 OS"),
+                                                tableRow("deviceModel", "String", "디바이스 모델"),
                                                 tableRow("appVersion", "String", "앱 버전, ex) 1.0.0"),
                                                 tableRow("region", "String", "지역, ex) KR")
                                         )
@@ -159,7 +161,6 @@ class UserLogControllerTest {
                                         )
                                         .build()
                                 )
-                                .requestHeaders(headerWithName("Authorization").description("access token"))
                                 .requestFields(
                                         fieldWithPath("eventLogName").description("이벤트 로그 이름"),
                                         fieldWithPath("screenName").description("화면 이름"),
@@ -167,7 +168,7 @@ class UserLogControllerTest {
                                         fieldWithPath("logData").description("로그 데이터"),
                                         fieldWithPath("sessionID").description("세션 ID"),
                                         fieldWithPath("userID").description("사용자 ID"),
-                                        fieldWithPath("deviceOS").description("디바이스 OS"),
+                                        fieldWithPath("osNameAndVersion").description("디바이스 OS"),
                                         fieldWithPath("deviceModel").description("디바이스 모델"),
                                         fieldWithPath("appVersion").description("앱 버전"),
                                         fieldWithPath("region").description("지역")
@@ -176,7 +177,7 @@ class UserLogControllerTest {
                                         fieldWithPath("success").description("성공 여부"),
                                         fieldWithPath("responseCode").description("응답 코드"),
                                         fieldWithPath("message").description("응답 메시지"),
-                                        fieldWithPath("data").description("응답 데이터, topic")
+                                        fieldWithPath("data").description("응답 데이터")
                                 )
                                 .build()
                 )));
