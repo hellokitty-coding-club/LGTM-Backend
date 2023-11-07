@@ -37,6 +37,7 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    implementation 'com.vladmihalcea:hibernate-types-60:2.21.1'
 
 
     // Querydsl 추가

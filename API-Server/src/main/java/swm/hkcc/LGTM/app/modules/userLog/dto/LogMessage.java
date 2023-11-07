@@ -13,10 +13,11 @@ import java.util.Map;
 public class LogMessage {
     private String eventLogName;
     private String screenName;
-    private Integer logVersion;
+    private String logVersion;
+
     private String sessionID;
-    private Integer userID;
-    private String deviceOS;
+    private String userID;
+    private String osNameAndVersion;
     private String deviceModel;
     private String appVersion;
     private String region;
