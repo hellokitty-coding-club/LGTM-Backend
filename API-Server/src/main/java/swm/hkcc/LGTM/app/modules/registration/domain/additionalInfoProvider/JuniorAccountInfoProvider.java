@@ -21,7 +21,7 @@ public class JuniorAccountInfoProvider implements JuniorInfoProvider {
                 .accountNumber(senior.getSenior().getAccountNumber())
                 .bankName(senior.getSenior().getBank().getName())
                 .price(mission.getPrice())
-                .sendTo("") // todo: 시니어 실명 입력
+                .sendTo(senior.getSenior().getAccountHolderName())
                 .build();
     }
 
