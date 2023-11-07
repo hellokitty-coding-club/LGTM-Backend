@@ -34,7 +34,7 @@ import swm.hkcc.LGTM.app.modules.member.exception.NotExistMember;
 import swm.hkcc.LGTM.app.modules.member.exception.NotSeniorMember;
 import swm.hkcc.LGTM.app.modules.member.repository.MemberRepository;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
-import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequest;
+import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequestV2;
 import swm.hkcc.LGTM.app.modules.mission.exception.InvalidGithubUrl;
 import swm.hkcc.LGTM.app.modules.mission.service.CreateMissionServiceImpl;
 import swm.hkcc.LGTM.utils.CustomMDGenerator;
@@ -63,7 +63,7 @@ import static swm.hkcc.LGTM.utils.CustomMDGenerator.tableRow;
 @Transactional
 @ActiveProfiles("test")
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-class CreateMissionTest {
+class CreateMissionTestV2 {
     private MockMvc mockMvc;
 
     @Autowired
@@ -75,7 +75,7 @@ class CreateMissionTest {
     @MockBean
     private MemberRepository memberRepository;
 
-    CreateMissionRequest createMissionRequest;
+    CreateMissionRequestV2 createMissionRequest;
 
     @BeforeEach
     public void setUp(@Autowired WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentationContextProvider) {
@@ -87,7 +87,7 @@ class CreateMissionTest {
                 .build();
 
         LocalDate referenceDate = LocalDate.of(2100, 1, 1);
-        createMissionRequest = CreateMissionRequest.builder()
+        createMissionRequest = CreateMissionRequestV2.builder()
                 .missionRepositoryUrl("https://github.com/abcabc")
                 .title("title")
                 .tagList(List.of("JAVA", "Spring"))
@@ -104,7 +104,7 @@ class CreateMissionTest {
     @DisplayName("미션 생성 동작 테스트")
     void createMission() throws Exception {
         // given
-        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
+        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequestV2.class)))
                 .thenReturn(
                         Mission.builder()
                                 .missionId(1L)
@@ -123,7 +123,7 @@ class CreateMissionTest {
         // when
 
         // then
-        ResultActions actions = mockMvc.perform(post("/v1/mission")
+        ResultActions actions = mockMvc.perform(post("/v2/mission")
                         .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
@@ -141,11 +141,11 @@ class CreateMissionTest {
 
         // document
         actions
-                .andDo(document("post-create-mission",  // 문서의 고유 id
+                .andDo(document("post-create-mission-v2",  // 문서의 고유 id
                         preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
                         resource(ResourceSnippetParameters.builder()
-                                .summary("[미션] 미션 생성")
+                                .summary("[미션] 미션 생성 (V2)")
                                 .description(
                                         CustomMDGenerator.builder()
                                                 .h1("[Descriptions]")
@@ -159,7 +159,7 @@ class CreateMissionTest {
                                                         tableRow("description", "String", "미션 설명. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
                                                         tableRow("recommendTo", "String", "이런 사람에게 추천해요. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
                                                         tableRow("notRecommendTo", "String", "이런 사람에게는 추천하지 않아요. 최대 길이 = 1000 이상일 경우 Validation 에러 발생"),
-                                                        tableRow("registrationDueDate", "LocalDate", "모집 및 입금완료 마감일. yyyy.MM.dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
+                                                        tableRow("registrationDueDate", "LocalDate", "모집 및 입금완료 마감일. yyyy-MM-dd 형식, 미션 등록일보다 현재 혹은 미래가 아닐 경우 Validation 에러 발생"),
                                                         tableRow("price", "Integer", "미션 가격"),
                                                         tableRow("maxPeopleNumber", "Integer", "미션 최대 참가 인원")
                                                 )
@@ -217,7 +217,7 @@ class CreateMissionTest {
     @DisplayName("미션 생성 실패 테스트 - 존재하지 않는 회원")
     void createMissionNotExistMember() throws Exception {
         // given
-        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
+        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequestV2.class)))
                 .thenThrow(new NotExistMember());
 
         Member member = Member.builder()
@@ -233,7 +233,7 @@ class CreateMissionTest {
 
         // then
         ResponseCode expectedResponseCode = ResponseCode.NOT_EXIST_MEMBER;
-        ResultActions actions = mockMvc.perform(post("/v1/mission")
+        ResultActions actions = mockMvc.perform(post("/v2/mission")
                         .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
@@ -248,7 +248,7 @@ class CreateMissionTest {
 
         // document
         actions
-                .andDo(document("post-create-mission-not-exist-member",
+                .andDo(document("post-create-mission-not-exist-member-v2",
                         preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
@@ -267,7 +267,7 @@ class CreateMissionTest {
     @DisplayName("미션 생성 실패 테스트 - 시니어가 아닌 회원")
     void createMissionNotSenior() throws Exception {
         // given
-        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
+        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequestV2.class)))
                 .thenThrow(new NotSeniorMember());
 
         Member member = Member.builder()
@@ -283,7 +283,7 @@ class CreateMissionTest {
 
         // then
         ResponseCode expectedResponseCode = ResponseCode.NOT_SENIOR_MEMBER;
-        ResultActions actions = mockMvc.perform(post("/v1/mission")
+        ResultActions actions = mockMvc.perform(post("/v2/mission")
                         .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
@@ -298,7 +298,7 @@ class CreateMissionTest {
 
         // document
         actions
-                .andDo(document("post-create-mission-not-senior-member",
+                .andDo(document("post-create-mission-not-senior-member-v2",
                         preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
@@ -317,7 +317,7 @@ class CreateMissionTest {
     void createMissionInvalidTechTag() throws Exception {
         // given
 
-        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
+        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequestV2.class)))
                 .thenThrow(new InvalidTechTag());
 
         Member member = Member.builder()
@@ -333,7 +333,7 @@ class CreateMissionTest {
 
         // then
         ResponseCode expectedResponseCode = ResponseCode.INVALID_TECH_TAG;
-        ResultActions actions = mockMvc.perform(post("/v1/mission")
+        ResultActions actions = mockMvc.perform(post("/v2/mission")
                         .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
@@ -348,7 +348,7 @@ class CreateMissionTest {
 
         // document
         actions
-                .andDo(document("post-create-mission-invalid-tech-tag",
+                .andDo(document("post-create-mission-invalid-tech-tag-v2",
                         preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
@@ -367,7 +367,7 @@ class CreateMissionTest {
     @DisplayName("미션 생성 실패 테스트 - 부적절한 레포지토리 url")
     void createMissionInvalidGihubUrl() throws Exception {
         // given
-        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequest.class)))
+        Mockito.when(createMissionService.createMission(any(Member.class), any(CreateMissionRequestV2.class)))
                 .thenThrow(new InvalidGithubUrl());
 
         Member member = Member.builder()
@@ -383,7 +383,7 @@ class CreateMissionTest {
 
         // then
         ResponseCode expectedResponseCode = ResponseCode.INVALID_GITHUB_URL;
-        ResultActions actions = mockMvc.perform(post("/v1/mission")
+        ResultActions actions = mockMvc.perform(post("/v2/mission")
                         .header("Authorization", "Bearer " + memberAccessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
@@ -398,7 +398,7 @@ class CreateMissionTest {
 
         // document
         actions
-                .andDo(document("post-create-mission-not-senior-member",
+                .andDo(document("post-create-mission-not-senior-member-v2",
                         preprocessRequest(prettyPrint()),        // request JSON 정렬하여 출력
                         preprocessResponse(prettyPrint()),       // response JSON 정렬하여 출력
 
