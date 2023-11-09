@@ -31,6 +31,10 @@ spring:
     sql:
       init:
         mode: never
+  data:
+    redis:
+      host: host.docker.internal
+      port: 6379
 
   # Kafka
 #  kafka:
