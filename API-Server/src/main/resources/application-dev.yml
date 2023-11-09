@@ -13,7 +13,7 @@ spring:
             baseUri: "https://github.com/login/oauth/authorize"
   data:
     redis:
-      host: host.docker.internal
+      host: redis
       port: 6379
 
   datasource:
