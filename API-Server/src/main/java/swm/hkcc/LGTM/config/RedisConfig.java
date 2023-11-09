@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableCaching
 @EnableRedisRepositories
-@Profile("test")
+@Profile({"prod", "dev", "test"})
 public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
