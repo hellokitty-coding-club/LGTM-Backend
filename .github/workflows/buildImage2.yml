@@ -1,4 +1,4 @@
-name: Build Image and Push to ECR
+name: Build Image and Push to ECR in account_v2
 
 on:
   push:
