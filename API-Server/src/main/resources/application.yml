@@ -13,6 +13,10 @@ spring:
     group-id:
       user-log: user-log-c-default-001
       chat-message: chat-message-c-default-001
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 jwt:
   header: Authorization
