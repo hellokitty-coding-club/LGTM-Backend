@@ -1,7 +1,7 @@
 # LGTM-Backend
 ![image](https://github.com/hellokitty-coding-club/LGTM-Backend/assets/83508073/ac95cab2-77ed-46f7-8fd0-b1372f249813)
 
-Looks good to me (LGTM) 코드 리뷰 매칭 플랫폼 Backend
+[Looks good to me (LGTM) 코드 리뷰 매칭 플랫폼 Backend, 팀 노션 페이지 입니다.](https://www.notion.so/team-hkcc/Hello-Kitty-Coding-Club-52c64bc1236d4288a15e3ebf7ab9db9f)
 
 # Architecture on AWS
 ![image](https://github.com/hellokitty-coding-club/LGTM-Backend/assets/83508073/4999fe10-b8b3-4f44-bfc9-58872b8d7d44)
