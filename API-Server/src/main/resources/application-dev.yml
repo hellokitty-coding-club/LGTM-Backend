@@ -11,10 +11,6 @@ spring:
             clientSecret: ${DEV_GITHUB_CLIENT_SECRET}
             redirectUri: ${DEV_GITHUB_REDIRECT_URI}
             baseUri: "https://github.com/login/oauth/authorize"
-  data:
-    redis:
-      host: redis
-      port: 6379
 
   datasource:
     url: ${DEV_DB_HOST}
@@ -35,6 +31,11 @@ spring:
     sql:
       init:
         mode: always
+
+  data:
+    redis:
+      host: host.docker.internal
+      port: 6379
 
 # Kafka
 #  kafka:
