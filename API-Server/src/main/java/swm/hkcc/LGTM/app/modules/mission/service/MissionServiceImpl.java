@@ -71,6 +71,24 @@ public class MissionServiceImpl implements MissionService {
     }
 
     @Override
+    public MissionContentData getMostViewedMissions(Long memberId) {
+        List<Mission> missions = missionViewRepository.findByOrderByViewCountDesc(3)
+                .stream()
+                .map(missionView -> missionView.getMission())
+                .collect(Collectors.toList());
+
+        return MissionContentData.of(
+                missions.stream()
+                        .map(mission -> MissionMapper.missionToMissionDto(
+                                mission,
+                                techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId()),
+                                "HotMission"
+                        ))
+                        .toList()
+        );
+    }
+
+    @Override
     public MissionContentData getTotalMissions(Long memberId) {
         List<Mission> missions = missionRepository.getTotalMissions();
 
