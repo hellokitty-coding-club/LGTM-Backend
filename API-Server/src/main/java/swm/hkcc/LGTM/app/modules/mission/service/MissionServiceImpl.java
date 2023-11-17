@@ -10,6 +10,7 @@ import swm.hkcc.LGTM.app.modules.member.repository.SeniorRepository;
 import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
+import swm.hkcc.LGTM.app.modules.mission.domain.MissionView;
 import swm.hkcc.LGTM.app.modules.mission.domain.mapper.MissionMapper;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailViewResponse;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
@@ -88,6 +89,9 @@ public class MissionServiceImpl implements MissionService {
         int currentPeopleNumber = missionRegistrationRepository.countByMission_MissionId(mission.getMissionId());
         MemberType memberType = memberService.getMemberType(memberId);
         boolean isParticipated = checkMemberIsParticipated(memberId, missionId, memberType);
+
+        MissionView missionView = MissionView.from(mission, memberService.getMember(memberId));
+        missionViewRepository.save(missionView);
 
         return missionAndMemberToDetailView(mission, isScraped, missionWriter, techTagList, currentPeopleNumber, memberType, isParticipated);
     }
