@@ -11,6 +11,8 @@ public interface MissionService {
 
     MissionContentData getRecommendMissions(Long memberId);
 
+    MissionContentData getMostViewedMissions(Long memberId);
+
     MissionContentData getTotalMissions(Long memberId);
 
     MissionDetailViewResponse getMissionDetail(Long memberId, Long missionId);
