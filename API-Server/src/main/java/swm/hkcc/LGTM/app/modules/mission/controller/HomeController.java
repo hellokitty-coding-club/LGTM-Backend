@@ -12,7 +12,7 @@ import swm.hkcc.LGTM.app.modules.mission.service.HomeService;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenScreenResponse;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.domain.groupAssignment.HomeScreenABTestService;
 
-import static swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.ABTest.HOME_SCREEN_SEQUENCE_TEST;
+import static swm.hkcc.LGTM.app.modules.serverDrivenUI.constant.ABTest.HOT_MISSION_FEATURE_TEST;
 
 @Slf4j
 @RestController
@@ -22,7 +22,7 @@ public class HomeController {
 
     private final HomeService homeService;
     private final HomeScreenABTestService abTestService;
-    private final String CURRNT_AB_TEST_NAME = HOME_SCREEN_SEQUENCE_TEST.getTestName(); // TODO : 현재 테스트 이름을 AB test 스케줄러에서 가져오도록 수정
+    private final String CURRNT_AB_TEST_NAME = HOT_MISSION_FEATURE_TEST.getTestName(); // TODO : 현재 테스트 이름을 AB test 스케줄러에서 가져오도록 수정
 
     @GetMapping
     public ApiDataResponse<ServerDrivenScreenResponse> getHomeScreen(

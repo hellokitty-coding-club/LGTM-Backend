@@ -10,6 +10,7 @@ import swm.hkcc.LGTM.app.modules.member.repository.SeniorRepository;
 import swm.hkcc.LGTM.app.modules.member.service.MemberService;
 import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionContentData;
+import swm.hkcc.LGTM.app.modules.mission.domain.MissionView;
 import swm.hkcc.LGTM.app.modules.mission.domain.mapper.MissionMapper;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailViewResponse;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionDetailsDto;
@@ -39,6 +40,11 @@ public class MissionServiceImpl implements MissionService {
     private final SeniorRepository seniorRepository;
     private final MemberService memberService;
 
+    private static final String ON_GOING_MISSION = "OnGoingMission";
+    private static final String HOT_MISSION = "HotMission";
+    private static final String TOTAL_MISSION = "TotalMission";
+    private static final String RECOMMEND_MISSION = "RecommendMission";
+
     @Override
     public MissionContentData getJuniorOngoingMissions(Long memberId) {
         List<Mission> missions = missionRepository.getJuniorOnGoingMissions(memberId);
@@ -48,7 +54,7 @@ public class MissionServiceImpl implements MissionService {
                         .map(mission -> MissionMapper.missionToMissionDto(
                                 mission,
                                 techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId()),
-                                "OnGoingMission"
+                                ON_GOING_MISSION
                         ))
                         .toList()
         );
@@ -63,7 +69,25 @@ public class MissionServiceImpl implements MissionService {
                         .map(mission -> MissionMapper.missionToMissionDto(
                                 mission,
                                 techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId()),
-                                "OnGoingMission"
+                                ON_GOING_MISSION
+                        ))
+                        .toList()
+        );
+    }
+
+    @Override
+    public MissionContentData getMostViewedMissions(Long memberId) {
+        List<Mission> missions = missionViewRepository.findByOrderByViewCountDesc(3)
+                .stream()
+                .map(missionView -> missionView.getMission())
+                .collect(Collectors.toList());
+
+        return MissionContentData.of(
+                missions.stream()
+                        .map(mission -> MissionMapper.missionToMissionDto(
+                                mission,
+                                techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId()),
+                                HOT_MISSION
                         ))
                         .toList()
         );
@@ -73,7 +97,7 @@ public class MissionServiceImpl implements MissionService {
     public MissionContentData getTotalMissions(Long memberId) {
         List<Mission> missions = missionRepository.getTotalMissions();
 
-        return getMissionContentData(memberId, missions, "TotalMission");
+        return getMissionContentData(memberId, missions, TOTAL_MISSION);
     }
 
     @Override
@@ -88,6 +112,9 @@ public class MissionServiceImpl implements MissionService {
         int currentPeopleNumber = missionRegistrationRepository.countByMission_MissionId(mission.getMissionId());
         MemberType memberType = memberService.getMemberType(memberId);
         boolean isParticipated = checkMemberIsParticipated(memberId, missionId, memberType);
+
+        MissionView missionView = MissionView.from(mission, memberService.getMember(memberId));
+        missionViewRepository.save(missionView);
 
         return missionAndMemberToDetailView(mission, isScraped, missionWriter, techTagList, currentPeopleNumber, memberType, isParticipated);
     }
@@ -104,7 +131,7 @@ public class MissionServiceImpl implements MissionService {
             }
         }
 
-        return getMissionContentData(memberId, missions, "RecommendMission");
+        return getMissionContentData(memberId, missions, RECOMMEND_MISSION);
     }
 
     @Override

@@ -16,6 +16,10 @@ public enum MissionContentType {
 
     RECOMMENDED_MISSION_LIST_V1(ViewType.ITEM, Theme.GRAY, 3),
 
+    HOT_MISSION_TITLE_V1(ViewType.TITLE, Theme.GRAY, "핫한 미션"),
+
+    HOT_MISSION_LIST_V1(ViewType.ITEM, Theme.GRAY, 3),
+
     TOTAL_MISSION_TITLE_V1(ViewType.TITLE, Theme.GRAY, "전체 미션"),
 
     TOTAL_MISSION_LIST_V1(ViewType.ITEM, Theme.GRAY, 5),
