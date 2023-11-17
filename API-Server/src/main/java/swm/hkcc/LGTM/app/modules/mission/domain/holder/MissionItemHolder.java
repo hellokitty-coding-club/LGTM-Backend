@@ -20,6 +20,8 @@ public class MissionItemHolder {
     public static final String ONGOING_MISSION_EMPTY_VIEW = "ongoing_mission_empty_view";
     public static final String RECOMMENDED_MISSION_EMPTY_VIEW = "recommended_mission_empty_view";
 
+    public static final String HOT_MISSION_EMPTY_VIEW = "hot_mission_empty_view";
+
     private final MissionService missionService;
 
     public Function<Long, MissionContentData> getMissionListFunction(MissionContentType missionContentType, MemberType memberType) {
@@ -31,6 +33,7 @@ public class MissionItemHolder {
                 case SENIOR -> missionService::getSeniorOngoingMissions;
                 default -> null;
             };
+            case HOT_MISSION_LIST_V1 -> missionService::getMostViewedMissions;
             default -> null;
         };
     }
@@ -40,6 +43,7 @@ public class MissionItemHolder {
             case TOTAL_MISSION_LIST_V1 -> ServerDrivenContent.from(convertToDto(TOTAL_MISSION_EMPTY_VIEW), missionContentType.getTheme(), ViewType.EMPTY);
             case ON_GOING_MISSION_LIST_V1 -> ServerDrivenContent.from(convertToDto(ONGOING_MISSION_EMPTY_VIEW), missionContentType.getTheme(), ViewType.EMPTY);
             case RECOMMENDED_MISSION_LIST_V1 -> ServerDrivenContent.from(convertToDto(RECOMMENDED_MISSION_EMPTY_VIEW), missionContentType.getTheme(), ViewType.EMPTY);
+            case HOT_MISSION_LIST_V1 -> ServerDrivenContent.from(convertToDto(HOT_MISSION_EMPTY_VIEW), missionContentType.getTheme(), ViewType.EMPTY);
             default -> null;
         };
     }
