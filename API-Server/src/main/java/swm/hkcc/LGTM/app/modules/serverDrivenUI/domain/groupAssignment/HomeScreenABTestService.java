@@ -47,12 +47,11 @@ public class HomeScreenABTestService implements ABTestService {
     }
 
     private void saveABTestUserGroup(Long memberId, String testName, String groupName) {
-        abTestUserGroupRepository.save(
-                ABTestUserGroup.builder()
-                        .memberId(memberId)
-                        .testName(testName)
-                        .groupName(groupName)
-                        .build()
-        );
+        ABTestUserGroup abTestUserGroup = ABTestUserGroup.builder()
+                .memberId(memberId)
+                .testName(testName)
+                .groupName(groupName)
+                .build();
+        abTestUserGroupRepository.save(abTestUserGroup);
     }
 }
