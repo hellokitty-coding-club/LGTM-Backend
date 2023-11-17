@@ -40,6 +40,11 @@ public class MissionServiceImpl implements MissionService {
     private final SeniorRepository seniorRepository;
     private final MemberService memberService;
 
+    private static final String ON_GOING_MISSION = "OnGoingMission";
+    private static final String HOT_MISSION = "HotMission";
+    private static final String TOTAL_MISSION = "TotalMission";
+    private static final String RECOMMEND_MISSION = "RecommendMission";
+
     @Override
     public MissionContentData getJuniorOngoingMissions(Long memberId) {
         List<Mission> missions = missionRepository.getJuniorOnGoingMissions(memberId);
@@ -49,7 +54,7 @@ public class MissionServiceImpl implements MissionService {
                         .map(mission -> MissionMapper.missionToMissionDto(
                                 mission,
                                 techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId()),
-                                "OnGoingMission"
+                                ON_GOING_MISSION
                         ))
                         .toList()
         );
@@ -64,7 +69,7 @@ public class MissionServiceImpl implements MissionService {
                         .map(mission -> MissionMapper.missionToMissionDto(
                                 mission,
                                 techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId()),
-                                "OnGoingMission"
+                                ON_GOING_MISSION
                         ))
                         .toList()
         );
@@ -82,7 +87,7 @@ public class MissionServiceImpl implements MissionService {
                         .map(mission -> MissionMapper.missionToMissionDto(
                                 mission,
                                 techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId()),
-                                "HotMission"
+                                HOT_MISSION
                         ))
                         .toList()
         );
@@ -92,7 +97,7 @@ public class MissionServiceImpl implements MissionService {
     public MissionContentData getTotalMissions(Long memberId) {
         List<Mission> missions = missionRepository.getTotalMissions();
 
-        return getMissionContentData(memberId, missions, "TotalMission");
+        return getMissionContentData(memberId, missions, TOTAL_MISSION);
     }
 
     @Override
@@ -126,7 +131,7 @@ public class MissionServiceImpl implements MissionService {
             }
         }
 
-        return getMissionContentData(memberId, missions, "RecommendMission");
+        return getMissionContentData(memberId, missions, RECOMMEND_MISSION);
     }
 
     @Override
