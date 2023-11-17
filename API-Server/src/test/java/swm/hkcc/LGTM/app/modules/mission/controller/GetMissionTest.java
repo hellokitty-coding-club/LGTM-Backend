@@ -36,6 +36,7 @@ import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.domain.MissionStatus;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionScrapRepository;
+import swm.hkcc.LGTM.app.modules.mission.repository.MissionViewRepository;
 import swm.hkcc.LGTM.app.modules.registration.repository.MissionRegistrationRepository;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
@@ -94,6 +95,9 @@ public class GetMissionTest {
 
     @MockBean
     private MemberService memberService;
+
+    @MockBean
+    private MissionViewRepository missionViewRepository;
 
     @BeforeEach
     public void setUp(@Autowired WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentationContextProvider) {
