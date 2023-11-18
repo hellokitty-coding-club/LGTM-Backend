@@ -20,7 +20,7 @@ public class MissionItemHolder {
     public static final String ONGOING_MISSION_EMPTY_VIEW = "ongoing_mission_empty_view";
     public static final String RECOMMENDED_MISSION_EMPTY_VIEW = "recommended_mission_empty_view";
 
-    public static final String HOT_MISSION_EMPTY_VIEW = "hot_mission_empty_view";
+    public static final String HOT_MISSION_EMPTY_VIEW = "total_mission_empty_view"; // TODO: 추후에 hot mission empty view 추가(android)
 
     private final MissionService missionService;
 
