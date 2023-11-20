@@ -82,15 +82,7 @@ public class MissionServiceImpl implements MissionService {
                 .map(missionView -> missionView.getMission())
                 .collect(Collectors.toList());
 
-        return MissionContentData.of(
-                missions.stream()
-                        .map(mission -> MissionMapper.missionToMissionDto(
-                                mission,
-                                techTagPerMissionRepository.findTechTagsByMissionId(mission.getMissionId()),
-                                HOT_MISSION
-                        ))
-                        .toList()
-        );
+        return getMissionContentData(memberId, missions, HOT_MISSION);
     }
 
     @Override
