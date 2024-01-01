@@ -10,7 +10,7 @@ import swm.hkcc.LGTM.app.modules.mission.domain.Mission;
 import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequest;
 import swm.hkcc.LGTM.app.modules.mission.dto.CreateMissionRequestV2;
 import swm.hkcc.LGTM.app.modules.mission.repository.MissionRepository;
-import swm.hkcc.LGTM.app.modules.mission.utils.GithubUrlValidator;
+import swm.hkcc.LGTM.utils.GithubUrlValidator;
 import swm.hkcc.LGTM.app.modules.tag.service.TechTagService;
 import swm.hkcc.LGTM.app.modules.tag.service.TechTagValidator;
 
