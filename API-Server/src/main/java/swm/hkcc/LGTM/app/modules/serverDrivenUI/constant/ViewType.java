@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum ViewType {
     TITLE("sectionTitle"),
     ITEM("sectionItem"),
+    SUB_ITEM("sectionSubItem"),
     CLOSER("sectionCloser"),
     EMPTY("empty");
 
