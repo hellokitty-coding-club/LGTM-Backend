@@ -52,4 +52,24 @@ public class HomeServerDrivenUISequenceFactoryTest {
                 () -> homeServerDrivenUISequenceFactory.getServerDrivenUISequence(invalidGroupName),
                 ResponseCode.DATA_ACCESS_ERROR.getMessage());
     }
+
+    @Test
+    @DisplayName("valid한 groupName과 version을 입력했을 때, 해당하는 MissionContentSequence를 반환한다.")
+    public void testGetServerDrivenUISequenceByVersion_ValidVersionAndVersion() {
+        // Given
+        String validGroupName = "A";
+        List<Integer> validVersions = List.of(1, 2);
+        List<List<MissionContentType>> contents = List.of(
+                        HomeServerDrivenUISequenceByVersion.A_HOME_SERVER_DRIVEN_UI_SEQUENCE.getContents(),
+                        HomeServerDrivenUISequenceByVersion.A_V2_HOME_SERVER_DRIVEN_UI_SEQUENCE.getContents());
+
+        for (int i = 0; i < validVersions.size(); i++) {
+            // When
+            MissionContentSequence result = homeServerDrivenUISequenceFactory.getServerDrivenUISequence(validGroupName, validVersions.get(i));
+
+            // Then
+            assertNotNull(result);
+            assertEquals(contents.get(i), result.getMissionContents());
+        }
+    }
 }
