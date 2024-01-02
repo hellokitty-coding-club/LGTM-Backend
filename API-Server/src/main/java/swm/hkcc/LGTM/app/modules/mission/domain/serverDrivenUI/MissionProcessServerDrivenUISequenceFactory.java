@@ -11,4 +11,10 @@ public class MissionProcessServerDrivenUISequenceFactory implements ServerDriven
         // todo: implement this method
         return null;
     }
+
+    @Override
+    public MissionContentSequence getServerDrivenUISequence(String ABTestGroupName, int version) {
+        // todo: implement this method
+        return null;
+    }
 }

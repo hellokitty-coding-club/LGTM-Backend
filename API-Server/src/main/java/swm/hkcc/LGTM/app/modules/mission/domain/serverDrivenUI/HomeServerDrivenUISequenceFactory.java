@@ -17,4 +17,12 @@ public class HomeServerDrivenUISequenceFactory implements ServerDrivenUISequence
                 .orElseThrow(() -> new GeneralException(ResponseCode.DATA_ACCESS_ERROR));
     }
 
+    @Override
+    public MissionContentSequence getServerDrivenUISequence(String ABTestGroupName, int version) {
+        return HomeServerDrivenUISequenceByVersion.find(ABTestGroupName)
+                .map(HomeServerDrivenUISequenceByVersion::getContents)
+                .map(MissionContentSequence::new)
+                .orElseThrow(() -> new GeneralException(ResponseCode.DATA_ACCESS_ERROR));
+    }
+
 }
