@@ -13,6 +13,7 @@ import swm.hkcc.LGTM.app.modules.mission.domain.holder.MissionItemHolder;
 import swm.hkcc.LGTM.app.modules.mission.domain.serverDrivenUI.HomeServerDrivenUISequenceFactory;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionCloserDto;
 import swm.hkcc.LGTM.app.modules.mission.dto.MissionTitleDto;
+import swm.hkcc.LGTM.app.modules.mission.dto.SubItemDto;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContent;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenContents;
 import swm.hkcc.LGTM.app.modules.serverDrivenUI.ServerDrivenScreenResponse;
@@ -36,8 +37,20 @@ public class HomeServiceImpl implements HomeService{
     @Transactional(readOnly = true)
     public ServerDrivenScreenResponse getHomeScreen(Long memberId, String ABTestGroupName) {
         MissionContentSequence contentSequence = sequenceFactory.getServerDrivenUISequence(ABTestGroupName);
-        List<ServerDrivenContent> serverDrivenContentList = new ArrayList<>();
 
+        List<ServerDrivenContent> serverDrivenContentList = new ArrayList<>();
+        contentSequence.getMissionContents()
+                .forEach(missionContentType -> processMissionContentType(memberId, missionContentType, serverDrivenContentList));
+
+        return new ServerDrivenScreenResponse(RESPONSE_SCREEN_NAME, serverDrivenContentList);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ServerDrivenScreenResponse getHomeScreenV2(Long memberId, String ABTestGroupName) {
+        MissionContentSequence contentSequence = sequenceFactory.getServerDrivenUISequence(ABTestGroupName, 2);
+
+        List<ServerDrivenContent> serverDrivenContentList = new ArrayList<>();
         contentSequence.getMissionContents()
                 .forEach(missionContentType -> processMissionContentType(memberId, missionContentType, serverDrivenContentList));
 
@@ -58,7 +71,13 @@ public class HomeServiceImpl implements HomeService{
             return;
         }
         if (missionContentType.getViewType() == ViewType.TITLE) {
-            serverDrivenContentList.add(getMissionTitle(missionContentType));
+            MemberType memberType = memberService.getMemberType(memberId);
+            serverDrivenContentList.add(getMissionTitle(missionContentType, memberType));
+            return;
+        }
+        if (missionContentType.getViewType() == ViewType.SUB_ITEM) {
+            MemberType memberType = memberService.getMemberType(memberId);
+            serverDrivenContentList.add(getSubItem(missionContentType, memberType));
             return;
         }
         serverDrivenContentList.add(getMissionCloser(missionContentType));
@@ -80,10 +99,10 @@ public class HomeServiceImpl implements HomeService{
         contentList.addAll(missionContents.getContents());
     }
 
-    private ServerDrivenContent getMissionTitle(MissionContentType missionContentType) {
+    private ServerDrivenContent getMissionTitle(MissionContentType missionContentType, MemberType memberType) {
         return ServerDrivenContent.from(
                 MissionTitleDto.builder()
-                        .title(missionContentType.getTitleName())
+                        .title(missionContentType.getTitleName(memberType))
                         .build(),
                 missionContentType.getTheme(),
                 missionContentType.getViewType()
@@ -94,6 +113,16 @@ public class HomeServiceImpl implements HomeService{
         return ServerDrivenContent.from(
                 MissionCloserDto.builder()
                         .closer(missionContentType.getViewType().getName())
+                        .build(),
+                missionContentType.getTheme(),
+                missionContentType.getViewType()
+        );
+    }
+
+    private ServerDrivenContent getSubItem(MissionContentType missionContentType, MemberType memberType) {
+        return ServerDrivenContent.from(
+                    SubItemDto.builder()
+                        .text(missionContentType.getTitleName(memberType))
                         .build(),
                 missionContentType.getTheme(),
                 missionContentType.getViewType()
