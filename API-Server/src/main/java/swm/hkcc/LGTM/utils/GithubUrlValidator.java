@@ -1,4 +1,4 @@
-package swm.hkcc.LGTM.app.modules.mission.utils;
+package swm.hkcc.LGTM.utils;
 
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
