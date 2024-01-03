@@ -63,9 +63,6 @@ public enum MissionContentType {
 
         if (memberType == MemberType.JUNIOR)
             return titleNameForJunior;
-        else if (memberType == MemberType.SENIOR)
-            return titleNameForSenior;
-
-        throw new UnspecifiedMemberType();
+        return titleNameForSenior;
     }
 }
