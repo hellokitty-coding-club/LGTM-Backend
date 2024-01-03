@@ -24,8 +24,6 @@ class MissionContentTypeTest {
         String titleNameSenior = missionContentType.getTitleName(MemberType.SENIOR);
 
         // then
-        System.out.println("titleNameJunior = " + titleNameJunior);
-        System.out.println("titleNameSenior = " + titleNameSenior);
         if (missionContentType.getTitleName() == null) {
             assertThat(titleNameJunior).isEqualTo(missionContentType.getTitleNameForJunior());
             assertThat(titleNameSenior).isEqualTo(missionContentType.getTitleNameForSenior());
