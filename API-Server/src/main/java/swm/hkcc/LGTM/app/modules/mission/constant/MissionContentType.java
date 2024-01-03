@@ -25,8 +25,8 @@ public enum MissionContentType {
     SECTION_DARK_CLOSER_V1(ViewType.CLOSER, Theme.GRAY),
     SECTION_LIGHT_CLOSER_V1(ViewType.CLOSER, Theme.WHITE),
 
-    MISSION_SUGGESTION_TITLE_V1(ViewType.TITLE, Theme.GRAY, "어떤 미션을 만들지 고민이세요?", "하고 싶은 미션이 없다면?"),
-    MISSION_SUGGESTION_BODY_V1(ViewType.SUB_ITEM, Theme.GRAY, "리뷰이들의 \uD83D\uDD25HOT한 주제 살펴보기", "리뷰어님, 이런 미션 만들어주세요!"),
+    MISSION_SUGGESTION_TITLE_V1(ViewType.TITLE, Theme.GRAY, "하고 싶은 미션이 없다면?", "어떤 미션을 만들지 고민이세요?"),
+    MISSION_SUGGESTION_BODY_V1(ViewType.SUB_ITEM, Theme.GRAY, "리뷰어님, 이런 미션 만들어주세요!", "리뷰이들의 \uD83D\uDD25HOT한 주제 살펴보기"),
     ;
 
     private final ViewType viewType;

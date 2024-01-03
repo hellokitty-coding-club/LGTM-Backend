@@ -19,7 +19,9 @@ public enum HomeServerDrivenUISequenceByVersion implements ServerDrivenUISequenc
             List.of(ON_GOING_MISSION_TITLE_V1,
                     ON_GOING_MISSION_LIST_V1,
                     SECTION_LIGHT_CLOSER_V1,
-                    SECTION_LIGHT_CLOSER_V1, // todo:
+                    MISSION_SUGGESTION_TITLE_V1,
+                    MISSION_SUGGESTION_BODY_V1,
+                    SECTION_DARK_CLOSER_V1,
                     RECOMMENDED_MISSION_TITLE_V1,
                     RECOMMENDED_MISSION_LIST_V1,
                     SECTION_DARK_CLOSER_V1,
@@ -37,7 +39,9 @@ public enum HomeServerDrivenUISequenceByVersion implements ServerDrivenUISequenc
             List.of(ON_GOING_MISSION_TITLE_V1,
                     ON_GOING_MISSION_LIST_V1,
                     SECTION_LIGHT_CLOSER_V1,
-                    SECTION_LIGHT_CLOSER_V1, // todo:
+                    MISSION_SUGGESTION_TITLE_V1,
+                    MISSION_SUGGESTION_BODY_V1,
+                    SECTION_DARK_CLOSER_V1,
                     HOT_MISSION_TITLE_V1,
                     HOT_MISSION_LIST_V1,
                     SECTION_DARK_CLOSER_V1,
