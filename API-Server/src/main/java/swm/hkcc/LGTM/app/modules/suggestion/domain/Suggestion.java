@@ -5,11 +5,13 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import swm.hkcc.LGTM.app.global.entity.BaseEntity;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
+import swm.hkcc.LGTM.app.modules.suggestion.dto.CreateSuggestionRequest;
 
 import java.io.Serializable;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @ToString
 @AllArgsConstructor
@@ -32,4 +34,12 @@ public class Suggestion extends BaseEntity implements Serializable {
 
     @ColumnDefault("0")
     private Integer likeNum;
+
+    public static Suggestion from(CreateSuggestionRequest requestBody, Member writer) {
+        return Suggestion.builder()
+                .title(requestBody.getTitle().trim())
+                .description(requestBody.getDescription())
+                .writer(writer)
+                .build();
+    }
 }
