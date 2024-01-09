@@ -52,10 +52,11 @@ public class SuggestionService {
                 Objects.equals(member.getMemberId(), suggestion.getWriter().getMemberId()));
     }
 
-    public void deleteSuggestion(Long suggestionId, Member member) {
+    public boolean deleteSuggestion(Long suggestionId, Member member) {
         Suggestion suggestion = suggestionRepository.findById(suggestionId).orElseThrow(NotExistSuggestion::new);
         validateMySuggestion(suggestion, member);
         suggestionRepository.delete(suggestion);
+        return true;
     }
 
     private void validateMySuggestion(Suggestion suggestion, Member member) {
