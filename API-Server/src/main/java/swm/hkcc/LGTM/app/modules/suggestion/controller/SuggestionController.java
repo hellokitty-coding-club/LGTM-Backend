@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import swm.hkcc.LGTM.app.global.dto.ApiDataResponse;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.member.domain.custom.CustomUserDetails;
-import swm.hkcc.LGTM.app.modules.suggestion.dto.CreateSuggestionRequest;
-import swm.hkcc.LGTM.app.modules.suggestion.dto.CreateSuggestionResponse;
-import swm.hkcc.LGTM.app.modules.suggestion.dto.SuggestionDto;
-import swm.hkcc.LGTM.app.modules.suggestion.dto.SuggestionListDto;
+import swm.hkcc.LGTM.app.modules.suggestion.dto.*;
 import swm.hkcc.LGTM.app.modules.suggestion.service.SuggestionService;
 
 @RestController
@@ -43,5 +40,18 @@ public class SuggestionController {
     ) {
         Member member = customUserDetails.getMember();
         return ApiDataResponse.of(suggestionService.getSuggestion(suggestionId, member));
+    }
+
+    @DeleteMapping("/{suggestionId}")
+    public ApiDataResponse<DeleteSuggestionResponse> deleteSuggestion(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long suggestionId
+    ) {
+        Member member = customUserDetails.getMember();
+        suggestionService.deleteSuggestion(suggestionId, member);
+        return ApiDataResponse.of(DeleteSuggestionResponse.builder()
+                .suggestionId(suggestionId)
+                .success(true)
+                .build());
     }
 }

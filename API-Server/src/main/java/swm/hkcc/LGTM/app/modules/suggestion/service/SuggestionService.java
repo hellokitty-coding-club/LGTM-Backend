@@ -11,6 +11,7 @@ import swm.hkcc.LGTM.app.modules.suggestion.dto.CreateSuggestionRequest;
 import swm.hkcc.LGTM.app.modules.suggestion.dto.CreateSuggestionResponse;
 import swm.hkcc.LGTM.app.modules.suggestion.dto.SuggestionDto;
 import swm.hkcc.LGTM.app.modules.suggestion.exception.NotExistSuggestion;
+import swm.hkcc.LGTM.app.modules.suggestion.exception.NotMySuggestion;
 import swm.hkcc.LGTM.app.modules.suggestion.repository.SuggestionLikeRepository;
 import swm.hkcc.LGTM.app.modules.suggestion.repository.SuggestionRepository;
 
@@ -49,6 +50,19 @@ public class SuggestionService {
                 suggestionLikeRepository.countBySuggestion_SuggestionId(suggestion.getSuggestionId()),
                 suggestionLikeRepository.existsBySuggestion_SuggestionIdAndMember_MemberId(suggestion.getSuggestionId(), member.getMemberId()),
                 Objects.equals(member.getMemberId(), suggestion.getWriter().getMemberId()));
+    }
+
+    public boolean deleteSuggestion(Long suggestionId, Member member) {
+        Suggestion suggestion = suggestionRepository.findById(suggestionId).orElseThrow(NotExistSuggestion::new);
+        validateMySuggestion(suggestion, member);
+        suggestionRepository.delete(suggestion);
+        return true;
+    }
+
+    private void validateMySuggestion(Suggestion suggestion, Member member) {
+        if (!Objects.equals(member.getMemberId(), suggestion.getWriter().getMemberId())) {
+            throw new NotMySuggestion();
+        }
     }
 
 }

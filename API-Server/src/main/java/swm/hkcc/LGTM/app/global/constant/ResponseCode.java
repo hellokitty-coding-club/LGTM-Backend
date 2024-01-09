@@ -63,6 +63,7 @@ public enum ResponseCode {
 
     // 104xx : 미션 제안하기
     NOT_EXIST_SUGGESTION(10400, HttpStatus.BAD_REQUEST, "존재하지 않는 게시글입니다."),
+    NOT_MY_SUGGESTION(10401, HttpStatus.BAD_REQUEST, "수정 권한이 없는 게시글입니다."),
 
     // 105xx :
 
