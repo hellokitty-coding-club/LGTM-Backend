@@ -32,9 +32,6 @@ public class Suggestion extends BaseEntity implements Serializable {
     @Column(nullable = false, length = 1000)
     private String description;
 
-    @ColumnDefault("0")
-    private Integer likeNum;
-
     public static Suggestion from(CreateSuggestionRequest requestBody, Member writer) {
         return Suggestion.builder()
                 .title(requestBody.getTitle().trim())

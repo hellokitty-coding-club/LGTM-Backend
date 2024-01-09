@@ -61,7 +61,8 @@ public enum ResponseCode {
     INVALID_PROCESS_STATUS(10307, HttpStatus.BAD_REQUEST, "현재 진행상태에서 수행할 수 없는 작업입니다."),
 
 
-    // 104xx : 검색
+    // 104xx : 미션 제안하기
+    NOT_EXIST_SUGGESTION(10400, HttpStatus.BAD_REQUEST, "존재하지 않는 게시글입니다."),
 
     // 105xx :
 
