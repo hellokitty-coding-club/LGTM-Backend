@@ -235,6 +235,11 @@ class ReadSuggestionControllerTest {
                                                         tableHead("Request values", "Data Type", "Description"),
                                                         tableRow("Authorization", "String", "액세스 토큰")
                                                 )
+                                                .h1("[Path Variables]")
+                                                .table(
+                                                        tableHead("Request values", "Data Type", "Description"),
+                                                        tableRow("suggestionId", "Number", "게시글 ID")
+                                                )
                                                 .h1("[Response Fields]")
                                                 .table(
                                                         tableHead("Request values", "Data Type", "Description"),
