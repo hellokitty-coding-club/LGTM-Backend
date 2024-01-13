@@ -54,4 +54,22 @@ public class SuggestionController {
                 .success(true)
                 .build());
     }
+
+    @PostMapping("/{suggestionId}/like")
+    public ApiDataResponse<LikeSuggestionResponse> likeSuggestion(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long suggestionId
+    ) {
+        Member member = customUserDetails.getMember();
+        return ApiDataResponse.of(suggestionService.likeSuggestion(suggestionId, member));
+    }
+
+    @DeleteMapping("/{suggestionId}/like")
+    public ApiDataResponse<LikeSuggestionResponse> dislikeSuggestion(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long suggestionId
+    ) {
+        Member member = customUserDetails.getMember();
+        return ApiDataResponse.of(suggestionService.cancelLikeSuggestion(suggestionId, member));
+    }
 }
