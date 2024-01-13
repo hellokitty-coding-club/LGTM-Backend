@@ -61,6 +61,7 @@ public class MissionMapper {
                 .maxPeopleNumber(mission.getMaxPeopleNumber())
                 .currentPeopleNumber(currentPeopleNumber)
                 .price(mission.getPrice())
+                .createdAt(mission.getCreatedAt())
                 .description(mission.getDescription())
                 .recommendTo(mission.getRecommendTo())
                 .notRecommendTo(mission.getNotRecommendTo())

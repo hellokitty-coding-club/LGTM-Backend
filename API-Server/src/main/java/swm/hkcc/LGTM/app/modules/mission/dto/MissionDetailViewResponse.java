@@ -8,6 +8,7 @@ import lombok.Getter;
 import swm.hkcc.LGTM.app.modules.tag.domain.TechTag;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -43,6 +44,9 @@ public class MissionDetailViewResponse {
 
     @NotBlank
     private int price;
+
+    @NotBlank
+    private LocalDateTime createdAt;
 
     @NotBlank
     private String description;
