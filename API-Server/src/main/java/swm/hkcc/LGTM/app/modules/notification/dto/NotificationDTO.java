@@ -1,12 +1,11 @@
 package swm.hkcc.LGTM.app.modules.notification.dto;
 
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import swm.hkcc.LGTM.app.modules.member.domain.Member;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import swm.hkcc.LGTM.app.modules.notification.domain.Notification;
 
-import java.util.Map;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +15,7 @@ public class NotificationDTO {
     private String title;
     private String body;
     private Boolean isRead;
+    private LocalDateTime createdAt;
 
     public static NotificationDTO from(Notification notification) {
         return NotificationDTO.builder()
@@ -23,6 +23,7 @@ public class NotificationDTO {
                 .title(notification.getTitle())
                 .body(notification.getBody())
                 .isRead(notification.isRead())
+                .createdAt(notification.getCreatedAt())
                 .build();
     }
 }
