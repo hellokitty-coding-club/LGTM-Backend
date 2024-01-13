@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import swm.hkcc.LGTM.app.modules.member.domain.Member;
 import swm.hkcc.LGTM.app.modules.suggestion.domain.Suggestion;
+import swm.hkcc.LGTM.app.modules.suggestion.domain.SuggestionLike;
 import swm.hkcc.LGTM.app.modules.suggestion.dto.CreateSuggestionRequest;
 import swm.hkcc.LGTM.app.modules.suggestion.dto.CreateSuggestionResponse;
+import swm.hkcc.LGTM.app.modules.suggestion.dto.LikeSuggestionResponse;
 import swm.hkcc.LGTM.app.modules.suggestion.dto.SuggestionDto;
 import swm.hkcc.LGTM.app.modules.suggestion.exception.NotExistSuggestion;
 import swm.hkcc.LGTM.app.modules.suggestion.exception.NotMySuggestion;
@@ -57,6 +59,37 @@ public class SuggestionService {
         validateMySuggestion(suggestion, member);
         suggestionRepository.delete(suggestion);
         return true;
+    }
+
+    public LikeSuggestionResponse likeSuggestion(Long suggestionId, Member member) {
+        Suggestion suggestion = suggestionRepository.findById(suggestionId).orElseThrow(NotExistSuggestion::new);
+        suggestionLikeRepository.findBySuggestion_SuggestionIdAndMember_MemberId(suggestionId, member.getMemberId())
+                .ifPresentOrElse(
+                        suggestionLike -> {
+                        },
+                        () -> suggestionLikeRepository.save(SuggestionLike.builder()
+                                .suggestion(suggestion)
+                                .member(member)
+                                .build())
+                );
+        return LikeSuggestionResponse.from(
+                suggestionLikeRepository.countBySuggestion_SuggestionId(suggestion.getSuggestionId()),
+                suggestionLikeRepository.existsBySuggestion_SuggestionIdAndMember_MemberId(suggestion.getSuggestionId(), member.getMemberId())
+        );
+    }
+
+    public LikeSuggestionResponse cancelLikeSuggestion(Long suggestionId, Member member) {
+        Suggestion suggestion = suggestionRepository.findById(suggestionId).orElseThrow(NotExistSuggestion::new);
+        suggestionLikeRepository.findBySuggestion_SuggestionIdAndMember_MemberId(suggestionId, member.getMemberId())
+                .ifPresentOrElse(
+                        suggestionLike -> suggestionLikeRepository.delete(suggestionLike),
+                        () -> {
+                        }
+                );
+        return LikeSuggestionResponse.from(
+                suggestionLikeRepository.countBySuggestion_SuggestionId(suggestion.getSuggestionId()),
+                suggestionLikeRepository.existsBySuggestion_SuggestionIdAndMember_MemberId(suggestion.getSuggestionId(), member.getMemberId())
+        );
     }
 
     private void validateMySuggestion(Suggestion suggestion, Member member) {
