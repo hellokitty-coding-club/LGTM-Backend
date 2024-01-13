@@ -43,6 +43,7 @@ import swm.hkcc.LGTM.app.modules.tag.repository.TechTagPerMissionRepository;
 import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -98,6 +99,7 @@ public class GetMissionTest {
 
     @MockBean
     private MissionViewRepository missionViewRepository;
+    LocalDateTime refDateTime;
 
     @BeforeEach
     public void setUp(@Autowired WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentationContextProvider) {
@@ -107,6 +109,8 @@ public class GetMissionTest {
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .alwaysDo(print())
                 .build();
+
+        refDateTime = LocalDateTime.now();
     }
 
     @Test
@@ -158,6 +162,7 @@ public class GetMissionTest {
                 .andExpect(jsonPath("$.data.maxPeopleNumber").value(10))
                 .andExpect(jsonPath("$.data.currentPeopleNumber").value(5))
                 .andExpect(jsonPath("$.data.price").value(10000))
+                .andExpect(jsonPath("$.data.createdAt").value(refDateTime.toString()))
                 .andExpect(jsonPath("$.data.description").value("content"))
                 .andExpect(jsonPath("$.data.recommendTo").value("ReomnnandTo"))
                 .andExpect(jsonPath("$.data.notRecommendTo").value("notReomnnandTo"))
@@ -171,6 +176,7 @@ public class GetMissionTest {
                 .andExpect(jsonPath("$.data.scraped").value(true))
                 .andExpect(jsonPath("$.data.participated").value(true))
                 .andExpect(jsonPath("$.data.closed").value(false));
+
 
         // document
         actions
@@ -232,6 +238,7 @@ public class GetMissionTest {
                                         fieldWithPath("data.maxPeopleNumber").type(JsonFieldType.NUMBER).description("최대 참가 인원"),
                                         fieldWithPath("data.currentPeopleNumber").type(JsonFieldType.NUMBER).description("현재 참가 인원 수"),
                                         fieldWithPath("data.price").type(JsonFieldType.NUMBER).description("미션 가격"),
+                                        fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("미션 생성일"),
                                         fieldWithPath("data.description").type(JsonFieldType.STRING).description("미션 설명"),
                                         fieldWithPath("data.recommendTo").type(JsonFieldType.STRING).description("이런 사람에게 추천"),
                                         fieldWithPath("data.notRecommendTo").type(JsonFieldType.STRING).description("이런 사람에게 추천하지 않음"),
@@ -274,8 +281,7 @@ public class GetMissionTest {
 
     private Mission createMockMission() {
         Member mockWriter = createMockWriter();
-
-        return Mission.builder()
+        Mission mockMission = Mission.builder()
                 .missionId(27L)
                 .writer(mockWriter)
                 .missionRepositoryUrl("https://www.github.com/kxxhyorim")
@@ -288,6 +294,8 @@ public class GetMissionTest {
                 .price(10000)
                 .maxPeopleNumber(10)
                 .build();
+        mockMission.setCreatedAt(refDateTime);
+        return mockMission;
     }
 
     private Member createMockWriter() {
