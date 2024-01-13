@@ -2,7 +2,6 @@ package swm.hkcc.LGTM.app.modules.notification.controller;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.metamodel.model.domain.internal.MapMember;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +30,7 @@ import swm.hkcc.LGTM.app.modules.notification.dto.NotificationDTO;
 import swm.hkcc.LGTM.app.modules.notification.service.NotificationCenterService;
 import swm.hkcc.LGTM.utils.CustomMDGenerator;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -39,10 +39,9 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.headerWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -69,6 +68,7 @@ public class NotificationCenterControllerTest {
     private NotificationCenterService notificationCenterService;
 
     private Member mockMember;
+    LocalDateTime now = LocalDateTime.now();
 
     @BeforeEach
     public void setUp(@Autowired WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentationContextProvider) {
@@ -92,6 +92,7 @@ public class NotificationCenterControllerTest {
                                 .title("테스트")
                                 .body("테스트")
                                 .isRead(true)
+                                .createdAt(now)
                                 .build(),
 
                         NotificationDTO.builder()
@@ -99,6 +100,7 @@ public class NotificationCenterControllerTest {
                                 .title("테스트")
                                 .body("테스트")
                                 .isRead(false)
+                                .createdAt(now)
                                 .build()
                 );
         given(notificationCenterService.getNotification(Mockito.any(Member.class))).willReturn(response);
@@ -130,6 +132,20 @@ public class NotificationCenterControllerTest {
                                                 tableRow("Authorization", "String", "액세스 토큰")
                                         )
                                         .line()
+                                        .h1("[Response Fields]")
+                                        .table(
+                                                tableHead("Request values", "Data Type", "Description"),
+                                                tableRow("success", "Boolean", "성공여부"),
+                                                tableRow("responseCode", "Number", "응답코드"),
+                                                tableRow("message", "String", "메시지"),
+                                                tableRow("data", "Array", "알림 센터 목록"),
+                                                tableRow("data[].notificationId", "Number", "알림 id"),
+                                                tableRow("data[].title", "String", "알림 제목"),
+                                                tableRow("data[].body", "String", "알림 내용"),
+                                                tableRow("data[].isRead", "Boolean", "읽음 여부"),
+                                                tableRow("data[].createdAt", "String", "알림 생성 시간")
+                                        )
+                                        .line()
                                         .h1("[Errors]")
                                         .table(
                                                 tableHead("HTTP Status", "Response Code", "Message"),
@@ -144,7 +160,8 @@ public class NotificationCenterControllerTest {
                                         fieldWithPath("data[].notificationId").type(JsonFieldType.NUMBER).description("알림 id"),
                                         fieldWithPath("data[].title").type(JsonFieldType.STRING).description("알림 제목"),
                                         fieldWithPath("data[].body").type(JsonFieldType.STRING).description("알림 내용"),
-                                        fieldWithPath("data[].isRead").type(JsonFieldType.BOOLEAN).description("읽음 여부")
+                                        fieldWithPath("data[].isRead").type(JsonFieldType.BOOLEAN).description("읽음 여부"),
+                                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("알림 생성 시간")
                                 )
                                 .build())));
     }
