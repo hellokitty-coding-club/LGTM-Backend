@@ -180,12 +180,12 @@ class LikeSuggestionControllerTest {
                 .andExpect(jsonPath("$.data.likeNum").value("999+"));
         // document
         resultActions.andDo(document(
-                "post-like-suggestion",
+                "post-cancel-like-suggestion",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 resource(
                         ResourceSnippetParameters.builder()
-                                .summary("[제안] 좋아요 누르기")
+                                .summary("[제안] 좋아요 취소하기")
                                 .tag("제안하기")
                                 .description( CustomMDGenerator.builder()
                                         .h1("[Request Headers]")
