@@ -3,7 +3,7 @@ name: (manual) Build Image and Push to ECR
 on: workflow_dispatch
       
 env:
-      ECR_ROOT: ${{ secrets.AWS_ECR_ROOT }}
+      ECR_ROOT: ${{ secrets.AWS_ECR_ROOT_2 }}
       ECR_REPOSITORY: lgtm-api-server
       IMAGE_NAME: lgtm-api-server:0.0.${{ github.run_number }}
       
@@ -47,8 +47,8 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_2 }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_2 }}
         aws-region: ap-northeast-2
 
     - name: Login to Amazon ECR
