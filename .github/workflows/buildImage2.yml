@@ -8,8 +8,8 @@ on:
 
 env:
       ECR_ROOT: ${{ secrets.AWS_ECR_ROOT_2 }}
-      ECR_REPOSITORY: lgtm-api-server
-      IMAGE_NAME: lgtm-api-server:${{ github.ref_name }}_0.0.${{ github.run_number }} 
+      ECR_REPOSITORY: lgtm
+      IMAGE_NAME: lgtm:${{ github.ref_name }}_0.0.${{ github.run_number }} 
       
 jobs:
   build:
